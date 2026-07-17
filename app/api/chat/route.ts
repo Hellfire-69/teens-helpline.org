@@ -1,18 +1,41 @@
-﻿/**
- * Nova chat — POST a user message, receive a validated reply. CRITICAL: Escalation Layer runs before any AI call per AGENTS.md §5. Delegates to features/nova/service.ts.
- *
- * Scaffold stub — not yet implemented. Full implementation on the
- * corresponding feature branch per AGENTS.md §3 (plan → approval → implement).
- *
- * Every request must be Zod-validated before reaching service logic (TRD §11).
- * Response envelope must match TRD §13 format.
- */
-import type { NextRequest } from "next/server";
+import { NextRequest } from "next/server";
+import { chatRequestSchema } from "@/features/nova/schema";
+import { handleChatTurn } from "@/features/nova/service";
+import { getCurrentUserWithRole } from "@/features/auth/service";
 
-export async function POST(_req: NextRequest): Promise<Response> {
-  return Response.json({ success: false, error: { code: "NOT_IMPLEMENTED", message: "This endpoint is scaffolded but not yet implemented." } }, { status: 501 });
+export async function POST(req: NextRequest): Promise<Response> {
+  try {
+    const body = await req.json();
+    
+    // Validate input via Zod
+    const parseResult = chatRequestSchema.safeParse(body);
+    if (!parseResult.success) {
+      return Response.json({ 
+        success: false, 
+        error: { code: "VALIDATION_ERROR", message: "Invalid request data", details: parseResult.error.flatten() } 
+      }, { status: 400 });
+    }
+
+    // Get current session context
+    const authContext = await getCurrentUserWithRole();
+
+    // Pass to service layer
+    const chatResponse = await handleChatTurn(parseResult.data, authContext);
+
+    // TRD §13 standard response envelope
+    return Response.json({
+      success: true,
+      data: chatResponse
+    });
+  } catch (error: any) {
+    console.error("Chat API error:", error);
+    return Response.json({ 
+      success: false, 
+      error: { code: "INTERNAL_ERROR", message: "An unexpected error occurred processing your message." } 
+    }, { status: 500 });
+  }
 }
 
 export async function GET(_req: NextRequest): Promise<Response> {
-  return Response.json({ success: false, error: { code: "NOT_IMPLEMENTED", message: "This endpoint is scaffolded but not yet implemented." } }, { status: 501 });
+  return Response.json({ success: false, error: { code: "METHOD_NOT_ALLOWED", message: "Use POST" } }, { status: 405 });
 }
