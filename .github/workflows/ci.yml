@@ -1,0 +1,149 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+# Cancel in-progress runs for the same PR/branch to save minutes
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ─── Step 1: Install ──────────────────────────────────────────────────────
+  install:
+    name: Install dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - name: Install
+        run: npm ci
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+
+  # ─── Step 2: Lint ─────────────────────────────────────────────────────────
+  lint:
+    name: ESLint (strict)
+    runs-on: ubuntu-latest
+    needs: install
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - name: Restore node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+      - name: Lint
+        run: npm run lint
+
+  # ─── Step 3: Typecheck ────────────────────────────────────────────────────
+  typecheck:
+    name: TypeScript (strict)
+    runs-on: ubuntu-latest
+    needs: install
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - name: Restore node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+      - name: Typecheck
+        run: npm run typecheck
+
+  # ─── Step 4: Unit + Integration Tests ────────────────────────────────────
+  test:
+    name: Unit + Integration Tests (Vitest)
+    runs-on: ubuntu-latest
+    needs: install
+    env:
+      # Dummy values — lib/env.ts validates at boot; tests may need these present
+      NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder-anon-key
+      SUPABASE_SERVICE_ROLE_KEY: placeholder-service-role-key
+      GEMINI_API_KEY: placeholder-gemini-key
+      GROQ_API_KEY: placeholder-groq-key
+      NODE_ENV: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - name: Restore node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+      - name: Test
+        run: npm run test
+
+  # ─── Step 5: Build check ──────────────────────────────────────────────────
+  build:
+    name: Production build check
+    runs-on: ubuntu-latest
+    needs: [lint, typecheck, test]
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder-anon-key
+      SUPABASE_SERVICE_ROLE_KEY: placeholder-service-role-key
+      GEMINI_API_KEY: placeholder-gemini-key
+      GROQ_API_KEY: placeholder-groq-key
+      NODE_ENV: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - name: Restore node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+      - name: Build
+        run: npm run build
+
+  # ─── E2E (Playwright) — disabled until safety-critical tests are written ──
+  # Enabled on feature/nova-conversation once the crisis banner, quick-exit,
+  # and Nova risk-signal E2E suite exist (TRD §29, AGENTS.md §12).
+  #
+  # IMPORTANT: This job MUST pass before any PR touching Nova, escalation, or
+  # the crisis banner is merged — per AGENTS.md §12.
+  e2e:
+    name: E2E Tests (Playwright) — skipped until safety suite is written
+    runs-on: ubuntu-latest
+    needs: build
+    if: false  # Enable on feature/nova-conversation
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - name: Restore node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Run E2E
+        run: npm run test:e2e

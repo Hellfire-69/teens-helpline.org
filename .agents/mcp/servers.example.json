@@ -1,0 +1,25 @@
+{
+  "_comment": "MCP server config for development tooling only — never a runtime dependency. Copy this to servers.json and fill in real values.",
+  "servers": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@latest"],
+      "_purpose": "Fetches latest, version-accurate package documentation before adopting or upgrading any library (TRD AI-Assisted Development Standards)"
+    },
+    "supabase": {
+      "command": "npx",
+      "args": ["-y", "@supabase/mcp-server-supabase@latest", "--project-ref", "tjxtodmwwaennacjektw"],
+      "_purpose": "Database schema, auth config, storage, migrations — always use for schema changes instead of manual SQL (TRD AI-Assisted Development Standards)"
+    },
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github@latest"],
+      "_purpose": "Repository management, PRs, issues — used for team collaboration workflows (TRD §37-38)"
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"],
+      "_purpose": "Browser automation for safety-critical E2E testing (TRD §29, AGENTS.md §12)"
+    }
+  }
+}

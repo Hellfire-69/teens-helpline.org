@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * CSS custom properties for next/font variables.
+ * These are set on <html> by app/layout.tsx and consumed by tailwind.config.ts's
+ * fontFamily.inter and fontFamily.fraunces entries.
+ */
+:root {
+  --font-inter: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-fraunces: "Fraunces", ui-serif, Georgia, serif;
+}
+
+/*
+ * Base reset — extends Tailwind's preflight with design-system decisions.
+ * Design.md §40: focus-visible states are NEVER suppressed anywhere.
+ */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  /* Never suppress focus-visible — Design.md §40, WCAG AA requirement */
+  *:focus {
+    outline: none;
+  }
+
+  *:focus-visible {
+    outline: 3px solid theme("colors.aurora.sea");
+    outline-offset: 2px;
+    border-radius: theme("borderRadius.radius-sm");
+  }
+
+  html {
+    /* Smooth scrolling — but not if the user prefers reduced motion */
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    /* Strip all non-essential motion — Design.md §25 */
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body {
+    /* Base text uses ink.900 — warm-tinted near-black, never pure black */
+    color: theme("colors.ink.900");
+    background-color: theme("colors.paper.50");
+    font-family: theme("fontFamily.inter");
+    font-size: theme("fontSize.type-body-md[0]");
+    line-height: 1.5;
+    /* Prevent text inflation on mobile */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  /* Dark mode base */
+  .dark body {
+    color: theme("colors.paper.50");
+    background-color: theme("colors.night.950");
+  }
+
+  /* Minimum text size — Design.md §10, §40: never below 12px */
+  small,
+  .text-xs {
+    font-size: max(0.75rem, theme("fontSize.type-body-sm[0]"));
+  }
+}

@@ -1,0 +1,6 @@
+﻿# Ensure consistent LF line endings for all text files
+* text=auto eol=lf
+
+# Windows-specific binary files
+*.exe binary
+*.dll binary
