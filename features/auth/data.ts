@@ -36,10 +36,6 @@ export async function createProfile(userId: string): Promise<Profile> {
 }
 
 export async function getProfile(supabase: SupabaseClient, userId: string): Promise<Profile | null> {
-  // IMPORTANT (RLS Gap): This uses the regular client (anon/authenticated). 
-  // It will fail to return a profile until a SELECT policy is written 
-  // and approved allowing a user to read their own row (per Database-Schema.md §6.3).
-  // Do NOT add this policy without human sign-off (AGENTS.md §14).
   const { data, error } = await supabase
     .from("profiles")
     .select("*")
