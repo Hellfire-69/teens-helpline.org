@@ -41,6 +41,9 @@ Short-form record of the decisions that shape this system, kept here rather than
 | ADR-007 | Email confirmation disabled in Supabase Auth for the prototype | No real domain/email deliverability exists yet; sign-up friction isn't worth it for an 8-day build | Documented, single-setting reversal at production stage (§9) |
 | ADR-008 | CSS 3D transforms + Motion, not WebGL/Three.js, for the "3D-like" onboarding feel | A game engine risks the Lighthouse/load-time budget for a cosmetic effect | Depth/tilt achieved via `perspective` and spring-based hover transforms; a literal 3D engine is an explicit Phase 2 discussion, not baseline architecture |
 | ADR-009 | Fixed illustrated avatar set, no custom uploads, in MVP | Uploads would require Storage moderation and validation work the 8-day window doesn't have room for | Avatar selection is a card-picker over pre-set illustrations only |
+| ADR-010 | AI Context Window capped at 6 messages | The TRD specifies a "bounded window of history" but doesn't define the limit | Both anonymous in-memory array and logged-in DB query are capped to the 6 most recent messages |
+| ADR-011 | Escalation Logging Graceful Degradation | The PRD/TRD says "The violation is logged" but didn't specify error handling for the logging call itself | The log call is wrapped in a try/catch; if the DB is down, it logs to server console and returns the safe crisis response to the user. Safety takes precedence over telemetry |
+| ADR-012 | Use `service_role` to write to `escalation_events` | The table has zero RLS policies for users to prevent exposure | Writing to this table uses the Admin Client (service_role key) to bypass RLS, ensuring it stays fully closed to client-side reads/writes |
 
 ## 3. Technology Stack
 
@@ -444,9 +447,9 @@ graph LR
     Validator -->|Fails / flagged| Fallback["Safe fallback message + escalation surfaced"]
 ```
 
-- **Escalation Layer runs first, before any AI call is made** — this is deliberate. Rule-based risk detection (keyword/pattern matching on self-harm, suicidal ideation, substance-use language) happens synchronously and, if triggered, the AI is never invoked for that turn; the crisis banner and escalation prompt are returned directly. This guarantees Nova structurally cannot "talk through" a crisis, matching the PRD's hard rule.
+- **Escalation Layer runs first, before any AI call is made** — this is deliberate. Rule-based risk detection (keyword/pattern matching on self-harm, suicidal ideation, substance-use language) happens synchronously and, if triggered, the AI is never invoked for that turn; the crisis banner and escalation prompt are returned directly. This guarantees Nova structurally cannot "talk through" a crisis, matching the PRD's hard rule. To check the mood context for risk signals, the mood note is concatenated directly onto the message string before running it through the Escalation Layer regex.
 - **System prompt** encodes Nova's persona (elder-sibling tone), its supported topic scope, and explicit hard constraints (never diagnose, never reference medication, never claim to replace a therapist, never attempt to manage a detected crisis — which shouldn't reach it anyway due to the pre-check).
-- **Context retrieval** pulls the user's stated mood and "what brought you here" concern (from onboarding, if available) plus recent conversation turns (for logged-in users) or in-memory session turns (anonymous) — never a full chat history dump beyond a bounded window.
+- **Context retrieval** pulls the user's stated mood and "what brought you here" concern (from onboarding, if available) plus recent conversation turns (for logged-in users) or in-memory session turns (anonymous) — never a full chat history dump beyond a bounded window (capped at **6 messages**).
 - **Response Validator** re-checks the *model's own output* (not just the user's input) against the same banned-content patterns, since a model can drift into disallowed territory even with a good system prompt — this is a second, independent safety gate.
 - **Fallback handling:** Gemini failure → automatic retry once → failover to GROQ → if both fail, a static, pre-written supportive fallback message is returned along with a link to Study Hub and the ever-present crisis banner. Never a silent failure or raw error shown to the user, per PRD's Error Handling table.
 

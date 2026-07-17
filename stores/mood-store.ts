@@ -1,16 +1,20 @@
-﻿/**
- * Mood state — current session's mood entry and optional note. In-memory for anonymous; synced to Supabase only for logged-in users via features/mood-engine/service.ts.
- *
- * State shape and actions implemented on the corresponding feature branch.
- * Stub exports the store name so imports resolve without errors at scaffold stage.
+/**
+ * Mood state — current session's mood entry and optional note.
+ * In-memory for anonymous; synced to Supabase only for logged-in users via API.
+ * TRD §20 explicitly forbids localStorage here.
  */
 import { create } from "zustand";
 
-// Placeholder state shape — replaced with real types on the feature branch
 type MoodState = {
-  _placeholder: null;
+  moodValue: string | null;
+  note: string | null;
+  setMood: (moodValue: string, note?: string) => void;
+  clearMood: () => void;
 };
 
-export const useMoodStore = create<MoodState>(() => ({
-  _placeholder: null,
+export const useMoodStore = create<MoodState>((set) => ({
+  moodValue: null,
+  note: null,
+  setMood: (moodValue, note = "") => set({ moodValue, note }),
+  clearMood: () => set({ moodValue: null, note: null }),
 }));

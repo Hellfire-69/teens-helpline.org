@@ -71,3 +71,46 @@ test.describe('Nova Safety Pipeline E2E', () => {
     expect(textLower).not.toContain('arrr');
   });
 });
+
+test.describe('Mood Engine Safety Pipeline E2E', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/mood-test');
+  });
+
+  test('Risk signals in mood note trigger immediate escalation response', async ({ page }) => {
+    // Fill out the mood form with a risk signal
+    await page.selectOption('select', { label: 'Anxious' });
+    await page.fill('textarea', 'I want to kill myself');
+    await page.click('button:has-text("Submit to /api/mood")');
+
+    // Wait for the JSON response to appear on screen
+    const responseBlock = page.locator('pre');
+    await expect(responseBlock).toBeVisible({ timeout: 15000 });
+
+    const responseText = await responseBlock.innerText();
+    const data = JSON.parse(responseText);
+
+    // Assert the escalation payload
+    expect(data.data.escalation).toBe(true);
+    expect(data.data.escalationReason).toBe('suicidal_ideation');
+    expect(data.data.safeReply).toContain('reach out to a trusted adult');
+  });
+
+  test('Normal mood notes do not trigger escalation', async ({ page }) => {
+    // Fill out the mood form normally
+    await page.selectOption('select', { label: 'Happy' });
+    await page.fill('textarea', 'Had a great day at school');
+    await page.click('button:has-text("Submit to /api/mood")');
+
+    // Wait for the JSON response
+    const responseBlock = page.locator('pre');
+    await expect(responseBlock).toBeVisible({ timeout: 15000 });
+
+    const responseText = await responseBlock.innerText();
+    const data = JSON.parse(responseText);
+
+    // Assert no escalation
+    expect(data.data.escalation).toBe(false);
+    expect(data.data.recommendationCategory).toBeDefined();
+  });
+});
