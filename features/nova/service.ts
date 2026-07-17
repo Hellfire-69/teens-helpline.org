@@ -19,6 +19,7 @@ export type ChatResponse = {
   escalation: boolean;
   escalationReason?: string | null;
   conversationId?: string; // For logged in users
+  providerUsed?: string;
 };
 
 export async function handleChatTurn(req: ChatRequest, auth: AuthUserContext): Promise<ChatResponse> {
@@ -122,6 +123,7 @@ export async function handleChatTurn(req: ChatRequest, auth: AuthUserContext): P
   return {
     reply: aiReply,
     escalation: false,
-    conversationId
+    conversationId,
+    providerUsed: providerResponse.providerUsed
   };
 }

@@ -4,8 +4,8 @@ import { AIProvider, AIProviderContext } from "./types";
 import { logger } from "@/lib/logger";
 
 const groq = new Groq({ apiKey: serverEnv.GROQ_API_KEY });
-// LLaMA3-8b is fast, standard conversational fallback.
-const MODEL_NAME = "llama3-8b-8192";
+// LLaMA3.1-8b is fast, standard conversational fallback.
+const MODEL_NAME = "llama-3.1-8b-instant";
 
 export class GroqProvider implements AIProvider {
   async generateReply(context: AIProviderContext): Promise<string> {
