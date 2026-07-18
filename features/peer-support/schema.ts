@@ -6,3 +6,11 @@ export const submitMessageSchema = z.object({
 });
 
 export type SubmitMessagePayload = z.infer<typeof submitMessageSchema>;
+
+export const reportMessageSchema = z.object({
+  messageId: z.string().uuid("Invalid message ID"),
+  reasonSlug: z.string().min(1, "Reason is required"),
+  details: z.string().max(1000, "Details too long").optional(),
+});
+
+export type ReportMessagePayload = z.infer<typeof reportMessageSchema>;

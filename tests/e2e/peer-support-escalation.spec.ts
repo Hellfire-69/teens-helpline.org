@@ -3,6 +3,12 @@ import { test, expect } from '@playwright/test';
 test.describe('Peer Support Safety Pipeline API E2E', () => {
   // We use the API context to directly hit the endpoints since the UI isn't built yet
   
+  test.beforeEach(async ({ request }) => {
+    // Inject a mock authenticated session context to fix the 401 error
+    const authRes = await request.post('/api/auth/anonymous');
+    expect(authRes.ok()).toBeTruthy();
+  });
+
   test('Risk signals in peer message trigger immediate escalation response and do not persist', async ({ request }) => {
     // 1. Create a session
     const sessionRes = await request.post('/api/peer-support/session');

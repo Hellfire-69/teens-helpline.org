@@ -3,7 +3,7 @@ import { checkRiskSignal, logEscalationEvent } from "@/features/nova";
 import sanitizeHtml from "sanitize-html";
 import { logger } from "@/lib/logger";
 
-const MODERATION_REGEX = /(fuck|shit|bitch|asshole|cunt|slut|whore|fag|nigger|kill|die)/i;
+const MODERATION_REGEX = /(fuck|shit|bitch|asshole|cunt|slut|whore|fag|nigger)/i;
 
 /**
  * Creates a new peer support session in the 'active' state (MVP: "waiting for peer").
@@ -104,4 +104,35 @@ export async function submitMessage(
     escalated: false,
     messageData: data,
   };
+}
+
+/**
+ * Reports a peer support message.
+ */
+export async function reportMessage(
+  messageId: string,
+  reasonSlug: string,
+  details: string | undefined,
+  reporterId: string | null
+) {
+  const adminClient = createAdminClient();
+
+  const { data, error } = await adminClient
+    .from("reports")
+    .insert({
+      reporter_id: reporterId, // Null if anonymous, as designed in Stage 2
+      reported_entity: "peer_message",
+      entity_id: messageId,
+      reason_slug: reasonSlug,
+      details: details,
+      status: "pending",
+    })
+    .select("id")
+    .single();
+
+  if (error) {
+    throw new Error(`Failed to submit report: ${error.message}`);
+  }
+
+  return data;
 }
