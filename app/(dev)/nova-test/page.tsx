@@ -48,8 +48,8 @@ export default function NovaTestPage() {
         { role: "user", content: userMessage },
         { role: "assistant", content: data.data.reply + (data.data.escalation ? " [ESCALATION TRIGGERED]" : "") }
       ]);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to fetch");
     } finally {
       setLoading(false);
     }

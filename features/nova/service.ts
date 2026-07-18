@@ -57,10 +57,13 @@ export async function handleChatTurn(req: ChatRequest, auth: AuthUserContext): P
   if (isAnonymous) {
     history = (req.recentHistory || []).slice(-6); // Server-side cap for anonymous
   } else {
-    // Persistent user
+    // Persistent user — userId is guaranteed non-null here (isAnonymous = !userId)
+    if (!userId) {
+      throw new Error("Invariant violation: non-anonymous user has no userId");
+    }
     if (!conversationId) {
       // Create new conversation, defaulting to big_brother for MVP
-      conversationId = await createConversation(supabase, userId!, "big_brother");
+      conversationId = await createConversation(supabase, userId, "big_brother");
     } else {
       history = await getRecentConversationHistory(supabase, conversationId, 6);
     }

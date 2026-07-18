@@ -30,7 +30,7 @@ export default function MoodTestPage() {
   
   // API State
   const [loading, setLoading] = useState(false);
-  const [response, setResponse] = useState<any>(null);
+  const [response, setResponse] = useState<Record<string, unknown> | null>(null);
   const [apiError, setApiError] = useState("");
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export default function MoodTestPage() {
     return () => subscription.unsubscribe();
   }, [supabase.auth]);
 
-  const updateAuthState = (user: any) => {
+  const updateAuthState = (user: { id: string; is_anonymous?: boolean; email?: string } | null) => {
     if (!user) {
       setAuthState("Guest");
       setUserEmail(null);
@@ -65,7 +65,7 @@ export default function MoodTestPage() {
 
   const handleRegister = async () => {
     setAuthError("");
-    const { data, error } = await supabase.auth.signUp({ email: emailInput, password: passwordInput });
+    const { error } = await supabase.auth.signUp({ email: emailInput, password: passwordInput });
     if (error) {
       setAuthError(error.message);
     } else {
@@ -112,8 +112,9 @@ export default function MoodTestPage() {
 
       const data = await res.json();
       setResponse(data);
-    } catch (err: any) {
-      setApiError(err.message || "Failed to fetch");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Failed to fetch";
+      setApiError(message);
     } finally {
       setLoading(false);
     }

@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 import { chatRequestSchema } from "@/features/nova/schema";
 import { handleChatTurn } from "@/features/nova/service";
 import { getCurrentUserWithRole } from "@/features/auth/service";
@@ -27,8 +27,9 @@ export async function POST(req: NextRequest): Promise<Response> {
       success: true,
       data: chatResponse
     });
-  } catch (error: any) {
-    console.error("Chat API error:", error);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unexpected error";
+    console.error("Chat API error:", message);
     return Response.json({ 
       success: false, 
       error: { code: "INTERNAL_ERROR", message: "An unexpected error occurred processing your message." } 
