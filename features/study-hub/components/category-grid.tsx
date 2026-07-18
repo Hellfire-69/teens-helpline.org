@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ResourceCategory } from "@/features/study-hub/types";
+import type { ResourceCategory } from "@/features/study-hub/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 

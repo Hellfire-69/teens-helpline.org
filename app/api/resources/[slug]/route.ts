@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { getResource } from "@/features/study-hub/service";
 
 export async function GET(
@@ -19,8 +20,9 @@ export async function GET(
     }
 
     return NextResponse.json({ data: resource });
-  } catch (error: any) {
-    console.error(`[GET /api/resources/[slug]] Error:`, error);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(`[GET /api/resources/[slug]] Error:`, message);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

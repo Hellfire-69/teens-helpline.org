@@ -30,7 +30,15 @@ export default function MoodTestPage() {
   
   // API State
   const [loading, setLoading] = useState(false);
-  const [response, setResponse] = useState<Record<string, unknown> | null>(null);
+  type MoodApiResponse = {
+    data?: {
+      escalation?: boolean;
+      recommendationCategory?: string;
+      [key: string]: unknown;
+    };
+    [key: string]: unknown;
+  };
+  const [response, setResponse] = useState<MoodApiResponse | null>(null);
   const [apiError, setApiError] = useState("");
 
   useEffect(() => {
@@ -208,7 +216,7 @@ export default function MoodTestPage() {
             {JSON.stringify(response, null, 2)}
           </pre>
           
-          {response.data && !response.data.escalation && (
+          {response?.data && !response.data.escalation && (
             <div style={{ marginTop: "15px" }}>
               <h4>Study Hub Deep Link Test</h4>
               <button 
@@ -222,7 +230,7 @@ export default function MoodTestPage() {
                     "Bullying": "bullying",
                   };
                   const category = concernToSlug[concern] || "";
-                  const contentType = response.data.recommendationCategory;
+                  const contentType = response?.data?.recommendationCategory;
                   
                   if (contentType === "peer-support") {
                     window.location.href = "/peer-support";

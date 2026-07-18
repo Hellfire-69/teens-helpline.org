@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Resource, ResourceCategory } from "@/features/study-hub/types";
+import type { Resource, ResourceCategory } from "@/features/study-hub/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { EyeSlash, ArrowRight } from "@phosphor-icons/react";
 

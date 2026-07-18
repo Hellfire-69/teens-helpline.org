@@ -1,7 +1,7 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
-import { motion, HTMLMotionProps } from "motion/react"
+import { motion, type HTMLMotionProps } from "motion/react"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
@@ -59,7 +59,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         whileTap={{ scale: 0.97 }}
         transition={{ type: "spring", stiffness: 420, damping: 32 }}
         disabled={props.disabled || isLoading}
-        {...(props as any)}
+        {...(props as HTMLMotionProps<"button">)}
       >
         {isLoading ? (
           <span className="flex space-x-1">

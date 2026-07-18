@@ -1,10 +1,10 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getCategories, getResources } from "@/features/study-hub/service";
 import { ResourceCard } from "@/features/study-hub/components/resource-card";
 import { ArrowLeft } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
-import { ResourceCategory } from "@/features/study-hub/types";
+import type { ResourceCategory, Resource } from "@/features/study-hub/types";
 
 // ISR strategy per TRD §18
 export const revalidate = 3600;
@@ -61,7 +61,7 @@ export default async function CategoryPage(
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-4 md:gap-space-6">
-          {resources.map((resource: any) => (
+          {resources.map((resource: Resource) => (
             <ResourceCard key={resource.id} resource={resource} />
           ))}
         </div>

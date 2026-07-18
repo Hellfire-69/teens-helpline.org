@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { motion } from "motion/react"
+import { motion, type HTMLMotionProps } from "motion/react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
@@ -39,12 +39,12 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     if (interactive) {
       return (
         <motion.div
-          ref={ref as any}
+          ref={ref as React.RefObject<HTMLDivElement>}
           className={cn(cardVariants({ variant, radius, className }))}
           whileHover={{ y: -2, boxShadow: "0 4px 12px rgba(28,27,41,0.08), 0 2px 4px rgba(28,27,41,0.04)" }}
           whileTap={{ scale: 0.98 }}
           transition={{ duration: 0.18, ease: "easeOut" }}
-          {...(props as any)}
+          {...(props as HTMLMotionProps<"div">)}
         />
       )
     }

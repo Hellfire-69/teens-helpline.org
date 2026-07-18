@@ -5,19 +5,19 @@ import dotenv from "dotenv";
 
 dotenv.config({ path: ".env.local" });
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!; // Must use service role to bypass RLS for seeding
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ""; // Must use service role to bypass RLS for seeding
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 function parseMarkdown(fileContent: string) {
   const match = fileContent.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
-  if (!match) throw new Error("Could not parse frontmatter");
+  if (!match || !match[1] || !match[2]) throw new Error("Could not parse frontmatter");
 
   const frontmatterStr = match[1];
   const content = match[2].trim();
 
-  const frontmatter: Record<string, any> = {};
+  const frontmatter: Record<string, unknown> = {};
   frontmatterStr.split("\n").forEach((line) => {
     const trimmed = line.trim();
     if (!trimmed) return;
@@ -25,16 +25,16 @@ function parseMarkdown(fileContent: string) {
     if (colonIdx === -1) return;
     
     const key = trimmed.slice(0, colonIdx).trim();
-    let value = trimmed.slice(colonIdx + 1).trim();
+    const valueStr = trimmed.slice(colonIdx + 1).trim();
     
-    if (value === "null") {
+    if (valueStr === "null") {
       frontmatter[key] = null;
-    } else if (value.startsWith('"') && value.endsWith('"')) {
-      frontmatter[key] = value.slice(1, -1);
-    } else if (value.startsWith("'") && value.endsWith("'")) {
-      frontmatter[key] = value.slice(1, -1);
+    } else if (valueStr.startsWith('"') && valueStr.endsWith('"')) {
+      frontmatter[key] = valueStr.slice(1, -1);
+    } else if (valueStr.startsWith("'") && valueStr.endsWith("'")) {
+      frontmatter[key] = valueStr.slice(1, -1);
     } else {
-      frontmatter[key] = value;
+      frontmatter[key] = valueStr;
     }
   });
 
@@ -69,22 +69,23 @@ async function run() {
       
       const { frontmatter, content } = parseMarkdown(fileContent);
 
-      const categoryId = categoryMap[frontmatter.concern_category];
+      const categorySlug = frontmatter.concern_category as string;
+      const categoryId = categoryMap[categorySlug];
       if (!categoryId) {
-        console.error(`Category ID not found for slug: ${frontmatter.concern_category}`);
+        console.error(`Category ID not found for slug: ${categorySlug}`);
         continue;
       }
 
       // Prepare payload
       const payload = {
-        title: frontmatter.title,
-        slug: frontmatter.slug,
-        summary: frontmatter.summary,
-        seo_description: frontmatter.seo_description,
-        content_warning_flag: frontmatter.content_warning !== null ? true : false,
-        content_warning_text: frontmatter.content_warning,
-        content_type: frontmatter.content_type,
-        content_tier: frontmatter.content_tier,
+        title: frontmatter.title as string,
+        slug: frontmatter.slug as string,
+        summary: frontmatter.summary as string,
+        seo_description: (frontmatter.seo_description as string) || null,
+        content_warning_flag: frontmatter.content_warning !== null && frontmatter.content_warning !== undefined,
+        content_warning_text: (frontmatter.content_warning as string) || null,
+        content_type: frontmatter.content_type as string,
+        content_tier: frontmatter.content_tier as string,
         published: true, // as instructed
         category_id: categoryId,
         content: content

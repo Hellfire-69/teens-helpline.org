@@ -1,11 +1,11 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getResource } from "@/features/study-hub/service";
 import { ArticleViewer } from "@/features/study-hub/components/article-viewer";
 import { ResourceCard } from "@/features/study-hub/components/resource-card";
 import { ArrowLeft, WarningCircle } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
-import { Resource } from "@/features/study-hub/types";
+import type { Resource } from "@/features/study-hub/types";
 
 // ISR strategy per TRD §18
 export const revalidate = 3600;
@@ -38,7 +38,7 @@ export default async function ArticleDetailPage(
 
   const resource = data as unknown as Resource & { 
     category: { slug: string, label: string }, 
-    related_resources: any[] 
+    related_resources: Resource[] 
   };
 
   // Ensure category matches to prevent duplicate URLs for the same resource

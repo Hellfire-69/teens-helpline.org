@@ -8,7 +8,7 @@ import { useState } from "react";
  * This is an unstyled, raw JSON viewer to verify the /api/resources endpoints against real data.
  */
 export default function StudyHubTestPage() {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<unknown>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [slug, setSlug] = useState("smoke-test-article");
@@ -21,8 +21,8 @@ export default function StudyHubTestPage() {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const json = await res.json();
       setData(json);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
     }
@@ -36,8 +36,8 @@ export default function StudyHubTestPage() {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const json = await res.json();
       setData(json);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
     }
@@ -77,7 +77,7 @@ export default function StudyHubTestPage() {
       
       {error && <div className="text-red-500 font-bold border border-red-200 bg-red-50 p-4 rounded">Error: {error}</div>}
 
-      {data && !loading && (
+      {!!data && !loading && (
         <div className="mt-4">
           <h2 className="font-bold mb-2">Result:</h2>
           <pre className="bg-gray-900 text-green-400 p-4 rounded overflow-auto max-h-[600px] shadow-inner">
