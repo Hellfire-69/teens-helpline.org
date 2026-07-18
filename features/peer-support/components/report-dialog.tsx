@@ -11,7 +11,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Select,
@@ -20,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { usePeerSession } from "../hooks/use-peer-session";
+import type { usePeerSession } from "../hooks/use-peer-session";
 
 const REPORT_REASONS = [
   { slug: "inappropriate_content", label: "Inappropriate Content" },

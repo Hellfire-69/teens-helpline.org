@@ -1,3 +1,4 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { checkRiskSignal, logEscalationEvent } from "@/features/nova";
 import sanitizeHtml from "sanitize-html";
@@ -11,7 +12,7 @@ const MODERATION_REGEX = /(fuck|shit|bitch|asshole|cunt|slut|whore|fag|nigger)/i
 export async function createOrJoinSession(userId: string | null, anonToken: string | null) {
   const adminClient = createAdminClient();
 
-  const payload: any = { status: "active" };
+  const payload: { status: string; user_id?: string; anon_token?: string } = { status: "active" };
   if (userId) {
     payload.user_id = userId;
   } else if (anonToken) {
@@ -59,7 +60,7 @@ export async function submitMessage(
   if (riskCheck.escalate && riskCheck.signal) {
     // Escalate immediately
     try {
-      await logEscalationEvent(adminClient as any, userId, "peer_chat", riskCheck.signal);
+      await logEscalationEvent(adminClient as SupabaseClient, userId, "peer_chat", riskCheck.signal);
     } catch (err) {
       logger.error("Failed to log escalation event to DB", { error: String(err) });
     }

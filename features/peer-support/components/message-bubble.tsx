@@ -7,7 +7,7 @@ export function MessageBubble({
   sessionHook
 }: {
   message: Message;
-  sessionHook: any; // We'll pass the usePeerSession return type
+  sessionHook: ReturnType<typeof usePeerSession>; // We'll pass the usePeerSession return type
 }) {
   const isMine = message.sender_ref === "user" || message.sender_ref === "anonymous";
 

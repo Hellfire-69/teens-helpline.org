@@ -25,7 +25,7 @@ describe("Peer Support Service", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    (createAdminClient as any).mockReturnValue(mockAdminClient);
+    vi.mocked(createAdminClient).mockReturnValue(mockAdminClient as unknown as ReturnType<typeof createAdminClient>);
   });
 
   describe("createOrJoinSession", () => {
@@ -51,7 +51,7 @@ describe("Peer Support Service", () => {
 
   describe("submitMessage", () => {
     it("should process a safe message correctly", async () => {
-      (checkRiskSignal as any).mockReturnValue({ escalate: false });
+      vi.mocked(checkRiskSignal).mockReturnValue({ escalate: false, signal: null });
       mockAdminClient.single.mockResolvedValue({
         data: { id: "msg-1", content: "hello", flagged: false, sender_ref: "user" },
         error: null,
@@ -71,7 +71,7 @@ describe("Peer Support Service", () => {
     });
 
     it("should sanitize HTML", async () => {
-      (checkRiskSignal as any).mockReturnValue({ escalate: false });
+      vi.mocked(checkRiskSignal).mockReturnValue({ escalate: false, signal: null });
       mockAdminClient.single.mockResolvedValue({ data: {}, error: null });
 
       await submitMessage("sess-1", "<script>alert(1)</script>hello", "user", "user-1");
@@ -84,7 +84,7 @@ describe("Peer Support Service", () => {
     });
 
     it("should flag messages with profanity", async () => {
-      (checkRiskSignal as any).mockReturnValue({ escalate: false });
+      vi.mocked(checkRiskSignal).mockReturnValue({ escalate: false, signal: null });
       mockAdminClient.single.mockResolvedValue({ data: {}, error: null });
 
       await submitMessage("sess-1", "this is dumb shit", "user", "user-1");
@@ -95,16 +95,16 @@ describe("Peer Support Service", () => {
     });
 
     it("should escalate immediately if risk signal is detected", async () => {
-      (checkRiskSignal as any).mockReturnValue({ escalate: true, signal: "suicide_risk" });
+      vi.mocked(checkRiskSignal).mockReturnValue({ escalate: true, signal: "suicidal_ideation" });
 
       const result = await submitMessage("sess-1", "I want to die", "user", "user-1");
 
-      expect(logEscalationEvent).toHaveBeenCalledWith(mockAdminClient, "user-1", "peer_chat", "suicide_risk");
+      expect(logEscalationEvent).toHaveBeenCalledWith(mockAdminClient, "user-1", "peer_chat", "suicidal_ideation");
       expect(mockAdminClient.update).toHaveBeenCalledWith({ status: "flagged" });
       expect(mockAdminClient.eq).toHaveBeenCalledWith("id", "sess-1");
       expect(mockAdminClient.insert).not.toHaveBeenCalled(); // Message is NOT persisted to peer_messages
       expect(result.escalated).toBe(true);
-      expect(result.reason).toBe("suicide_risk");
+      expect(result.reason).toBe("suicidal_ideation");
     });
   });
 });
