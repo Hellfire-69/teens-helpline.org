@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import type { Message } from "../hooks/use-peer-session";
+import type { Message, usePeerSession } from "../hooks/use-peer-session";
 import { ReportDialog } from "./report-dialog";
 
 export function MessageBubble({
