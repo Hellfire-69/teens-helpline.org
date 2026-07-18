@@ -350,7 +350,7 @@ Technical enforcement of the roles defined in PRD.md's User Permissions table, i
 | `/api/chat` | Nova conversation turn | Anonymous or logged-in session | Strict per-session AI limit |
 | `/api/mood` | Mood check-in submission + recommendation | Anonymous or logged-in session | Per-user/session limit |
 | `/api/resources` | Study Hub content + search | Public | Standard |
-| `/api/peer-support` | Peer session, messaging, report | Lightweight sign-up required | Standard |
+| `/api/peer-support/*` | Peer session, messaging, report (`/api/peer-support/report`) | Anonymous or logged-in session | Standard |
 | `/api/dashboard` | Teen/Parent dashboard data | Authenticated | Standard |
 | `/api/admin` | Reporting/escalation views *(Coming Soon)* | Admin role only | Standard, internal-only |
 | `/api/analytics` | Aggregate stats *(Phase 2, not built in MVP)* | Admin role only | N/A in MVP |
