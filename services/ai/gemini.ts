@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { serverEnv } from "@/lib/env";
-import { AIProvider, AIProviderContext } from "./types";
+import type { AIProvider, AIProviderContext } from "./types";
 import { logger } from "@/lib/logger";
 
 const genAI = new GoogleGenerativeAI(serverEnv.GEMINI_API_KEY);

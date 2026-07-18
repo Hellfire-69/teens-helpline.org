@@ -1,4 +1,4 @@
-import { AIProviderContext, ProviderResponse } from "./types";
+import type { AIProviderContext, ProviderResponse } from "./types";
 import { GeminiProvider } from "./gemini";
 import { GroqProvider } from "./groq";
 import { logger } from "@/lib/logger";

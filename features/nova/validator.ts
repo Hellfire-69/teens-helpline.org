@@ -1,4 +1,5 @@
-import { checkRiskSignal, RiskSignal } from "./escalation";
+import { checkRiskSignal } from "./escalation";
+import type { RiskSignal } from "./escalation";
 import { logger } from "@/lib/logger";
 
 export interface ValidationResult {
