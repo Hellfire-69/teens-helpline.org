@@ -1,11 +1,16 @@
-﻿/**
- * peer-support feature — Zod validation schemas stub
- *
- * Schemas are colocated with the feature (per AGENTS.md §8) and exported for
- * reuse on both client (React Hook Form) and server (Route Handler) sides.
- * Implemented on the corresponding feature branch.
- */
 import { z } from "zod";
 
-// Placeholder export so the module resolves without errors at scaffold stage.
-export const SchemaPlaceholder = z.object({});
+export const submitMessageSchema = z.object({
+  sessionId: z.string().uuid("Invalid session ID"),
+  content: z.string().min(1, "Message cannot be empty").max(2000, "Message is too long"),
+});
+
+export type SubmitMessagePayload = z.infer<typeof submitMessageSchema>;
+
+export const reportMessageSchema = z.object({
+  messageId: z.string().uuid("Invalid message ID"),
+  reasonSlug: z.string().min(1, "Reason is required"),
+  details: z.string().max(1000, "Details too long").optional(),
+});
+
+export type ReportMessagePayload = z.infer<typeof reportMessageSchema>;

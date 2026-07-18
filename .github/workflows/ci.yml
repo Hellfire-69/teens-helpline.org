@@ -121,17 +121,19 @@ jobs:
       - name: Build
         run: npm run build
 
-  # ─── E2E (Playwright) — disabled until safety-critical tests are written ──
-  # Enabled on feature/nova-conversation once the crisis banner, quick-exit,
-  # and Nova risk-signal E2E suite exist (TRD §29, AGENTS.md §12).
-  #
+  # ─── E2E (Playwright) ─────────────────────────────────────────────────────
   # IMPORTANT: This job MUST pass before any PR touching Nova, escalation, or
   # the crisis banner is merged — per AGENTS.md §12.
   e2e:
-    name: E2E Tests (Playwright) — skipped until safety suite is written
+    name: E2E Tests (Playwright)
     runs-on: ubuntu-latest
     needs: build
-    if: false  # Enable on feature/nova-conversation
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
