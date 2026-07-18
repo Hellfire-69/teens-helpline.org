@@ -187,7 +187,7 @@ How are you feeling today?
    Happy · Okay · Sad · Overwhelmed · Anxious
    ↓
 What brought you here?
-   Academic Stress · Family · Friends · Career · Identity · Bullying · Just Exploring
+   Academic Stress · Family · Friends · Career · Identity · Bullying · Anxiety (Emotional Overwhelm) · Behavioural Concerns · Just Exploring
    ↓
 Nova welcomes the user
 ```
@@ -336,7 +336,10 @@ The Study Hub replaces a generic resource library with content that works hand-i
 - Focus and productivity guidance
 - Academic stress content
 - Career exploration
-- Time management
+- Emotional overwhelm and anxiety
+- Family and friendship conflicts
+- Bullying and behavioural concerns
+- Confidence and identity
 - Blogs and videos
 - Helpful tools
 

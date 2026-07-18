@@ -163,7 +163,7 @@ Maps to TRD's conceptual `counsellor_bookings`. Renamed here to reflect that thi
 | Column | Type | Nullable | Default | Notes |
 |---|---|---|---|---|
 | `id` | uuid (PK) | No | gen_random_uuid() | |
-| `slug` | text | No | — | Unique, URL-safe (e.g. `academic-stress`, `bullying`, `faq`) |
+| `slug` | text | No | — | Unique, URL-safe (e.g. `academic-stress`, `bullying`, `family-concerns`, `friendships-relationships`, `emotional-overwhelm`, `behavioural-concerns`, `confidence-identity`, `career-exploration`, `faq`) |
 | `label` | text | No | — | Human-readable display name |
 | `audience` | text | No | `'teen'` | `teen`, `parent`, `teacher_educator` — this is what replaces the separate `teacher_resources`/`parent_resources` tables |
 | `created_at` | timestamptz | No | now() | |
@@ -177,7 +177,13 @@ Maps to TRD's conceptual `counsellor_bookings`. Renamed here to reflect that thi
 | `title` | text | No | — | |
 | `content` | text | No | — | Markdown/rich text body |
 | `content_warning_flag` | boolean | No | `false` | Per CRD content-governance requirements |
+| `content_warning_text` | text | Yes | null | Displayed on the blur-veil if flagged |
 | `published` | boolean | No | `false` | Draft/publish workflow for content review sign-off (TRD §6 Content Management) |
+| `slug` | text | No | — | Unique, URL-friendly identifier |
+| `content_type` | text | No | — | `article`, `breathing-exercise`, `study-hub-tool`, `journal` |
+| `content_tier` | text | No | — | `reviewed`, `seed_draft` |
+| `summary` | text | No | — | Short preview text for cards |
+| `seo_description` | text | Yes | null | Meta description for search engines |
 | `created_at` | timestamptz | No | now() | |
 | `updated_at` | timestamptz | No | now() | |
 

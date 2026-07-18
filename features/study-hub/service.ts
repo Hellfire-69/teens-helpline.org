@@ -1,10 +1,29 @@
-﻿/**
- * study-hub feature — service layer stub
- *
- * Study Hub stub. Content retrieval, search, and Nova-driven surfacing. Statically generated content where possible. Implemented on feature/study-hub.
- *
- * This file establishes the module boundary. No logic is implemented yet.
- * See TRD §6 for this module's full responsibility definition.
+/**
+ * study-hub feature — service layer
  */
+import type { GetResourcesQuery } from "./schema";
+import { fetchResources, fetchResourceBySlug, fetchRelatedResources, fetchCategories } from "./data";
 
-export {};
+export async function getCategories() {
+  return fetchCategories();
+}
+
+export async function getResources(query: GetResourcesQuery) {
+  return fetchResources(query);
+}
+
+export async function getResource(slug: string) {
+  const resource = await fetchResourceBySlug(slug);
+  
+  if (!resource) {
+    return null;
+  }
+
+  // Fetch related resources
+  const related = await fetchRelatedResources(resource.category_id, resource.id, 3);
+
+  return {
+    ...resource,
+    related_resources: related,
+  };
+}

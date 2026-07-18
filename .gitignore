@@ -46,3 +46,8 @@ next-env.d.ts
 
 # Temp scaffold directory (can be deleted)
 ../nextjs-scaffold/
+
+# Playwright
+playwright-report/
+test-results/
+.playwright-mcp/
