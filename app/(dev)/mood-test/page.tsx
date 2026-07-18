@@ -206,6 +206,45 @@ export default function MoodTestPage() {
           <pre style={{ whiteSpace: "pre-wrap", margin: 0 }}>
             {JSON.stringify(response, null, 2)}
           </pre>
+          
+          {response.data && !response.data.escalation && (
+            <div style={{ marginTop: "15px" }}>
+              <h4>Study Hub Deep Link Test</h4>
+              <button 
+                onClick={async () => {
+                  const concernToSlug: Record<string, string> = {
+                    "Academic Stress": "academic-stress",
+                    "Family": "family-concerns",
+                    "Friends": "friendships-relationships",
+                    "Career": "career-exploration",
+                    "Identity": "confidence-identity",
+                    "Bullying": "bullying",
+                  };
+                  const category = concernToSlug[concern] || "";
+                  const contentType = response.data.recommendationCategory;
+                  
+                  if (contentType === "peer-support") {
+                    window.location.href = "/peer-support";
+                    return;
+                  }
+                  
+                  // Fetch the matching resource via API
+                  const url = `/api/resources?limit=1${category ? `&category=${category}` : ""}&contentType=${contentType}`;
+                  const res = await fetch(url);
+                  const data = await res.json();
+                  
+                  if (data.success && data.data.length > 0) {
+                    const resource = data.data[0];
+                    window.location.href = `/study-hub/${resource.category.slug}/${resource.slug}`;
+                  } else {
+                    alert("No matching resource found for: " + url);
+                  }
+                }}
+              >
+                Go to Recommended Resource
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

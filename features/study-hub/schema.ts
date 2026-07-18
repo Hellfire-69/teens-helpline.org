@@ -1,11 +1,14 @@
-﻿/**
- * study-hub feature — Zod validation schemas stub
- *
- * Schemas are colocated with the feature (per AGENTS.md §8) and exported for
- * reuse on both client (React Hook Form) and server (Route Handler) sides.
- * Implemented on the corresponding feature branch.
+/**
+ * study-hub feature — Zod validation schemas
  */
 import { z } from "zod";
 
-// Placeholder export so the module resolves without errors at scaffold stage.
-export const SchemaPlaceholder = z.object({});
+export const getResourcesQuerySchema = z.object({
+  category: z.string().optional(),
+  contentType: z.enum(["article", "breathing-exercise", "study-hub-tool", "journal"]).optional(),
+  q: z.string().optional(),
+  cursor: z.string().optional(),
+  limit: z.coerce.number().min(1).max(50).default(10),
+});
+
+export type GetResourcesQuery = z.infer<typeof getResourcesQuerySchema>;

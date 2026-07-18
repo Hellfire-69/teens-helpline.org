@@ -1,18 +1,41 @@
-﻿/**
- * Study Hub content and search. Delegates to features/study-hub/service.ts.
- *
- * Scaffold stub — not yet implemented. Full implementation on the
- * corresponding feature branch per AGENTS.md §3 (plan → approval → implement).
- *
- * Every request must be Zod-validated before reaching service logic (TRD §11).
- * Response envelope must match TRD §13 format.
- */
-import type { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { getResources } from "@/features/study-hub/service";
+import { getResourcesQuerySchema } from "@/features/study-hub/schema";
 
-export async function POST(_req: NextRequest): Promise<Response> {
-  return Response.json({ success: false, error: { code: "NOT_IMPLEMENTED", message: "This endpoint is scaffolded but not yet implemented." } }, { status: 501 });
-}
+export async function GET(request: NextRequest) {
+  try {
+    const searchParams = request.nextUrl.searchParams;
+    const queryParams = Object.fromEntries(searchParams.entries());
 
-export async function GET(_req: NextRequest): Promise<Response> {
-  return Response.json({ success: false, error: { code: "NOT_IMPLEMENTED", message: "This endpoint is scaffolded but not yet implemented." } }, { status: 501 });
+    // Validation
+    const parsedQuery = getResourcesQuerySchema.safeParse(queryParams);
+    if (!parsedQuery.success) {
+      return NextResponse.json(
+        { error: "Invalid query parameters", details: parsedQuery.error.format() },
+        { status: 400 }
+      );
+    }
+
+    const resources = await getResources(parsedQuery.data);
+
+    // Compute next cursor for pagination
+    let nextCursor = null;
+    if (resources && resources.length === parsedQuery.data.limit) {
+      const lastResource = resources[resources.length - 1];
+      if (lastResource) {
+        nextCursor = `${lastResource.created_at},${lastResource.id}`;
+      }
+    }
+
+    return NextResponse.json({
+      data: resources,
+      nextCursor,
+    });
+  } catch (error: any) {
+    console.error("[GET /api/resources] Error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
 }
