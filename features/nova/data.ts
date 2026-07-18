@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { RiskSignal } from "./escalation";
+import type { RiskSignal } from "./escalation";
 
 export async function logEscalationEvent(
   supabase: SupabaseClient, // Still passed but we'll use adminClient for this specific table

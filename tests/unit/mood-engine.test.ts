@@ -1,7 +1,6 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { processMoodEntry } from "@/features/mood-engine/service";
 import { moodRequestSchema } from "@/features/mood-engine/schema";
-import * as escalation from "@/features/nova/escalation";
 
 describe("Mood Engine Unit Tests", () => {
   describe("processMoodEntry", () => {

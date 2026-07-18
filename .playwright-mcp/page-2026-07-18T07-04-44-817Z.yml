@@ -1,0 +1,11 @@
+- generic [ref=e2]:
+  - 'heading "DEV ONLY: Study Hub Smoke Test" [level=1] [ref=e3]'
+  - paragraph [ref=e4]:
+    - text: This page tests the
+    - code [ref=e5]: /api/resources
+    - text: API.
+  - generic [ref=e6]:
+    - button "Fetch All Resources (GET /api/resources)" [ref=e7] [cursor=pointer]
+    - generic [ref=e8]:
+      - textbox "slug..." [ref=e9]: smoke-test-article
+      - button "Fetch by Slug" [ref=e10] [cursor=pointer]
