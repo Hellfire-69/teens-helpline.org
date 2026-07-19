@@ -6,15 +6,24 @@ import { NovaAvatar } from "@/features/nova/components/nova-avatar";
 import { ChatMessage } from "@/features/nova/components/chat-message";
 import { ChatComposer } from "@/features/nova/components/chat-composer";
 import { PersonaSwitcher } from "@/features/nova/components/persona-switcher";
-import { motion, AnimatePresence } from "motion/react";
+import { PERSONA_THEMES } from "@/features/nova/persona-theme";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { WarningCircle, Lightning, Leaf, Brain } from "@phosphor-icons/react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 export default function ChatPage() {
-  const { messages, setMessages, setConversationId, sendMessage, isEscalated, error, status, setActivePersona } = useNovaStore();
+  const { messages, setMessages, setConversationId, sendMessage, isEscalated, error, status, setActivePersona, activePersona } = useNovaStore();
   const [initialLoading, setInitialLoading] = useState(true);
+  const [waveTrigger, setWaveTrigger] = useState(0);
+  const shouldReduceMotion = useReducedMotion();
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (activePersona) {
+      setWaveTrigger(prev => prev + 1);
+    }
+  }, [activePersona]);
 
   useEffect(() => {
     // Fetch conversation history on mount
@@ -56,14 +65,95 @@ export default function ChatPage() {
     );
   }
 
-  const starterChips = [
-    { text: "I'm feeling really overwhelmed right now", icon: Lightning },
-    { text: "Can we practice a grounding exercise?", icon: Leaf },
-    { text: "I need help untangling my thoughts", icon: Brain }
-  ];
+  const activeTheme = PERSONA_THEMES[activePersona] || PERSONA_THEMES.big_brother;
+  const chipIcons = [Lightning, Leaf, Brain];
+  const starterChips = activeTheme.starterPrompts.map((text, idx) => ({
+    text,
+    icon: chipIcons[idx] || Brain
+  }));
 
   return (
     <div className="relative flex flex-col h-[calc(100vh-140px)] w-full overflow-hidden pt-4">
+      {/* 1. Visual connection wave sweeping from the selector to the entire scene */}
+      <AnimatePresence>
+        {!shouldReduceMotion && (
+          <motion.div
+            key={`wave-${waveTrigger}`}
+            initial={{ scale: 0.05, opacity: 0 }}
+            animate={{ 
+              scale: [0.05, 3],
+              opacity: [0, 0.45, 0.25, 0]
+            }}
+            transition={{ duration: 1.4, ease: "easeOut" }}
+            className="absolute top-0 right-0 w-[60dvw] h-[60dvw] rounded-radius-full pointer-events-none -z-10 blur-[110px]"
+            style={{
+              background: `radial-gradient(circle at 100% 0%, ${activeTheme.colorHex} 0%, ${activeTheme.secondaryColorHex}50 40%, transparent 80%)`,
+              transformOrigin: "top right"
+            }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* 2. Dynamic Ambient Background Mesh Glow (Breathes slowly, reacts to status) */}
+      <motion.div 
+        className="absolute inset-0 pointer-events-none overflow-hidden -z-20"
+        animate={{
+          opacity: status === "responding" 
+            ? 0.4 
+            : status === "listening" 
+              ? 0.2 
+              : 0.3,
+          scale: shouldReduceMotion ? 1 : (status === "responding" ? 1.03 : status === "listening" ? 0.97 : 1)
+        }}
+        transition={shouldReduceMotion ? { duration: 0 } : { type: "spring", stiffness: 80, damping: 20 }}
+      >
+        <motion.div 
+          className="absolute -top-[10%] -left-[10%] w-[60%] h-[60%] rounded-radius-full blur-[130px]"
+          animate={shouldReduceMotion ? { backgroundColor: activeTheme.colorHex } : { 
+            backgroundColor: activeTheme.colorHex,
+            scale: [1, 1.05, 0.95, 1],
+            x: [0, 15, -15, 0],
+            y: [0, -10, 10, 0]
+          }}
+          transition={shouldReduceMotion ? { duration: 0 } : {
+            backgroundColor: { type: "spring", stiffness: 60, damping: 24 },
+            scale: { duration: 18, repeat: Infinity, ease: "easeInOut" },
+            x: { duration: 24, repeat: Infinity, ease: "easeInOut" },
+            y: { duration: 20, repeat: Infinity, ease: "easeInOut" }
+          }}
+        />
+        <motion.div 
+          className="absolute top-[25%] -right-[15%] w-[65%] h-[65%] rounded-radius-full blur-[140px]"
+          animate={shouldReduceMotion ? { backgroundColor: activePersona === "mentor" ? "#FAF9FC" : "#6B5B95" } : { 
+            backgroundColor: activePersona === "mentor" ? "#FAF9FC" : "#6B5B95",
+            scale: [1, 0.95, 1.05, 1],
+            x: [0, -20, 20, 0],
+            y: [0, 15, -15, 0]
+          }}
+          transition={shouldReduceMotion ? { duration: 0 } : {
+            backgroundColor: { type: "spring", stiffness: 50, damping: 22 },
+            scale: { duration: 22, repeat: Infinity, ease: "easeInOut" },
+            x: { duration: 28, repeat: Infinity, ease: "easeInOut" },
+            y: { duration: 26, repeat: Infinity, ease: "easeInOut" }
+          }}
+        />
+        <motion.div 
+          className="absolute -bottom-[15%] left-[10%] w-[55%] h-[55%] rounded-radius-full blur-[120px]"
+          animate={shouldReduceMotion ? { backgroundColor: activePersona === "best_friend" ? "#FAF9FC" : activeTheme.colorHex } : { 
+            backgroundColor: activePersona === "best_friend" ? "#FAF9FC" : activeTheme.colorHex,
+            scale: [1, 1.03, 0.97, 1],
+            x: [0, 10, -10, 0],
+            y: [0, -8, 8, 0]
+          }}
+          transition={shouldReduceMotion ? { duration: 0 } : {
+            backgroundColor: { type: "spring", stiffness: 55, damping: 20 },
+            scale: { duration: 16, repeat: Infinity, ease: "easeInOut" },
+            x: { duration: 20, repeat: Infinity, ease: "easeInOut" },
+            y: { duration: 18, repeat: Infinity, ease: "easeInOut" }
+          }}
+        />
+      </motion.div>
+
       <div className="absolute top-2 right-4 z-50 md:top-4 md:right-8">
         <PersonaSwitcher />
       </div>
@@ -93,14 +183,19 @@ export default function ChatPage() {
                     key={idx}
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.15 + idx * 0.08, type: "spring", stiffness: 300, damping: 30 }}
-                    whileHover={{ y: -2 }}
-                    whileTap={{ scale: 0.97 }}
+                    transition={shouldReduceMotion ? { duration: 0.15 } : { delay: 0.15 + idx * 0.08, type: "spring", stiffness: 300, damping: 30 }}
+                    whileHover={shouldReduceMotion ? undefined : { y: -2, borderColor: activeTheme.colorHex }}
+                    whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
                     onClick={() => sendMessage(chip.text)}
                     aria-label={`Start conversation: ${chip.text}`}
-                    className="flex flex-col items-center text-center p-space-4 bg-white/50 dark:bg-black/20 hover:bg-white/80 dark:hover:bg-black/40 border border-white/20 dark:border-white/10 rounded-radius-lg shadow-sm transition-colors duration-[180ms] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aurora-sea focus-visible:ring-offset-2"
+                    className={`flex flex-col items-center text-center p-space-4 bg-white/50 dark:bg-black/20 hover:bg-white/80 dark:hover:bg-black/40 border border-white/20 dark:border-white/10 rounded-radius-lg shadow-sm transition-colors duration-[180ms] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+                      activePersona === "big_brother" ? "focus-visible:ring-aurora-sea" :
+                      activePersona === "big_sister" ? "focus-visible:ring-aurora-blush" :
+                      activePersona === "mentor" ? "focus-visible:ring-aurora-dusk" :
+                      "focus-visible:ring-aurora-dawn"
+                    }`}
                   >
-                    <chip.icon weight="duotone" className="w-6 h-6 text-aurora-sea mb-space-3" aria-hidden="true" />
+                    <chip.icon weight="duotone" className={`w-6 h-6 mb-space-3 ${activeTheme.textClass}`} aria-hidden="true" />
                     <span className="text-type-body-sm font-medium text-ink-900 dark:text-white leading-tight">{chip.text}</span>
                   </motion.button>
                 ))}

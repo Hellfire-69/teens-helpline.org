@@ -2,14 +2,17 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useNovaStore } from "../store";
+import { PERSONA_THEMES } from "../persona-theme";
 import { PaperPlaneRight, Stop } from "@phosphor-icons/react";
 import { motion, AnimatePresence } from "motion/react";
 import TextareaAutosize from "react-textarea-autosize";
 
 export function ChatComposer() {
   const [input, setInput] = useState("");
-  const { sendMessage, status } = useNovaStore();
+  const { sendMessage, status, activePersona, setStatus } = useNovaStore();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  
+  const activeTheme = PERSONA_THEMES[activePersona] || PERSONA_THEMES.big_brother;
 
   const isResponding = status === "responding";
 
@@ -18,7 +21,7 @@ export function ChatComposer() {
     if (!isResponding && textareaRef.current) {
       textareaRef.current.focus();
     }
-  }, [isResponding]);
+  }, [isResponding, setStatus]);
 
   const handleSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -44,13 +47,19 @@ export function ChatComposer() {
       >
         <form 
           onSubmit={handleSubmit}
-          className="relative flex items-end gap-space-3 bg-white/80 dark:bg-black/60 backdrop-blur-[24px] shadow-sm border border-white/40 dark:border-white/10 rounded-radius-2xl p-2 pl-4 md:p-3 md:pl-5 transition-shadow focus-within:shadow-md focus-within:border-white/60 dark:focus-within:border-white/20"
+          className={`relative flex items-end gap-space-3 bg-white/80 dark:bg-black/60 backdrop-blur-[24px] shadow-sm border border-white/40 dark:border-white/10 rounded-radius-2xl p-2 pl-4 md:p-3 md:pl-5 transition-all duration-base focus-within:shadow-md focus-within:ring-2 ${activeTheme.focusRingClass}`}
         >
           <TextareaAutosize
             ref={textareaRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
+            onFocus={() => {
+              if (status === "resting") setStatus("listening");
+            }}
+            onBlur={() => {
+              if (status === "listening") setStatus("resting");
+            }}
             placeholder="Message Nova..."
             minRows={1}
             maxRows={5}
