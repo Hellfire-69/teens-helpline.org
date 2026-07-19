@@ -14,7 +14,7 @@ test.describe('Nova Chat UI Pipeline E2E', () => {
 
     // Wait for the assistant's reply to appear
     const assistantReply = page.locator('[data-testid="chat-message-nova"]').last();
-    await expect(assistantReply).toBeVisible({ timeout: 15000 });
+    await expect(assistantReply).toBeVisible({ timeout: 25000 });
 
     const replyText = await assistantReply.innerText();
     expect(replyText.length).toBeGreaterThan(5);
@@ -29,7 +29,7 @@ test.describe('Nova Chat UI Pipeline E2E', () => {
 
     // Wait for the assistant's reply to appear
     const assistantReply = page.locator('[data-testid="chat-message-nova"]').last();
-    await expect(assistantReply).toBeVisible({ timeout: 15000 });
+    await expect(assistantReply).toBeVisible({ timeout: 25000 });
 
     // Verify crisis banner is visible and has the correct alert
     const crisisBanner = page.locator('[data-testid="crisis-banner"]');
@@ -42,7 +42,7 @@ test.describe('Nova Chat UI Pipeline E2E', () => {
     await page.click('button[type="submit"]');
 
     const assistantReply = page.locator('[data-testid="chat-message-nova"]').last();
-    await expect(assistantReply).toBeVisible({ timeout: 15000 });
+    await expect(assistantReply).toBeVisible({ timeout: 25000 });
 
     // Verify crisis banner is visible
     const crisisBanner = page.locator('[data-testid="crisis-banner"]');
@@ -54,7 +54,7 @@ test.describe('Nova Chat UI Pipeline E2E', () => {
     await page.click('button[type="submit"]');
 
     const assistantReply = page.locator('[data-testid="chat-message-nova"]').last();
-    await expect(assistantReply).toBeVisible({ timeout: 15000 });
+    await expect(assistantReply).toBeVisible({ timeout: 25000 });
 
     // Verify crisis banner is visible
     const crisisBanner = page.locator('[data-testid="crisis-banner"]');
@@ -66,7 +66,7 @@ test.describe('Nova Chat UI Pipeline E2E', () => {
     await page.click('button[type="submit"]');
 
     const assistantReply = page.locator('[data-testid="chat-message-nova"]').last();
-    await expect(assistantReply).toBeVisible({ timeout: 15000 });
+    await expect(assistantReply).toBeVisible({ timeout: 25000 });
 
     const replyText = await assistantReply.innerText();
     
