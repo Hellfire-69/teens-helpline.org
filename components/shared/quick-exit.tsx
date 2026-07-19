@@ -14,6 +14,7 @@ export function QuickExit() {
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
+      transition={{ type: "spring", stiffness: 300, damping: 30 }}
       className="fixed bottom-6 right-6 z-50"
     >
       <Button

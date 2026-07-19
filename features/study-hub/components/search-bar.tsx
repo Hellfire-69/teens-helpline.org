@@ -3,8 +3,6 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { MagnifyingGlass } from "@phosphor-icons/react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 
 export function SearchBar() {
   const router = useRouter();
@@ -22,23 +20,18 @@ export function SearchBar() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="relative flex w-full max-w-md items-center gap-space-2">
-      <div className="relative flex-1">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <MagnifyingGlass size={20} className="text-ink-300" weight="duotone" />
-        </div>
-        <Input
-          type="text"
-          placeholder="Search articles and tools..."
-          aria-label="Search query"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="pl-10"
-        />
+    <form onSubmit={handleSubmit} className="relative flex w-full max-w-md items-center group">
+      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-ink-400 group-focus-within:text-aurora-sea transition-colors">
+        <MagnifyingGlass weight="bold" className="w-5 h-5" />
       </div>
-      <Button type="submit" variant="secondary" size="md">
-        Search
-      </Button>
+      <input
+        type="text"
+        placeholder="Search articles and tools..."
+        aria-label="Search query"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        className="w-full bg-white/60 dark:bg-black/40 backdrop-blur-md border border-white/40 dark:border-white/10 rounded-radius-full py-3 pl-12 pr-4 text-type-body-md text-ink-900 dark:text-white placeholder:text-ink-400 focus:outline-none focus:ring-2 focus:ring-aurora-sea/50 focus:bg-white dark:focus:bg-night-950 transition-all shadow-sm"
+      />
     </form>
   );
 }

@@ -16,6 +16,7 @@ export function CrisisBanner() {
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
+      transition={{ type: "spring", stiffness: 260, damping: 34, bounce: 0 }}
       className="bg-signal-crisis/10 border-b border-signal-crisis/20 px-4 py-3 shadow-glow-crisis backdrop-blur-md"
     >
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
