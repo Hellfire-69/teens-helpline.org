@@ -81,6 +81,8 @@ export function ChatComposer() {
                   whileHover={{ scale: input.trim() ? 1.05 : 1 }}
                   whileTap={{ scale: input.trim() ? 0.95 : 1 }}
                   type="submit"
+                  onClick={handleSubmit}
+                  data-testid="send-button"
                   disabled={!input.trim()}
                   className="w-10 h-10 md:w-12 md:h-12 rounded-radius-full flex items-center justify-center bg-aurora-sea text-white disabled:opacity-40 disabled:bg-ink-200 dark:disabled:bg-ink-800 disabled:text-ink-400 dark:disabled:text-ink-500 transition-colors shadow-sm"
                 >
