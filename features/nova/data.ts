@@ -68,3 +68,44 @@ export async function getRecentConversationHistory(supabase: SupabaseClient, con
     content: msg.content
   }));
 }
+
+export async function getLatestConversationWithHistory(
+  supabase: SupabaseClient, 
+  userId: string, 
+  limit: number = 20
+) {
+  // 1. Get the user's most recent conversation ID
+  const { data: convData, error: convError } = await supabase
+    .from("nova_conversations")
+    .select("id")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (convError) throw new Error("Failed to fetch latest conversation: " + convError.message);
+  
+  // If no previous conversation exists, return null values
+  if (!convData) return { conversationId: null, messages: [] };
+
+  const conversationId = convData.id;
+
+  // 2. Fetch the bounded history for that conversation
+  const { data: msgData, error: msgError } = await supabase
+    .from("conversation_messages")
+    .select("sender, content")
+    .eq("conversation_id", conversationId)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  if (msgError) throw new Error("Failed to fetch history: " + msgError.message);
+
+  // Return in chronological order for the UI
+  return {
+    conversationId,
+    messages: msgData.reverse().map(msg => ({
+      role: msg.sender === "nova" ? "assistant" : "user",
+      content: msg.content
+    }))
+  };
+}
