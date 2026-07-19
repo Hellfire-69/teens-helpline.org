@@ -3,6 +3,11 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { checkRiskSignal, logEscalationEvent } from "@/features/nova";
 import sanitizeHtml from "sanitize-html";
 import { logger } from "@/lib/logger";
+import { getUserSessions as fetchUserSessions } from "./data";
+
+export async function getUserSessions(userId: string) {
+  return fetchUserSessions(userId);
+}
 
 const MODERATION_REGEX = /(fuck|shit|bitch|asshole|cunt|slut|whore|fag|nigger)/i;
 

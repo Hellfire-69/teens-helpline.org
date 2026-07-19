@@ -1,11 +1,11 @@
 import { ChatInterface } from "@/features/peer-support/components/chat-interface";
 import type { Metadata } from "next";
 import { getCurrentUserWithRole } from "@/features/auth/service";
-import { AlertCircle } from "lucide-react";
+import { UsersThree, WarningCircle } from "@phosphor-icons/react/dist/ssr";
 
 export const metadata: Metadata = {
-  title: "Peer Support",
-  description: "Connect anonymously with a trained peer supporter.",
+  title: "Peer Support | TeensHelpline",
+  description: "Connect anonymously with a trained peer supporter who understands.",
 };
 
 export default async function PeerSupportPage() {
@@ -16,12 +16,16 @@ export default async function PeerSupportPage() {
     const comingSoonRoles = ["moderator", "admin", "counsellor", "teacher_educator"];
     if (comingSoonRoles.includes(auth.profile.role)) {
       return (
-        <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
-          <div className="bg-muted/50 p-6 rounded-2xl max-w-md border border-border">
-            <AlertCircle className="w-10 h-10 text-muted-foreground mx-auto mb-4" />
-            <h2 className="text-xl font-fraunces font-semibold mb-2">Not Yet Available</h2>
-            <p className="text-muted-foreground text-sm leading-relaxed">
-              The {auth.profile.role} dashboard and associated peer support routing are currently under development and will be available in a future update.
+        <div className="flex-1 flex flex-col items-center justify-center p-8 text-center min-h-[60vh]">
+          <div className="bg-white/60 dark:bg-night-950/60 border border-white/20 dark:border-white/10 p-space-8 rounded-radius-xl max-w-md shadow-sm">
+            <div className="w-14 h-14 rounded-radius-full bg-aurora-dusk/10 flex items-center justify-center mx-auto mb-space-6">
+              <WarningCircle weight="duotone" className="w-7 h-7 text-aurora-dusk" aria-hidden="true" />
+            </div>
+            <h2 className="text-type-title-lg font-fraunces font-semibold text-ink-900 dark:text-white mb-space-3">
+              Not Yet Available
+            </h2>
+            <p className="text-type-body-md text-ink-600 dark:text-ink-300 leading-relaxed">
+              The <span className="font-semibold capitalize">{auth.profile.role}</span> dashboard and peer support routing are currently under development. Check back soon.
             </p>
           </div>
         </div>
@@ -30,19 +34,25 @@ export default async function PeerSupportPage() {
   }
 
   return (
-    <div className="flex-1 flex flex-col p-4 md:p-8">
-      <div className="max-w-4xl mx-auto w-full mb-6">
-        <h1 className="text-3xl font-fraunces font-semibold text-foreground mb-2">
-          Peer Support
-        </h1>
-        <p className="text-muted-foreground">
-          Talk to someone who gets it. Our peer supporters are trained to listen and share their experiences without judgment.
+    <main className="flex flex-col py-space-6 px-4 md:px-space-8 w-full min-h-screen">
+      {/* Page header */}
+      <div className="max-w-4xl mx-auto w-full mb-space-6">
+        <div className="flex items-center gap-3 mb-space-2">
+          <div className="w-9 h-9 rounded-radius-full bg-aurora-blush/15 flex items-center justify-center shrink-0">
+            <UsersThree weight="fill" className="w-5 h-5 text-aurora-blush" aria-hidden="true" />
+          </div>
+          <h1 className="text-type-title-xl font-fraunces font-semibold text-ink-900 dark:text-white">
+            Peer Support
+          </h1>
+        </div>
+        <p className="text-type-body-md text-ink-600 dark:text-ink-300 max-w-xl pl-12">
+          Talk to someone who gets it — trained peers who listen without judgment.
         </p>
       </div>
       
-      <div className="flex-1 flex flex-col min-h-0 w-full">
+      <div className="flex-1 flex flex-col min-h-0 w-full max-w-4xl mx-auto">
         <ChatInterface />
       </div>
-    </div>
+    </main>
   );
 }

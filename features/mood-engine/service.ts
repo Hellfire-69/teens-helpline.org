@@ -2,8 +2,13 @@
  * mood-engine feature — service layer
  */
 import { checkRiskSignal } from "../nova/escalation";
+import { getUserMoodHistory as fetchUserMoodHistory } from "./data";
 import type { MoodRequest } from "./schema";
 import type { MoodEngineResult, RecommendationCategory } from "./types";
+
+export async function getUserMoodHistory(userId: string) {
+  return fetchUserMoodHistory(userId);
+}
 
 export function processMoodEntry(req: MoodRequest): MoodEngineResult {
   // 1. Stage 2: Check Escalation Layer on the note
