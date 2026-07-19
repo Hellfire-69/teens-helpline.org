@@ -6,13 +6,14 @@
  */
 
 import type { UserRole } from "@/types";
+import type { PersonaId } from "../nova/schema";
 
 export interface Profile {
   id: string;
   alias: string;
   age_band: string;
   role: UserRole;
-  preferred_persona: string | null;
+  preferred_persona: PersonaId | null;
   avatar_id: string | null;
   created_at: string;
 }

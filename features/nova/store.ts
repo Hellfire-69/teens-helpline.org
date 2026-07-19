@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import type { PersonaId } from "./schema";
 
 export type Message = {
   role: "user" | "assistant";
@@ -12,8 +13,10 @@ type NovaState = {
   conversationId: string | null;
   error: string | null;
   isEscalated: boolean; // Controls crisis banner display
+  activePersona: PersonaId;
   
   setMessages: (messages: Message[]) => void;
+  setActivePersona: (persona: PersonaId) => void;
   setConversationId: (id: string | null) => void;
   setStatus: (status: "resting" | "listening" | "responding") => void;
   setError: (error: string | null) => void;
@@ -28,8 +31,10 @@ export const useNovaStore = create<NovaState>((set, get) => ({
   conversationId: null,
   error: null,
   isEscalated: false,
+  activePersona: "big_brother",
 
   setMessages: (messages) => set({ messages }),
+  setActivePersona: (persona) => set({ activePersona: persona }),
   setConversationId: (id) => set({ conversationId: id }),
   setStatus: (status) => set({ status }),
   setError: (error) => set({ error }),
@@ -51,6 +56,7 @@ export const useNovaStore = create<NovaState>((set, get) => ({
         body: JSON.stringify({
           message: content,
           conversationId: conversationId || undefined,
+          persona: get().activePersona,
           recentHistory: recentHistory.length > 0 ? recentHistory : undefined,
         }),
       });

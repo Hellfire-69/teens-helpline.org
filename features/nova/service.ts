@@ -10,7 +10,8 @@ import {
   appendConversationMessage,
   getRecentConversationHistory,
 } from "./data";
-import type { ChatRequest } from "./schema";
+import type { ChatRequest, PersonaId } from "./schema";
+import { PERSONA_IDS } from "./schema";
 import type { AuthUserContext } from "../auth/types";
 import type { AIProviderContext } from "../../services/ai/types";
 
@@ -56,22 +57,35 @@ export async function handleChatTurn(req: ChatRequest, auth: AuthUserContext): P
 
   if (isAnonymous) {
     history = (req.recentHistory || []).slice(-6); // Server-side cap for anonymous
-  } else {
+  }
+  
+  // Resolve Persona
+  let resolvedPersona: PersonaId = "big_brother";
+  const requestedPersona = req.persona || auth.profile?.preferred_persona;
+  
+  if (requestedPersona) {
+    if (PERSONA_IDS.includes(requestedPersona as PersonaId)) {
+      resolvedPersona = requestedPersona as PersonaId;
+    } else {
+      logger.warn(`Invalid persona requested: ${requestedPersona}, falling back to big_brother`);
+    }
+  }
+
+  if (!isAnonymous) {
     // Persistent user — userId is guaranteed non-null here (isAnonymous = !userId)
     if (!userId) {
       throw new Error("Invariant violation: non-anonymous user has no userId");
     }
     if (!conversationId) {
-      // Create new conversation, defaulting to big_brother for MVP
-      conversationId = await createConversation(supabase, userId, "big_brother");
+      // Create new conversation
+      conversationId = await createConversation(supabase, userId, resolvedPersona);
     } else {
       history = await getRecentConversationHistory(supabase, conversationId, 6);
     }
   }
 
   // 3. Stage 2: Prompt Builder
-  // We use Big Brother as the MVP default persona
-  let systemPrompt = buildSystemPrompt();
+  let systemPrompt = buildSystemPrompt(resolvedPersona);
 
   if (req.moodContext) {
     const moodStr = req.moodContext.note 

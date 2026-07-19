@@ -8,6 +8,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { Profile } from "./types";
+import type { PersonaId } from "../nova/schema";
 
 export async function createProfile(userId: string): Promise<Profile> {
   const adminClient = createAdminClient();
@@ -52,3 +53,19 @@ export async function getProfile(supabase: SupabaseClient, userId: string): Prom
 
   return data as Profile;
 }
+
+export async function updatePreferredPersona(
+  supabase: SupabaseClient, 
+  userId: string, 
+  personaId: PersonaId
+): Promise<void> {
+  const { error } = await supabase
+    .from("profiles")
+    .update({ preferred_persona: personaId })
+    .eq("id", userId);
+
+  if (error) {
+    throw new Error(`Failed to update preferred persona: ${error.message}`);
+  }
+}
+

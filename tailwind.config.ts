@@ -118,6 +118,9 @@ const config: Config = {
         lg: "0 12px 32px rgba(28,27,41,0.12), 0 4px 8px rgba(28,27,41,0.06)",
         // Glow shadows — reserved exclusively for Nova (sea) and crisis banner
         "glow-sea": "0 0 24px rgba(91,154,160,0.35)",
+        "glow-blush": "0 0 24px rgba(232,160,160,0.35)",
+        "glow-dusk": "0 0 24px rgba(107,91,149,0.35)",
+        "glow-dawn": "0 0 24px rgba(242,166,90,0.35)",
         "glow-crisis": "0 0 32px rgba(232,101,79,0.4)",
       },
 

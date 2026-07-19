@@ -21,10 +21,20 @@ export async function GET() {
 
     const supabase = await createClient();
     const history = await getLatestConversationWithHistory(supabase, user.id, 20);
+    
+    // Also fetch the user's profile to get their preferred_persona
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("preferred_persona")
+      .eq("id", user.id)
+      .single();
 
     return NextResponse.json({
       success: true,
-      data: history
+      data: {
+        ...history,
+        preferredPersona: profile?.preferred_persona || null
+      }
     });
 
   } catch (error) {

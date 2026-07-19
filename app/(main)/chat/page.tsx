@@ -5,13 +5,14 @@ import { useNovaStore } from "@/features/nova/store";
 import { NovaAvatar } from "@/features/nova/components/nova-avatar";
 import { ChatMessage } from "@/features/nova/components/chat-message";
 import { ChatComposer } from "@/features/nova/components/chat-composer";
+import { PersonaSwitcher } from "@/features/nova/components/persona-switcher";
 import { motion, AnimatePresence } from "motion/react";
 import { WarningCircle, Lightning, Leaf, Brain } from "@phosphor-icons/react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 export default function ChatPage() {
-  const { messages, setMessages, setConversationId, sendMessage, isEscalated, error, status } = useNovaStore();
+  const { messages, setMessages, setConversationId, sendMessage, isEscalated, error, status, setActivePersona } = useNovaStore();
   const [initialLoading, setInitialLoading] = useState(true);
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -25,6 +26,9 @@ export default function ChatPage() {
         if (data.success) {
           setConversationId(data.data.conversationId);
           setMessages(data.data.messages || []);
+          if (data.data.preferredPersona) {
+            setActivePersona(data.data.preferredPersona);
+          }
         }
       } catch (err) {
         console.error("Failed to load chat history", err);
@@ -34,7 +38,7 @@ export default function ChatPage() {
     };
 
     fetchHistory();
-  }, [setConversationId, setMessages]);
+  }, [setConversationId, setMessages, setActivePersona]);
 
   useEffect(() => {
     // Scroll to bottom when messages change
@@ -60,6 +64,9 @@ export default function ChatPage() {
 
   return (
     <div className="relative flex flex-col h-[calc(100vh-140px)] w-full overflow-hidden pt-4">
+      <div className="absolute top-2 right-4 z-50 md:top-4 md:right-8">
+        <PersonaSwitcher />
+      </div>
       
       {/* Messages Canvas */}
       <div className="flex-1 overflow-y-auto pb-48 px-4 md:px-space-8 scroll-smooth scrollbar-hide">

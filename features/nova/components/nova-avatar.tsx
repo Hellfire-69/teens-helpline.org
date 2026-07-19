@@ -5,6 +5,21 @@ import { useNovaStore } from "../store";
 
 export function NovaAvatar() {
   const status = useNovaStore((state) => state.status);
+  const activePersona = useNovaStore((state) => state.activePersona);
+
+  const bgClass = {
+    big_brother: "bg-aurora-sea",
+    big_sister: "bg-aurora-blush",
+    mentor: "bg-aurora-dusk",
+    best_friend: "bg-aurora-dawn",
+  }[activePersona] || "bg-aurora-sea";
+
+  const shadowClass = {
+    big_brother: "shadow-glow-sea",
+    big_sister: "shadow-glow-blush",
+    mentor: "shadow-glow-dusk",
+    best_friend: "shadow-glow-dawn",
+  }[activePersona] || "shadow-glow-sea";
 
   // Define animations for each state per Design.md §20
   const variants = {
@@ -41,13 +56,13 @@ export function NovaAvatar() {
     <div className="relative w-12 h-12 flex items-center justify-center shrink-0">
       {/* Outer Glow */}
       <motion.div
-        className="absolute inset-0 rounded-full bg-aurora-sea mix-blend-screen blur-xl"
+        className={`absolute inset-0 rounded-full mix-blend-screen blur-xl ${bgClass}`}
         variants={variants}
         animate={status}
       />
       {/* Core Shape */}
       <motion.div
-        className="absolute w-8 h-8 rounded-full bg-white opacity-80 blur-sm shadow-glow-sea"
+        className={`absolute w-8 h-8 rounded-full bg-white opacity-80 blur-sm ${shadowClass}`}
         variants={variants}
         animate={status}
       />
