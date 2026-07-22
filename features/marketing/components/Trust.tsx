@@ -3,7 +3,6 @@
 import * as React from "react"
 import { motion, useReducedMotion } from "motion/react"
 import { ShieldCheck, Users } from "@phosphor-icons/react"
-import { cn } from "@/lib/utils"
 
 export function Trust() {
   const shouldReduceMotion = useReducedMotion()

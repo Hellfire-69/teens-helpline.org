@@ -2,8 +2,7 @@
 
 import * as React from "react"
 import { motion } from "motion/react"
-import { ArrowLeft, Heart, EyeSlash, Shield, UsersThree, HandHeart } from "@phosphor-icons/react"
-import { Button } from "@/components/ui/button"
+import { Heart, EyeSlash, Shield } from "@phosphor-icons/react"
 import { PeerSupportSection } from "@/features/marketing/components/PeerSupportSection"
 import { FAQ } from "@/features/marketing/components/FAQ"
 

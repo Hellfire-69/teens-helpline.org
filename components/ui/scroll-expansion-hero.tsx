@@ -4,8 +4,8 @@ import {
   useEffect,
   useRef,
   useState,
-  ReactNode,
 } from 'react';
+import type { ReactNode } from 'react';
 import Image from 'next/image';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
@@ -35,6 +35,7 @@ const ScrollExpandMedia = ({
   const scrollProgress = useMotionValue(0);
   const smoothProgress = useSpring(scrollProgress, { damping: 40, stiffness: 300, mass: 0.8 });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [showContent, setShowContent] = useState<boolean>(false);
   const [mediaFullyExpanded, setMediaFullyExpanded] = useState<boolean>(false);
   const [touchStartY, setTouchStartY] = useState<number>(0);
@@ -71,6 +72,7 @@ const ScrollExpandMedia = ({
 
     const handleTouchStart = (e: TouchEvent) => {
       if (e.touches.length > 0) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         setTouchStartY(e.touches[0]!.clientY);
       }
     };
@@ -78,6 +80,7 @@ const ScrollExpandMedia = ({
     const handleTouchMove = (e: TouchEvent) => {
       if (!touchStartY || e.touches.length === 0) return;
 
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const touchY = e.touches[0]!.clientY;
       const deltaY = touchStartY - touchY;
 

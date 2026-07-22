@@ -19,11 +19,7 @@ import {
   List
 } from "@phosphor-icons/react"
 
-interface NavbarProps {
-  onContinueAnonymously?: () => void
-}
-
-export function Navbar({ onContinueAnonymously }: NavbarProps) {
+export function Navbar() {
   const pathname = usePathname()
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
   const [hoveredPath, setHoveredPath] = React.useState<string | null>(null)

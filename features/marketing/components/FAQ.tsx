@@ -3,7 +3,6 @@
 import * as React from "react"
 import { motion, AnimatePresence, useReducedMotion } from "motion/react"
 import { CaretDown, Question } from "@phosphor-icons/react"
-import { cn } from "@/lib/utils"
 
 interface FAQItem {
   question: string

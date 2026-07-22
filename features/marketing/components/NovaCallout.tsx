@@ -6,7 +6,6 @@ import Image from "next/image"
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, CheckCircle, ChatCircleText, Sparkle, User } from "@phosphor-icons/react"
-import { cn } from "@/lib/utils"
 
 export function NovaCallout() {
   const shouldReduceMotion = useReducedMotion()

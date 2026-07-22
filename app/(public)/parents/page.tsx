@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { motion } from "motion/react"
+import Image from "next/image"
 import { Parents as ParentsComponent } from "@/features/marketing/components/Parents"
 import { Lock, ChatCircle, ShieldCheck } from "@phosphor-icons/react"
 
@@ -17,10 +18,13 @@ export default function ParentsPage() {
           <div className="absolute inset-0 z-0">
             <div className="absolute inset-0 bg-night-950/40 mix-blend-multiply z-10" />
             <div className="absolute inset-0 bg-gradient-to-r from-night-950 via-night-950/80 to-transparent z-20" />
-            <img 
+            <Image 
               src="https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=2069&auto=format&fit=crop" 
               alt="Parent and teenager talking" 
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              priority
             />
           </div>
 

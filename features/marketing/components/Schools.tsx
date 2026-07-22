@@ -3,7 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { motion, useReducedMotion } from "motion/react"
-import { BookOpen, Shield, GraduationCap, ArrowRight, Check, Building, Lightbulb, Users, Download } from "@phosphor-icons/react"
+import { BookOpen, Shield, ArrowRight, Check, Building, Lightbulb, Download } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
 
 const SCHOOL_RESOURCES = [

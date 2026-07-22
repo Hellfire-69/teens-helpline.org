@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useMotionValue, useTransform, useReducedMotion } from "motion/react";
-import { PERSONA_THEMES, type PersonaTheme } from "../persona-theme";
+import { type PersonaTheme } from "../persona-theme";
 import React from "react";
 
 interface PersonaCardProps {

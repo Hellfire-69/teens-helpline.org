@@ -3,8 +3,7 @@
 import * as React from "react"
 import { motion } from "motion/react"
 import { Schools as SchoolsComponent } from "@/features/marketing/components/Schools"
-import { BookOpen, Shield, ChartLineUp, ShieldCheck } from "@phosphor-icons/react"
-import { cn } from "@/lib/utils"
+import { ChartLineUp, ShieldCheck, BookOpen } from "@phosphor-icons/react"
 
 export default function SchoolsPage() {
   return (
