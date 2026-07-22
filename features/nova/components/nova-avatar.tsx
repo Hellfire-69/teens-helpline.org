@@ -4,13 +4,20 @@ import { motion, useReducedMotion } from "motion/react";
 import { useNovaStore } from "../store";
 import { PERSONA_THEMES } from "../persona-theme";
 
-export function NovaAvatar() {
+interface NovaAvatarProps {
+  isBlooming?: boolean;
+  onBloomComplete?: () => void;
+}
+
+export function NovaAvatar({ isBlooming, onBloomComplete }: NovaAvatarProps) {
   const status = useNovaStore((state) => state.status);
   const activePersona = useNovaStore((state) => state.activePersona);
   const shouldReduceMotion = useReducedMotion();
 
   const theme = PERSONA_THEMES[activePersona] || PERSONA_THEMES.big_brother;
   const { pulseProfile } = theme;
+
+  const activeState = isBlooming ? "blooming" : status;
 
   // Visual state animations using Framer Motion
   const outerGlowVariants = {
@@ -41,6 +48,14 @@ export function NovaAvatar() {
         repeat: Infinity,
       },
     },
+    blooming: {
+      scale: shouldReduceMotion ? 1.1 : [1, 1.45, 1],
+      opacity: [0.6, 1.0, 0.75],
+      transition: {
+        duration: 1.3,
+        ease: "easeOut",
+      }
+    }
   };
 
   const coreShapeVariants = {
@@ -71,6 +86,14 @@ export function NovaAvatar() {
         repeat: Infinity,
       },
     },
+    blooming: {
+      scale: shouldReduceMotion ? 1.15 : [1, 1.35, 1],
+      y: 0,
+      transition: {
+        duration: 1.3,
+        ease: "easeOut",
+      }
+    }
   };
 
   const ambientDrifterVariants = {
@@ -101,6 +124,14 @@ export function NovaAvatar() {
         repeat: Infinity,
       },
     },
+    blooming: {
+      scale: shouldReduceMotion ? 1.3 : [1, 1.6, 1],
+      opacity: [0.3, 0.8, 0.4],
+      transition: {
+        duration: 1.3,
+        ease: "easeOut",
+      }
+    }
   };
 
   return (
@@ -109,7 +140,12 @@ export function NovaAvatar() {
       <motion.div
         className={`absolute inset-0 rounded-radius-full mix-blend-screen blur-xl ${theme.colorClass}`}
         variants={outerGlowVariants}
-        animate={status}
+        animate={activeState}
+        onAnimationComplete={() => {
+          if (isBlooming && onBloomComplete) {
+            onBloomComplete();
+          }
+        }}
         style={{
           boxShadow: `0 0 32px ${theme.colorHex}35`,
         }}
@@ -119,14 +155,14 @@ export function NovaAvatar() {
       <motion.div
         className="absolute w-6 h-6 rounded-radius-full mix-blend-screen blur-md opacity-35 bg-white/30"
         variants={ambientDrifterVariants}
-        animate={status}
+        animate={activeState}
       />
 
       {/* 3. Core Glow Glass Shape */}
       <motion.div
         className={`absolute w-8 h-8 rounded-radius-full bg-white opacity-80 blur-[2.5px] transition-shadow duration-[400ms]`}
         variants={coreShapeVariants}
-        animate={status}
+        animate={activeState}
         style={{
           boxShadow: `0 0 16px ${theme.colorHex}60`,
         }}
@@ -149,9 +185,14 @@ export function NovaAvatar() {
             scale: shouldReduceMotion ? 1.15 : [1, 1.2, 1],
             opacity: shouldReduceMotion ? 0.95 : [0.85, 1, 0.85], 
             transition: { duration: 1.3, repeat: Infinity, ease: "easeInOut" } 
+          },
+          blooming: {
+            scale: shouldReduceMotion ? 1.2 : [1, 1.4, 1],
+            opacity: [0.5, 1.0, 0.85],
+            transition: { duration: 1.3, ease: "easeOut" }
           }
         }}
-        animate={status}
+        animate={activeState}
       />
     </div>
   );

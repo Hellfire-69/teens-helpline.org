@@ -19,9 +19,9 @@ export function ChatComposer() {
   useEffect(() => {
     // Focus the textarea when the component mounts or finishes responding
     if (!isResponding && textareaRef.current) {
-      textareaRef.current.focus();
+      textareaRef.current.focus({ preventScroll: true });
     }
-  }, [isResponding, setStatus]);
+  }, [isResponding]);
 
   const handleSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();

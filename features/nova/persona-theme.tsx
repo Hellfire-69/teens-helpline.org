@@ -1,4 +1,5 @@
 import type { PersonaId } from "./schema";
+import React from "react";
 
 export interface PulseProfile {
   restingDuration: number;
@@ -23,6 +24,8 @@ export interface PersonaTheme {
   pulseProfile: PulseProfile;
   meshColors: string[]; // Tailwind class gradient stops or Hex values for custom mesh
   starterPrompts: string[];
+  // Glyph is a functional component rendering the SVG icon representing the persona
+  Glyph: React.FC<React.SVGProps<SVGSVGElement>>;
 }
 
 export const PERSONA_THEMES: Record<PersonaId, PersonaTheme> = {
@@ -50,7 +53,14 @@ export const PERSONA_THEMES: Record<PersonaId, PersonaTheme> = {
       "I need help getting back on track.",
       "Can we make a plan for school stress?",
       "I need a straight answer on conflict."
-    ]
+    ],
+    Glyph: (props) => (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        {/* Minimal Shield / Concentric Grounded Frames */}
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        <circle cx="12" cy="11" r="3" className="stroke-white/40" />
+      </svg>
+    )
   },
   big_sister: {
     id: "big_sister",
@@ -76,7 +86,14 @@ export const PERSONA_THEMES: Record<PersonaId, PersonaTheme> = {
       "I've been carrying a lot lately.",
       "I feel like crying and don't know why.",
       "Can we just take a deep breath together?"
-    ]
+    ],
+    Glyph: (props) => (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        {/* Soft Lotus / Radiating Petals */}
+        <path d="M12 21a9 9 0 0 0 9-9c0-5-9-10-9-10S3 7 3 12a9 9 0 0 0 9 9z" />
+        <path d="M12 21a4 4 0 0 0 4-4c0-2-4-4-4-4s-4 2-4 4a4 4 0 0 0 4 4z" className="stroke-white/40" />
+      </svg>
+    )
   },
   mentor: {
     id: "mentor",
@@ -102,7 +119,14 @@ export const PERSONA_THEMES: Record<PersonaId, PersonaTheme> = {
       "Can we think through something together?",
       "I'm feeling stuck on a big decision.",
       "How do I set boundaries with people?"
-    ]
+    ],
+    Glyph: (props) => (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        {/* Structured Prism / Triangle / Diamond Grid */}
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+        <line x1="12" y1="2" x2="12" y2="22" className="stroke-white/30" />
+      </svg>
+    )
   },
   best_friend: {
     id: "best_friend",
@@ -128,6 +152,13 @@ export const PERSONA_THEMES: Record<PersonaId, PersonaTheme> = {
       "Can I vent for a minute?",
       "Some drama happened at school today.",
       "I need someone to celebrate a small win with!"
-    ]
+    ],
+    Glyph: (props) => (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        {/* Dynamic Spark / Intersecting Star */}
+        <path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8" />
+        <circle cx="12" cy="12" r="3" className="stroke-white/40" />
+      </svg>
+    )
   }
 };

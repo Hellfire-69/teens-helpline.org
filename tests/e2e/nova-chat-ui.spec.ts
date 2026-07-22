@@ -5,6 +5,19 @@ test.describe('Nova Chat UI Pipeline E2E', () => {
     test.setTimeout(60000);
     // Navigate to the real user-facing chat route
     await page.goto('/chat');
+    
+    // Wait for either the onboarding screen or the composer to load
+    await Promise.race([
+      page.waitForSelector('text=Who should Nova become?', { timeout: 15000 }).catch(() => {}),
+      page.waitForSelector('[data-testid="composer-input"]', { timeout: 15000 }).catch(() => {})
+    ]);
+
+    const onboardingHeader = page.locator('text=Who should Nova become?');
+    if (await onboardingHeader.isVisible()) {
+      await page.click('text=Big Brother');
+      // Wait for onboarding transition to complete and composer to appear
+      await page.waitForSelector('[data-testid="composer-input"]', { timeout: 15000 });
+    }
   });
 
   test('Normal messages receive normal replies without escalation', async ({ page }) => {
@@ -35,8 +48,7 @@ test.describe('Nova Chat UI Pipeline E2E', () => {
       
       // Switch persona if not default
       if (id !== 'big_brother') {
-        await page.click('[data-testid="persona-switcher-trigger"]');
-        await page.click(`[data-slot="select-item"]:has-text("${label}")`);
+        await page.click(`button[role="radio"]:has-text("${label}")`);
       }
 
       await page.fill('[data-testid="composer-input"]', 'I want to kill myself');

@@ -132,6 +132,34 @@ const config: Config = {
         slow: "400ms",
       },
 
+      // ─── Keyframes — Landing Page Redesign Phase 1A ───────────────────────────
+      keyframes: {
+        "pulse-slow": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.5" },
+        },
+        "pulse-subtle": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.7" },
+        },
+        shimmer: {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(100%)" },
+        },
+        drift: {
+          "0%, 100%": { transform: "translate(0, 0) rotate(0deg)" },
+          "25%": { transform: "translate(2%, -1%) rotate(0.5deg)" },
+          "50%": { transform: "translate(-1%, 2%) rotate(-0.5deg)" },
+          "75%": { transform: "translate(1%, 1%) rotate(0.3deg)" },
+        },
+      },
+      animation: {
+        "pulse-slow": "pulse-slow 3s ease-in-out infinite",
+        "pulse-subtle": "pulse-subtle 4s ease-in-out infinite",
+        shimmer: "shimmer 2s linear infinite",
+        drift: "drift 20s ease-in-out infinite",
+      },
+
       // ─── Max Width — Nova chat canvas (Design.md §11, §29) ───────────────────
       maxWidth: {
         "chat-canvas": "720px",
