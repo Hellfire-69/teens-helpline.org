@@ -10,7 +10,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
   const role = profile?.role || (type === "anonymous" ? "anonymous" : "guest");
 
   return (
-    <div className="relative min-h-screen flex flex-col md:flex-row">
+    <div className="relative h-screen flex flex-col md:flex-row overflow-hidden">
       <AuroraMesh />
       
       {/* Sidebar Navigation */}

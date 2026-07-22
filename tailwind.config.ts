@@ -118,6 +118,9 @@ const config: Config = {
         lg: "0 12px 32px rgba(28,27,41,0.12), 0 4px 8px rgba(28,27,41,0.06)",
         // Glow shadows — reserved exclusively for Nova (sea) and crisis banner
         "glow-sea": "0 0 24px rgba(91,154,160,0.35)",
+        "glow-blush": "0 0 24px rgba(232,160,160,0.35)",
+        "glow-dusk": "0 0 24px rgba(107,91,149,0.35)",
+        "glow-dawn": "0 0 24px rgba(242,166,90,0.35)",
         "glow-crisis": "0 0 32px rgba(232,101,79,0.4)",
       },
 
@@ -127,6 +130,34 @@ const config: Config = {
         fast: "180ms",
         base: "280ms",
         slow: "400ms",
+      },
+
+      // ─── Keyframes — Landing Page Redesign Phase 1A ───────────────────────────
+      keyframes: {
+        "pulse-slow": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.5" },
+        },
+        "pulse-subtle": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.7" },
+        },
+        shimmer: {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(100%)" },
+        },
+        drift: {
+          "0%, 100%": { transform: "translate(0, 0) rotate(0deg)" },
+          "25%": { transform: "translate(2%, -1%) rotate(0.5deg)" },
+          "50%": { transform: "translate(-1%, 2%) rotate(-0.5deg)" },
+          "75%": { transform: "translate(1%, 1%) rotate(0.3deg)" },
+        },
+      },
+      animation: {
+        "pulse-slow": "pulse-slow 3s ease-in-out infinite",
+        "pulse-subtle": "pulse-subtle 4s ease-in-out infinite",
+        shimmer: "shimmer 2s linear infinite",
+        drift: "drift 20s ease-in-out infinite",
       },
 
       // ─── Max Width — Nova chat canvas (Design.md §11, §29) ───────────────────

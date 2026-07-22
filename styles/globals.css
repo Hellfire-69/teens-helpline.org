@@ -1,3 +1,5 @@
+@import "../node_modules/tw-animate-css/dist/tw-animate.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -76,5 +78,71 @@
   small,
   .text-xs {
     font-size: max(0.75rem, theme("fontSize.type-body-sm[0]"));
+  }
+}
+
+/* ─── Utilities — Phase 1B Landing Page Redesign ───────────────────────────── */
+@layer utilities {
+  /* Glass utilities — referenced as bare strings on landing sections and mobile nav */
+  .glass-subtle {
+    background-color: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .dark .glass-subtle {
+    background-color: rgba(15, 14, 23, 0.65);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+  .glass-standard {
+    background-color: rgba(255, 255, 255, 0.68);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .dark .glass-standard {
+    background-color: rgba(15, 14, 23, 0.60);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+  .glass-prominent {
+    background-color: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(32px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .dark .glass-prominent {
+    background-color: rgba(15, 14, 23, 0.78);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  /* Gradient text utility — reused in 6+ sections */
+  .text-gradient-aurora {
+    @apply bg-gradient-to-r from-aurora-dusk via-aurora-sea to-aurora-dawn bg-clip-text text-transparent;
+  }
+
+  /* Noise texture utility — replaces duplicated inline SVGs in Hero + FeaturesGrid */
+  .bg-noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+  }
+  .dark .bg-noise {
+    opacity: 0.05;
+  }
+
+  /* Drift keyframes — fallback for aurora mesh if JS fails */
+  @keyframes drift {
+    0%,
+    100% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    25% {
+      transform: translate(2%, -1%) rotate(0.5deg);
+    }
+    50% {
+      transform: translate(-1%, 2%) rotate(-0.5deg);
+    }
+    75% {
+      transform: translate(1%, 1%) rotate(0.3deg);
+    }
+  }
+  .animate-drift {
+    animation: drift 20s ease-in-out infinite;
   }
 }
