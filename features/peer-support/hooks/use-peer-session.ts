@@ -17,7 +17,7 @@ export function usePeerSession() {
   const [sessionClosed, setSessionClosed] = useState(false);
   const [peerLeft, setPeerLeft] = useState(false);
   const [myUserId, setMyUserId] = useState<string | null>(null);
-  const initPromise = useRef<Promise<any> | null>(null);
+  const initPromise = useRef<Promise<{ success: boolean; data?: { id: string; status: string }; error?: { message: string } }> | null>(null);
 
   const supabase = createClient();
 
@@ -63,7 +63,7 @@ export function usePeerSession() {
     initSession();
 
     return () => { mounted = false; };
-  }, []);
+  }, [supabase]);
 
   useEffect(() => {
     if (!sessionId) return;
