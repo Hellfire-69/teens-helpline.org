@@ -40,8 +40,8 @@ export function JournalComposer({ onSuccess, onCancel }: JournalComposerProps) {
         setContent("");
         onSuccess();
       }
-    } catch (err: any) {
-      setError(err.message || "Failed to save journal entry. Please try again.");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to save journal entry. Please try again.");
     } finally {
       setIsSubmitting(false);
     }

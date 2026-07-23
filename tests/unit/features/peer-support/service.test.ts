@@ -31,22 +31,29 @@ describe("Peer Support Service", () => {
 
   describe("createOrJoinSession", () => {
     it("should create a session with userId", async () => {
-      mockAdminClient.single.mockResolvedValue({ data: { id: "session-123" }, error: null });
+      mockAdminClient.rpc.mockResolvedValue({ data: "session-123", error: null });
+      mockAdminClient.single.mockResolvedValue({ data: { status: "waiting" }, error: null });
 
       const result = await createOrJoinSession("user-1", null);
 
-      expect(mockAdminClient.from).toHaveBeenCalledWith("peer_support_sessions");
-      expect(mockAdminClient.insert).toHaveBeenCalledWith({ status: "active", user_id: "user-1" });
-      expect(result).toEqual({ id: "session-123" });
+      expect(mockAdminClient.rpc).toHaveBeenCalledWith("match_or_create_peer_session", {
+        p_user_id: "user-1",
+        p_anon_token: null
+      });
+      expect(result).toEqual({ id: "session-123", status: "waiting" });
     });
 
     it("should create a session with anonToken", async () => {
-      mockAdminClient.single.mockResolvedValue({ data: { id: "session-456" }, error: null });
+      mockAdminClient.rpc.mockResolvedValue({ data: "session-456", error: null });
+      mockAdminClient.single.mockResolvedValue({ data: { status: "waiting" }, error: null });
 
       const result = await createOrJoinSession(null, "anon-123");
 
-      expect(mockAdminClient.insert).toHaveBeenCalledWith({ status: "active", anon_token: "anon-123" });
-      expect(result).toEqual({ id: "session-456" });
+      expect(mockAdminClient.rpc).toHaveBeenCalledWith("match_or_create_peer_session", {
+        p_user_id: null,
+        p_anon_token: "anon-123"
+      });
+      expect(result).toEqual({ id: "session-456", status: "waiting" });
     });
   });
 
