@@ -6,8 +6,14 @@ import type { ParentDashboardData } from "@/features/dashboard/types";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion } from "motion/react";
+import { useEffect } from "react";
+import { useOnboardingStore } from "@/stores/onboardingStore";
 
 export function ParentDashboard({ data: _data }: { data: ParentDashboardData }) {
+  useEffect(() => {
+    useOnboardingStore.getState().reset();
+  }, []);
+
   // Container animation
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -109,6 +115,8 @@ export function ParentDashboard({ data: _data }: { data: ParentDashboardData }) 
             </CardContent>
           </Card>
         </motion.div>
+
+
 
       </div>
     </motion.div>

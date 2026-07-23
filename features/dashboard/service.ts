@@ -7,7 +7,7 @@
  * See TRD §6 for this module's full responsibility definition.
  */
 
-import { getCurrentUserWithRole } from "@/features/auth/service";
+import { getCurrentUserWithRole } from "@/features/auth/server";
 import { getUserMoodHistory } from "@/features/mood-engine/service";
 import { getUserSessions } from "@/features/peer-support/service";
 import type { TeenDashboardData, ParentDashboardData } from "./types";

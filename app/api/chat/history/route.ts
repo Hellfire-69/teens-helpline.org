@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { getCurrentUserWithRole } from "@/features/auth/service";
+import { getCurrentUserWithRole } from "@/features/auth/server";
 import { getLatestConversationWithHistory } from "@/features/nova/data";
 
 export async function GET() {

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { moodRequestSchema } from "@/features/mood-engine/schema";
 import { processMoodEntry } from "@/features/mood-engine/service";
-import { getCurrentUserWithRole } from "@/features/auth/service";
+import { getCurrentUserWithRole } from "@/features/auth/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logger } from "@/lib/logger";

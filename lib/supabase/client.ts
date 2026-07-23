@@ -13,6 +13,10 @@ import { createBrowserClient } from "@supabase/ssr";
 import { publicEnv } from "@/lib/env";
 
 export function createClient() {
+  console.log(
+    "DEBUG URL:", publicEnv.NEXT_PUBLIC_SUPABASE_URL, 
+    "DEBUG KEY:", publicEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
   return createBrowserClient(
     publicEnv.NEXT_PUBLIC_SUPABASE_URL,
     publicEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY

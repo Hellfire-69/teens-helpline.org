@@ -50,7 +50,7 @@ export function Navbar() {
             aria-label="TeensHelpline Home"
           >
             <div className="relative w-8 h-8 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-              <Image src="/images/logo-v2.png" alt="TeensHelpline Logo" fill className="object-contain scale-[2]" />
+              <Image src="/images/logo-v2.png" alt="TeensHelpline Logo" fill sizes="32px" className="object-contain scale-[2]" />
             </div>
             <span className="font-fraunces text-lg font-semibold text-ink-900 dark:text-white tracking-tight">
               TeensHelpline
@@ -189,7 +189,7 @@ export function Navbar() {
           aria-label="TeensHelpline Home"
         >
           <div className="relative w-6 h-6 flex items-center justify-center">
-            <Image src="/images/logo-v2.png" alt="TeensHelpline Logo" fill className="object-contain scale-[2]" />
+            <Image src="/images/logo-v2.png" alt="TeensHelpline Logo" fill sizes="24px" className="object-contain scale-[2]" />
           </div>
           <span className="font-fraunces text-sm font-semibold text-ink-900 dark:text-white tracking-tight">
             TeensHelpline

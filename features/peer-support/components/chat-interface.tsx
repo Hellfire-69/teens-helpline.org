@@ -7,8 +7,8 @@ import { MessageBubble } from "./message-bubble";
 import { ChatInput } from "./chat-input";
 import { cn } from "@/lib/utils";
 
-// Not using motion here — reduced to CSS transitions only for performance
-// The backdrop-blur is only on the outer container, not layered inside
+import { motion } from "framer-motion";
+
 export const ChatInterface = memo(function ChatInterface() {
   const session = usePeerSession();
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -46,7 +46,11 @@ export const ChatInterface = memo(function ChatInterface() {
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-100px)] md:h-[calc(100vh-80px)] bg-white/70 dark:bg-night-900/70 border border-white/30 dark:border-white/10 rounded-radius-2xl shadow-sm overflow-hidden w-full max-w-4xl mx-auto"
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      className="flex flex-col h-[calc(100vh-100px)] md:h-[calc(100vh-80px)] bg-white/70 dark:bg-night-900/70 border border-white/30 dark:border-white/10 rounded-radius-2xl shadow-sm overflow-hidden w-full max-w-4xl mx-auto"
       style={{ backdropFilter: "blur(16px)" }}
     >
       {/* Header — single blur layer, no nested backdrop */}
@@ -132,6 +136,6 @@ export const ChatInterface = memo(function ChatInterface() {
           disabled={!session.hasPeerJoined && session.messages.length > 0}
         />
       </div>
-    </div>
+    </motion.div>
   );
 });

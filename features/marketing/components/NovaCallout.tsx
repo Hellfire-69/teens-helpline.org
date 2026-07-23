@@ -77,6 +77,7 @@ export function NovaCallout() {
                   alt="Nova AI Avatar" 
                   fill 
                   className="object-contain" 
+                  sizes="(max-width: 768px) 14rem, 18rem"
                   priority
                 />
               </motion.div>

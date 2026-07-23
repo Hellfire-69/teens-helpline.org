@@ -1,12 +1,24 @@
 import { Navigation } from "@/components/shared/navigation";
 import { SafetyBar } from "@/components/shared/safety-bar";
 import { QuickExit } from "@/components/shared/quick-exit";
-import { getCurrentUserWithRole } from "@/features/auth/service";
+import { getCurrentUserWithRole } from "@/features/auth/server";
 import { PageTransition } from "@/components/shared/page-transition";
 import { AuroraMesh } from "@/components/shared/aurora-mesh";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export default async function MainLayout({ children }: { children: React.ReactNode }) {
   const { profile, type } = await getCurrentUserWithRole();
+  const cookieStore = await cookies();
+  const anonOnboardingCompleted = cookieStore.has('anon_onboarding_completed');  
+  if (type === "authenticated" && profile && !profile.onboarding_completed) {
+    redirect("/onboarding");
+  }
+
+  if (type === "anonymous" && !anonOnboardingCompleted) {
+    redirect("/onboarding");
+  }
+
   const role = profile?.role || (type === "anonymous" ? "anonymous" : "guest");
 
   return (

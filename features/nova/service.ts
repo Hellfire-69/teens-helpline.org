@@ -61,7 +61,7 @@ export async function handleChatTurn(req: ChatRequest, auth: AuthUserContext): P
   
   // Resolve Persona
   let resolvedPersona: PersonaId = "big_brother";
-  const requestedPersona = req.persona || auth.profile?.preferred_persona;
+  const requestedPersona = req.persona || auth.preferences?.preferred_persona;
   
   if (requestedPersona) {
     if (PERSONA_IDS.includes(requestedPersona as PersonaId)) {

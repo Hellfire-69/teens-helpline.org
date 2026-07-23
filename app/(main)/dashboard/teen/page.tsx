@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getCurrentUserWithRole } from "@/features/auth/service";
+import { getCurrentUserWithRole } from "@/features/auth/server";
 import { getTeenDashboardData } from "@/features/dashboard/service";
 import { TeenDashboard } from "@/features/dashboard/components/teen-dashboard";
 import { AlertCircle } from "lucide-react";

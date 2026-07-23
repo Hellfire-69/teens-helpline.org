@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getCurrentUserWithRole } from "@/features/auth/service";
+import { getCurrentUserWithRole } from "@/features/auth/server";
 import { getTeenDashboardData, getParentDashboardData } from "@/features/dashboard/service";
 import { logger } from "@/lib/logger";
 

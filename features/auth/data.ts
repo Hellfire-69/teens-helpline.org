@@ -1,30 +1,28 @@
-/**
- * Auth feature — data access
- *
- * Supabase data-access functions for the auth module.
- * All queries go through the Supabase client — no raw SQL from client-reachable paths.
- */
-
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { createAdminClient } from "@/lib/supabase/admin";
-import type { Profile } from "./types";
-import type { PersonaId } from "../nova/schema";
+import type { Profile, UserPreferences } from "./types";
 
-export async function createProfile(userId: string): Promise<Profile> {
+
+export async function createProfileData(
+  userId: string,
+  alias: string,
+  email: string | null,
+  role: "teen" | "parent"
+): Promise<{ profile: Profile; preferences: UserPreferences }> {
   const adminClient = createAdminClient();
-  
-  // Auto-generate placeholder values per requirements.
-  // These are expected to be overwritten once the onboarding feature exists.
-  const placeholderAlias = `TeenUser${Math.floor(Math.random() * 10000)}`;
-  const placeholderAgeBand = "13-15"; // Sensible placeholder
+
+  // placeholder age band until onboarding
+  const placeholderAgeBand = "13-15";
 
   const { data, error } = await adminClient
     .from("profiles")
     .insert({
       id: userId,
-      alias: placeholderAlias,
+      alias,
+      email,
       age_band: placeholderAgeBand,
-      role: "teen",
+      role,
+      onboarding_completed: false,
     })
     .select()
     .single();
@@ -33,10 +31,25 @@ export async function createProfile(userId: string): Promise<Profile> {
     throw new Error(`Failed to create profile: ${error.message}`);
   }
 
-  return data as Profile;
+  const profile: Profile = {
+    id: data.id,
+    alias: data.alias,
+    email: data.email,
+    age_band: data.age_band,
+    role: data.role,
+    onboarding_completed: data.onboarding_completed,
+    created_at: data.created_at,
+  };
+
+  const preferences: UserPreferences = {
+    preferred_persona: data.preferred_persona,
+    avatar_id: data.avatar_id,
+  };
+
+  return { profile, preferences };
 }
 
-export async function getProfile(supabase: SupabaseClient, userId: string): Promise<Profile | null> {
+export async function getProfileData(supabase: SupabaseClient, userId: string): Promise<{ profile: Profile; preferences: UserPreferences } | null> {
   const { data, error } = await supabase
     .from("profiles")
     .select("*")
@@ -51,21 +64,35 @@ export async function getProfile(supabase: SupabaseClient, userId: string): Prom
     throw new Error(`Failed to get profile: ${error.message}`);
   }
 
-  return data as Profile;
+  const profile: Profile = {
+    id: data.id,
+    alias: data.alias,
+    email: data.email,
+    age_band: data.age_band,
+    role: data.role,
+    onboarding_completed: data.onboarding_completed,
+    created_at: data.created_at,
+  };
+
+  const preferences: UserPreferences = {
+    preferred_persona: data.preferred_persona,
+    avatar_id: data.avatar_id,
+  };
+
+  return { profile, preferences };
 }
 
-export async function updatePreferredPersona(
-  supabase: SupabaseClient, 
-  userId: string, 
-  personaId: PersonaId
+export async function updateProfileData(
+  supabase: SupabaseClient,
+  userId: string,
+  updates: Partial<Profile & UserPreferences>
 ): Promise<void> {
   const { error } = await supabase
     .from("profiles")
-    .update({ preferred_persona: personaId })
+    .update(updates)
     .eq("id", userId);
 
   if (error) {
-    throw new Error(`Failed to update preferred persona: ${error.message}`);
+    throw new Error(`Failed to update profile: ${error.message}`);
   }
 }
-
