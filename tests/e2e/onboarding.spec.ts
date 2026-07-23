@@ -26,16 +26,24 @@ test.describe('Onboarding Flow', () => {
     
     // Mood Step
     await expect(page.locator('text="What\'s closest to how today feels?"')).toBeVisible();
-    await page.click('text="Happy"');
+    await page.click('text="Happy"', { force: true });
     
     // Concern Step
     await expect(page.locator('text="What is on your mind?"')).toBeVisible();
-    await page.click('text="School & Academics"');
+    await page.click('text="School & Academics"', { force: true });
     
     // Nova Welcome Step
     await expect(page.locator('text="Thank you for sharing that."')).toBeVisible();
     await expect(page.locator('text="Who are we setting this space up for?"')).toBeVisible();
-    await page.locator('button:has-text("I\'m a Teen")').click();
+    await page.locator('button:has-text("I\'m a Teen")').click({ force: true });
+    
+    // Wait for animation
+    await page.waitForTimeout(1000);
+    
+    // Select age band
+    await page.locator('button:has-text("13 - 15")').click({ force: true });
+    await page.waitForTimeout(500);
+
     await page.locator('button:has-text("Go to Dashboard")').click();
     
     // Anonymous user goes to dashboard

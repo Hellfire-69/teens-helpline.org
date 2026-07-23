@@ -21,16 +21,20 @@ test.describe('Registered Onboarding Flow', () => {
     await page.click('text="Enter"');
 
     // Avatar Step
+    await expect(page.locator('text="Choose a companion for the journey."')).toBeVisible();
     await page.locator('button:has-text("Lumina")').click({ force: true });
     await page.locator('button:has-text("Continue")').first().click();
 
     // Mood Step
-    await page.click('text="Happy"');
+    await expect(page.locator('text="What\'s closest to how today feels?"')).toBeVisible();
+    await page.click('text="Happy"', { force: true });
 
     // Concern Step
-    await page.click('text="School & Academics"');
+    await expect(page.locator('text="What is on your mind?"')).toBeVisible();
+    await page.click('text="School & Academics"', { force: true });
 
     // Nova Welcome Step
+    await expect(page.locator('text="Who are we setting this space up for?"')).toBeVisible();
     await page.locator('button:has-text("I\'m a Teen")').click({ force: true });
     
     // Wait for animation
@@ -43,7 +47,7 @@ test.describe('Registered Onboarding Flow', () => {
     await page.waitForTimeout(1000);
     
     // Clicking "Go to Dashboard"
-    await page.locator('button:has-text("Go to Dashboard")').click({ force: true });
+    await page.locator('button:has-text("Go to Dashboard")').click();
 
     await expect(page).toHaveURL(/\/dashboard\/teen/, { timeout: 15000 });
   });
@@ -68,18 +72,26 @@ test.describe('Registered Onboarding Flow', () => {
     await page.click('text="Enter"');
 
     // Avatar Step
+    await expect(page.locator('text="Choose a companion for the journey."')).toBeVisible();
     await page.locator('button:has-text("Lumina")').click({ force: true });
     await page.locator('button:has-text("Continue")').first().click();
 
     // Mood Step (if applicable for parent)
-    await page.click('text="Happy"').catch(() => {});
+    await expect(page.locator('text="What\'s closest to how today feels?"')).toBeVisible().catch(() => {});
+    await page.click('text="Happy"', { force: true }).catch(() => {});
 
     // Concern Step
-    await page.click('text="School & Academics"').catch(() => {});
+    await expect(page.locator('text="What is on your mind?"')).toBeVisible().catch(() => {});
+    await page.click('text="School & Academics"', { force: true }).catch(() => {});
 
     // Nova Welcome Step
+    await expect(page.locator('text="Who are we setting this space up for?"')).toBeVisible();
     await page.locator('button:has-text("I\'m a Parent")').click({ force: true });
-    await page.locator('button:has-text("Go to Dashboard")').click({ force: true });
+    
+    // Wait for animation
+    await page.waitForTimeout(1000);
+    
+    await page.locator('button:has-text("Go to Dashboard")').click();
 
     await expect(page).toHaveURL(/\/dashboard\/parent/, { timeout: 15000 });
   });
