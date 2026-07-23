@@ -1,17 +1,31 @@
 "use client";
 
-import { useRef, useEffect, useCallback, memo } from "react";
-import { CircleNotch, ShieldCheck, Handshake, WarningCircle } from "@phosphor-icons/react";
+import { useRef, useEffect, useCallback, memo, useState } from "react";
+import { CircleNotch, ShieldCheck, Handshake, WarningCircle, XCircle } from "@phosphor-icons/react";
 import { usePeerSession } from "../hooks/use-peer-session";
 import { MessageBubble } from "./message-bubble";
 import { ChatInput } from "./chat-input";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export const ChatInterface = memo(function ChatInterface() {
   const session = usePeerSession();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [showWaitFallback, setShowWaitFallback] = useState(false);
+
+  // 45s wait timeout fallback
+  useEffect(() => {
+    if (session.hasPeerJoined || session.sessionClosed) {
+      setShowWaitFallback(false);
+      return;
+    }
+    const timer = setTimeout(() => {
+      setShowWaitFallback(true);
+    }, 45000);
+    return () => clearTimeout(timer);
+  }, [session.hasPeerJoined, session.sessionClosed]);
 
   // Stable callback — won't recreate on each render
   const scrollToBottom = useCallback(() => {
@@ -81,13 +95,23 @@ export const ChatInterface = memo(function ChatInterface() {
             </span>
           </div>
         </div>
-        
-        {session.hasPeerJoined && (
-          <div className="hidden md:flex items-center gap-1.5 bg-aurora-blush/10 text-aurora-blush px-3 py-1.5 rounded-radius-full text-[11px] font-bold uppercase tracking-wider" aria-label="This is a safe space">
-            <ShieldCheck weight="fill" className="w-4 h-4" aria-hidden="true" />
-            Safe Space
-          </div>
-        )}
+        <div className="flex items-center gap-2">
+          {session.hasPeerJoined && !session.sessionClosed && (
+            <div className="hidden md:flex items-center gap-1.5 bg-aurora-blush/10 text-aurora-blush px-3 py-1.5 rounded-radius-full text-[11px] font-bold uppercase tracking-wider" aria-label="This is a safe space">
+              <ShieldCheck weight="fill" className="w-4 h-4" aria-hidden="true" />
+              Safe Space
+            </div>
+          )}
+          {!session.sessionClosed && (
+            <button
+              onClick={() => session.leaveSession()}
+              className="text-type-body-sm font-medium text-ink-500 hover:text-signal-error transition-colors px-3 py-1.5 rounded-radius-md hover:bg-signal-error/10"
+              aria-label="Leave session"
+            >
+              Leave
+            </button>
+          )}
+        </div>
       </header>
 
       {/* Messages — no blur here, reduces GPU composite layers */}
@@ -107,6 +131,29 @@ export const ChatInterface = memo(function ChatInterface() {
             <p className="max-w-sm text-type-body-md text-ink-600 dark:text-ink-300 leading-relaxed">
               A trained peer supporter will join shortly. They're here to listen without judgment. Take your time.
             </p>
+            
+            <AnimatePresence>
+              {showWaitFallback && !session.sessionClosed && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10, height: 0 }}
+                  animate={{ opacity: 1, y: 0, height: "auto" }}
+                  exit={{ opacity: 0, y: -10, height: 0 }}
+                  className="mt-4 p-4 bg-white dark:bg-night-800 rounded-radius-lg border border-border/50 shadow-sm max-w-sm w-full"
+                >
+                  <p className="text-type-body-sm text-ink-700 dark:text-ink-200 mb-3">
+                    It's taking a little longer than usual to match you with a peer. You can keep waiting, or talk to Nova instantly.
+                  </p>
+                  <div className="flex gap-2">
+                    <Link href="/nova" className="flex-1 bg-ink-900 text-white text-center py-2 rounded-radius-md text-sm font-medium hover:bg-ink-800 transition-colors">
+                      Talk to Nova
+                    </Link>
+                    <Link href="/study-hub" className="flex-1 bg-white text-ink-900 border border-ink-200 text-center py-2 rounded-radius-md text-sm font-medium hover:bg-ink-50 transition-colors">
+                      Study Hub
+                    </Link>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         ) : (
           <div className="flex flex-col pb-4">
@@ -129,12 +176,26 @@ export const ChatInterface = memo(function ChatInterface() {
         )}
       </div>
 
-      {/* Input — no backdrop, keep it simple */}
+      {/* Input or Closed State */}
       <div className="px-4 py-4 bg-white/80 dark:bg-night-950/80 border-t border-border/30 shrink-0">
-        <ChatInput
-          onSendMessage={session.sendMessage}
-          disabled={!session.hasPeerJoined && session.messages.length > 0}
-        />
+        {session.sessionClosed ? (
+          <div className="flex flex-col items-center justify-center p-4 text-center">
+            <XCircle weight="fill" className="w-8 h-8 text-ink-400 mb-2" />
+            <p className="text-type-body-md font-medium text-ink-800 dark:text-ink-100">
+              {session.peerLeft ? "The peer has left the session." : "Session closed."}
+            </p>
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-3 px-4 py-2 bg-ink-900 dark:bg-white text-white dark:text-ink-900 rounded-radius-md text-sm font-medium hover:opacity-90 transition-opacity"
+            >
+              Find New Peer
+            </button>
+          </div>
+        ) : (
+          <ChatInput
+            onSendMessage={session.sendMessage}
+          />
+        )}
       </div>
     </motion.div>
   );
