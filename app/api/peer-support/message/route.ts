@@ -30,11 +30,25 @@ export async function POST(req: NextRequest): Promise<Response> {
     }
 
     const { sessionId, content } = parseResult.data;
-    const userId = authContext.type === "authenticated" ? authContext.user.id : null;
-    const senderRef = authContext.type === "authenticated" ? "user" : "anonymous";
+    const isAuth = authContext.type === "authenticated";
+    const dbUserId = isAuth ? authContext.user.id : null;
+    let senderName = "Anonymous";
+
+    if (isAuth) {
+      const { createClient } = await import("@/lib/supabase/server");
+      const supabase = await createClient();
+      const { data } = await supabase.from("profiles").select("alias").eq("id", authContext.user.id).single();
+      if (data?.alias) {
+        senderName = data.alias;
+      } else {
+        senderName = "Teen";
+      }
+    }
+
+    const senderRef = `${authContext.user.id}::${senderName}`;
 
     // Pass to service layer
-    const responseData = await submitMessage(sessionId, content, senderRef, userId);
+    const responseData = await submitMessage(sessionId, content, senderRef, dbUserId);
 
     // TRD §13 standard response envelope
     return Response.json({

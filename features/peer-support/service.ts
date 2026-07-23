@@ -17,26 +17,27 @@ const MODERATION_REGEX = /(fuck|shit|bitch|asshole|cunt|slut|whore|fag|nigger)/i
 export async function createOrJoinSession(userId: string | null, anonToken: string | null) {
   const adminClient = createAdminClient();
 
-  const payload: { status: string; user_id?: string; anon_token?: string } = { status: "active" };
-  if (userId) {
-    payload.user_id = userId;
-  } else if (anonToken) {
-    payload.anon_token = anonToken;
-  } else {
+  if (!userId && !anonToken) {
     throw new Error("Must provide either userId or anonToken");
   }
 
-  const { data, error } = await adminClient
-    .from("peer_support_sessions")
-    .insert(payload)
-    .select("id")
-    .single();
+  const { data, error } = await adminClient.rpc("match_or_create_peer_session", {
+    p_user_id: userId,
+    p_anon_token: anonToken
+  });
 
   if (error) {
-    throw new Error(`Failed to create session: ${error.message}`);
+    throw new Error(`Failed to create or join session: ${error.message}`);
   }
 
-  return data;
+  // Fetch the current status to know if we matched or created
+  const { data: sessionData } = await adminClient
+    .from("peer_support_sessions")
+    .select("status")
+    .eq("id", data)
+    .single();
+
+  return { id: data, status: sessionData?.status || "waiting" };
 }
 
 /**
@@ -141,4 +142,20 @@ export async function reportMessage(
   }
 
   return data;
+}
+
+/**
+ * Leaves or closes a peer support session.
+ */
+export async function leaveSession(sessionId: string) {
+  const adminClient = createAdminClient();
+
+  const { error } = await adminClient
+    .from("peer_support_sessions")
+    .update({ status: "closed" })
+    .eq("id", sessionId);
+
+  if (error) {
+    throw new Error(`Failed to leave session: ${error.message}`);
+  }
 }

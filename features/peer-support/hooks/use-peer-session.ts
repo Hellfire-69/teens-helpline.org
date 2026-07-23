@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 
 export type Message = {
@@ -14,6 +14,10 @@ export function usePeerSession() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [hasPeerJoined, setHasPeerJoined] = useState(false);
+  const [sessionClosed, setSessionClosed] = useState(false);
+  const [peerLeft, setPeerLeft] = useState(false);
+  const [myUserId, setMyUserId] = useState<string | null>(null);
+  const initPromise = useRef<Promise<any> | null>(null);
 
   const supabase = createClient();
 
@@ -21,16 +25,29 @@ export function usePeerSession() {
     let mounted = true;
 
     async function initSession() {
+      if (!initPromise.current) {
+        initPromise.current = fetch("/api/peer-support/session", { method: "POST" }).then(res => res.json());
+      }
+
       try {
-        const res = await fetch("/api/peer-support/session", { method: "POST" });
-        const json = await res.json();
+        const [{ data: authData }, json] = await Promise.all([
+          supabase.auth.getUser(),
+          initPromise.current
+        ]);
         
+        if (mounted) {
+          setMyUserId(authData.user?.id || null);
+        }
+
         if (!json.success) {
           throw new Error(json.error?.message || "Failed to join session");
         }
         
         if (mounted) {
           setSessionId(json.data.id);
+          if (json.data.status === "active") {
+            setHasPeerJoined(true);
+          }
         }
       } catch (err) {
         if (mounted) {
@@ -52,7 +69,7 @@ export function usePeerSession() {
     if (!sessionId) return;
 
     // Subscribe to realtime messages
-    const channel = supabase
+    const messageChannel = supabase
       .channel(`peer_messages:${sessionId}`)
       .on(
         "postgres_changes",
@@ -73,10 +90,50 @@ export function usePeerSession() {
       )
       .subscribe();
 
+    // Subscribe to session status changes
+    const sessionChannel = supabase
+      .channel(`peer_session_status:${sessionId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "peer_support_sessions",
+          filter: `id=eq.${sessionId}`,
+        },
+        (payload) => {
+          const updatedSession = payload.new;
+          if (updatedSession.status === "active") {
+            setHasPeerJoined(true);
+          } else if (updatedSession.status === "closed") {
+            setPeerLeft(true);
+            setSessionClosed(true);
+          } else if (updatedSession.status === "flagged") {
+            setSessionClosed(true);
+          }
+        }
+      )
+      .subscribe();
+
     return () => {
-      supabase.removeChannel(channel);
+      supabase.removeChannel(messageChannel);
+      supabase.removeChannel(sessionChannel);
     };
   }, [sessionId, supabase]);
+
+  const leaveSession = useCallback(async () => {
+    if (!sessionId) return;
+    try {
+      await fetch("/api/peer-support/session", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId })
+      });
+      setSessionClosed(true);
+    } catch (err) {
+      console.error("Failed to leave session", err);
+    }
+  }, [sessionId]);
 
   const sendMessage = useCallback(async (content: string) => {
     if (!sessionId) return;
@@ -124,6 +181,10 @@ export function usePeerSession() {
     loading,
     error,
     hasPeerJoined,
+    sessionClosed,
+    peerLeft,
+    myUserId,
+    leaveSession,
     sendMessage,
     report
   };
