@@ -1,7 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { createProfileData, getProfileData, updateProfileData } from "./data";
+import { getProfileData, updateProfileData } from "./data";
 import type { Profile, UserPreferences } from "./types";
-import { createClient as createServerClient } from "@/lib/supabase/server";
 
 export class AuthService {
   constructor(private supabase: SupabaseClient) { }

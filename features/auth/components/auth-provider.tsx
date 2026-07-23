@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useEffect, useState, useMemo } from "react"
+import { createContext, useContext, useEffect, useState, useMemo, useCallback } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { AuthService } from "../service"
 import type { AuthState, Profile, UserPreferences } from "../types"
@@ -12,7 +12,7 @@ interface AuthContextValue extends AuthState {
   signOut: AuthService["signOut"]
   signInAnonymously: AuthService["signInAnonymously"]
   signInWithGoogle: AuthService["signInWithGoogle"]
-  refreshProfile: () => Promise<void>
+  refreshProfile: (uid?: string) => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
@@ -26,7 +26,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const supabase = createClient()
   const authService = useMemo(() => new AuthService(supabase), [supabase])
 
-  const refreshProfile = async (currentUserId?: string) => {
+  const refreshProfile = useCallback(async (currentUserId?: string) => {
     const uid = currentUserId || user?.id
     if (!uid) return
     try {
@@ -41,7 +41,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (e) {
       console.error("Failed to load profile", e)
     }
-  }
+  }, [user?.id, authService])
 
   useEffect(() => {
     const initializeAuth = async () => {
@@ -80,7 +80,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => {
       subscription.unsubscribe()
     }
-  }, [supabase])
+  }, [supabase, refreshProfile])
 
   const value: AuthContextValue = {
     user: user ? {

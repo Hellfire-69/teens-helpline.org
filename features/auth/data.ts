@@ -1,7 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { Profile, UserPreferences } from "./types";
-import type { PersonaId } from "../nova/schema";
+
 
 export async function createProfileData(
   userId: string,
