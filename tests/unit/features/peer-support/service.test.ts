@@ -21,6 +21,7 @@ describe("Peer Support Service", () => {
     eq: vi.fn().mockReturnThis(),
     select: vi.fn().mockReturnThis(),
     single: vi.fn(),
+    rpc: vi.fn(),
   };
 
   beforeEach(() => {
