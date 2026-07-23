@@ -43,7 +43,7 @@ export function usePeerSession() {
           throw new Error(json.error?.message || "Failed to join session");
         }
         
-        if (mounted) {
+        if (mounted && json.data) {
           setSessionId(json.data.id);
           if (json.data.status === "active") {
             setHasPeerJoined(true);
