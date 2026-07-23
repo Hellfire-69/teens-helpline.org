@@ -1,5 +1,5 @@
 import type { NextRequest } from "next/server";
-import { getCurrentUserWithRole } from "@/features/auth/service";
+import { getCurrentUserWithRole } from "@/features/auth/server";
 import { createOrJoinSession } from "@/features/peer-support/service";
 
 export async function POST(_req: NextRequest): Promise<Response> {

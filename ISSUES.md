@@ -21,3 +21,8 @@ Additionally, this ticket scopes in a compact/expand redesign:
   - All other hotline phone number spans in the banner.
 
 _Action Required: Re-evaluate the color tokens for `signal-crisis` to ensure accessibility compliance without losing the visual urgency of the banner._
+
+## Missing MVP Tables: appointments, audit_logs, contact_messages
+**Location**: \Database-Schema.md\ §3.8, §3.15, §3.16
+
+The tables \ppointments\, \udit_logs\, and \contact_messages\ are defined in the database schema documentation but have not been implemented in any SQL migration file. These are known gaps against the MVP scope and need to be built in a future sprint to fulfill the schema requirements.

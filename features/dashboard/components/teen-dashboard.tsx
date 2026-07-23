@@ -6,12 +6,19 @@ import { ChatCircleDots, Heartbeat, UsersThree, Books, Sparkle, ArrowRight, Cloc
 import type { TeenDashboardData } from "@/features/dashboard/types";
 import Link from "next/link";
 import { motion } from "motion/react";
+import { useEffect } from "react";
+import { useOnboardingStore } from "@/stores/onboardingStore";
 
 export function TeenDashboard({ data }: { data: TeenDashboardData }) {
   const isAnonymous = !data.profile;
   const alias = data.profile?.alias || "there";
   const activeSessions = data.peerSessions.filter(s => s.status === 'active').length;
   const recentMood = data.moodHistory[0]; // Assuming sorted by date descending
+
+  useEffect(() => {
+    // We safely clear onboarding state only after dashboard has mounted
+    useOnboardingStore.getState().reset();
+  }, []);
 
   // Container animation
   const containerVariants = {
@@ -218,6 +225,8 @@ export function TeenDashboard({ data }: { data: TeenDashboardData }) {
             </CardContent>
           </Card>
         </motion.div>
+
+
 
       </div>
     </motion.div>

@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { chatRequestSchema } from "@/features/nova/schema";
 import { handleChatTurn } from "@/features/nova/service";
-import { getCurrentUserWithRole } from "@/features/auth/service";
+import { getCurrentUserWithRole } from "@/features/auth/server";
 
 export async function POST(req: NextRequest): Promise<Response> {
   try {

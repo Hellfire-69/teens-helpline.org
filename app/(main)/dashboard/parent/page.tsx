@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getCurrentUserWithRole } from "@/features/auth/service";
+import { getCurrentUserWithRole } from "@/features/auth/server";
 import { getParentDashboardData } from "@/features/dashboard/service";
 import { ParentDashboard } from "@/features/dashboard/components/parent-dashboard";
 import { AlertCircle } from "lucide-react";
@@ -13,18 +13,19 @@ export const metadata: Metadata = {
 export default async function ParentDashboardPage() {
   const auth = await getCurrentUserWithRole();
 
-  if (auth.type === "guest" || !auth.user || !auth.profile) {
+  if (auth.type === "guest" || !auth.user) {
     redirect("/"); 
   }
 
-  const role = auth.profile.role;
+  if (auth.profile) {
+    const role = auth.profile.role;
 
-  if (role === "teen") {
-    redirect("/dashboard/teen");
-  }
+    if (role === "teen") {
+      redirect("/dashboard/teen");
+    }
 
-  const comingSoonRoles = ["moderator", "admin", "counsellor", "teacher_educator"];
-  if (comingSoonRoles.includes(role)) {
+    const comingSoonRoles = ["moderator", "admin", "counsellor", "teacher_educator"];
+    if (comingSoonRoles.includes(role)) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
         <div className="bg-paper-100 dark:bg-night-900 p-6 rounded-radius-xl max-w-md border border-ink-300/20">
@@ -37,6 +38,7 @@ export default async function ParentDashboardPage() {
       </div>
     );
   }
+}
 
   const data = await getParentDashboardData();
 

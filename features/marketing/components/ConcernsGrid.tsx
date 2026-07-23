@@ -71,7 +71,7 @@ const CONCERNS: ConcernItem[] = [
 export function ConcernsGrid() {
   const shouldReduceMotion = useReducedMotion()
   const containerRef = React.useRef<HTMLElement>(null)
-  
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end end"]
@@ -89,12 +89,12 @@ export function ConcernsGrid() {
   const yTranslations = ["15%", "8%", "1%", "1%", "8%", "15%"]
 
   return (
-    <section 
-      ref={containerRef} 
+    <section
+      ref={containerRef}
       className="relative h-[210vh] w-full bg-night-950 text-white"
     >
       <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col items-center justify-start pt-16 md:pt-24">
-        
+
         {/* Ambient Glow */}
         <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center">
           <div className="absolute w-[80vw] h-[50vh] bg-aurora-sea/5 blur-[120px] rounded-[100%]" />
@@ -133,9 +133,9 @@ export function ConcernsGrid() {
               <motion.div
                 key={item.slug}
                 style={shouldReduceMotion ? {} : { rotate, x, y, originY: "120%", zIndex: idx }}
-                whileHover={shouldReduceMotion ? {} : { 
-                  y: -40, 
-                  scale: 1.05, 
+                whileHover={shouldReduceMotion ? {} : {
+                  y: -40,
+                  scale: 1.05,
                   zIndex: 50,
                   transition: { type: "spring", stiffness: 300, damping: 20 }
                 }}
@@ -147,7 +147,7 @@ export function ConcernsGrid() {
               >
                 {/* 3D Glass Light reflection (top edge) */}
                 <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-50" />
-                
+
                 <div className="relative z-10 flex flex-col h-full justify-between pointer-events-none">
                   <div>
                     <div className="w-14 h-14 rounded-full bg-white/5 flex items-center justify-center backdrop-blur-md border border-white/10 mb-6 shadow-xl relative overflow-hidden">
@@ -164,7 +164,7 @@ export function ConcernsGrid() {
                   </div>
 
                   <Link href={categoryUrl} className="mt-8 flex items-center gap-2 text-white font-semibold group/link">
-                    Explore resources 
+                    Explore resources
                     <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
                   </Link>
                 </div>

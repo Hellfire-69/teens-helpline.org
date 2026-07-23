@@ -56,7 +56,7 @@ const ScrollExpandMedia = ({
         e.preventDefault();
       } else if (!mediaFullyExpanded) {
         e.preventDefault();
-        const scrollDelta = e.deltaY * 0.0018; 
+        const scrollDelta = e.deltaY * 0.0018;
         const current = scrollProgress.get();
         const newProgress = Math.min(Math.max(current + scrollDelta, 0), 1);
         scrollProgress.set(newProgress);
@@ -89,7 +89,7 @@ const ScrollExpandMedia = ({
         e.preventDefault();
       } else if (!mediaFullyExpanded) {
         e.preventDefault();
-        const scrollFactor = deltaY < 0 ? 0.012 : 0.010; 
+        const scrollFactor = deltaY < 0 ? 0.012 : 0.010;
         const scrollDelta = deltaY * scrollFactor;
         const current = scrollProgress.get();
         const newProgress = Math.min(Math.max(current + scrollDelta, 0), 1);
@@ -154,17 +154,17 @@ const ScrollExpandMedia = ({
 
   const mediaWidth = useTransform(smoothProgress, [0, 1], [300, isMobileState ? 950 : 1550]);
   const mediaHeight = useTransform(smoothProgress, [0, 1], [400, isMobileState ? 600 : 800]);
-  
+
   const leftX = useTransform(smoothProgress, [0, 1], ["0vw", isMobileState ? "-180vw" : "-150vw"]);
   const rightX = useTransform(smoothProgress, [0, 1], ["0vw", isMobileState ? "180vw" : "150vw"]);
-  
+
   const bgOpacity = useTransform(smoothProgress, [0, 1], [1, 0]);
   const overlayOpacity = useTransform(smoothProgress, [0, 1], [0.7, 0.4]);
 
   const parts = title ? title.split('|') : [];
   let firstWord = '';
   let restOfTitle = '';
-  
+
   if (parts.length > 1) {
     firstWord = parts[0]?.trim() ?? '';
     restOfTitle = parts[1]?.trim() ?? '';
@@ -174,8 +174,9 @@ const ScrollExpandMedia = ({
     firstWord = words.slice(0, middleIndex).join(' ');
     restOfTitle = words.slice(middleIndex).join(' ');
   }
-  
+
   const childrenOpacity = useTransform(smoothProgress, [0.85, 1], [0, 1]);
+  const bgY = useTransform(smoothProgress, [0, 1], ["0%", "15%"]);
 
   return (
     <div
@@ -186,7 +187,7 @@ const ScrollExpandMedia = ({
         <div className='relative w-full flex flex-col items-center min-h-[100dvh]'>
           <motion.div
             className='absolute inset-0 z-0 h-full'
-            style={{ opacity: bgOpacity }}
+            style={{ opacity: bgOpacity, y: bgY }}
           >
             <Image
               src={bgImageSrc}
@@ -226,11 +227,11 @@ const ScrollExpandMedia = ({
                         src={
                           mediaSrc.includes('embed')
                             ? mediaSrc +
-                              (mediaSrc.includes('?') ? '&' : '?') +
-                              'autoplay=1&mute=1&loop=1&controls=0&showinfo=0&rel=0&disablekb=1&modestbranding=1'
+                            (mediaSrc.includes('?') ? '&' : '?') +
+                            'autoplay=1&mute=1&loop=1&controls=0&showinfo=0&rel=0&disablekb=1&modestbranding=1'
                             : mediaSrc.replace('watch?v=', 'embed/') +
-                              '?autoplay=1&mute=1&loop=1&controls=0&showinfo=0&rel=0&disablekb=1&modestbranding=1&playlist=' +
-                              mediaSrc.split('v=')[1]
+                            '?autoplay=1&mute=1&loop=1&controls=0&showinfo=0&rel=0&disablekb=1&modestbranding=1&playlist=' +
+                            mediaSrc.split('v=')[1]
                         }
                         className='w-full h-full'
                         frameBorder='0'
@@ -280,7 +281,7 @@ const ScrollExpandMedia = ({
                     />
                   </div>
                 )}
-                
+
                 <motion.div
                   className="absolute inset-0 z-30 flex items-center justify-center"
                   style={{ opacity: childrenOpacity, pointerEvents: mediaFullyExpanded ? 'auto' : 'none' }}
@@ -309,9 +310,8 @@ const ScrollExpandMedia = ({
               </motion.div>
 
               <div
-                className={`flex items-center justify-center text-center gap-4 w-full relative z-10 flex-col ${
-                  textBlend ? 'mix-blend-difference' : 'mix-blend-normal'
-                }`}
+                className={`flex items-center justify-center text-center gap-4 w-full relative z-10 flex-col ${textBlend ? 'mix-blend-difference' : 'mix-blend-normal'
+                  }`}
               >
                 <motion.h2
                   className='text-4xl md:text-5xl lg:text-6xl font-bold text-blue-200'

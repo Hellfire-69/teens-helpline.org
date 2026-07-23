@@ -67,11 +67,14 @@ Extends `auth.users` with the application's public-facing profile data. One row 
 |---|---|---|---|---|
 | `id` | uuid (PK) | No | — | Same value as `auth.users.id` (1:1 extension, not a separate identity) |
 | `alias` | text | No | — | The only display identity; never a real name |
-| `age_band` | text | No | — | Self-declared bracket (e.g. `13-15`, `16-19`), never exact birthdate |
+| `email` | text | Yes | null | Included for persistent accounts |
+| `age_band` | text | No | — | Self-declared bracket (e.g. `13-15`, `16-19`), never exact birthdate. Parent accounts intentionally default to 'Unknown'. |
 | `role` | text (enum-like) | No | `'teen'` | One of: `teen`, `parent`, `counsellor`, `teacher_educator`, `moderator`, `admin` |
 | `preferred_persona` | text | Yes | `'big_brother'` | One of the four Nova personas (Persona.md §1); null defaults to Big Brother |
 | `avatar_id` | text | Yes | null | References a fixed illustrated set id, not a Storage file path (no uploads in MVP) |
 | `school_verified` | boolean | Yes | `false` | Reserved for Teacher/Educator role verification, Phase 2 |
+| `onboarding_completed` | boolean | No | `false` | Core application flag to track if initial flow is finished |
+| `onboarding_completed_at` | timestamptz | Yes | null | Dead/unused column in MVP; safe to leave as-is for future analytics |
 | `created_at` | timestamptz | No | now() | |
 | `updated_at` | timestamptz | No | now() | Updated via trigger, §9 |
 

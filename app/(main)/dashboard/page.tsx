@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getCurrentUserWithRole } from "@/features/auth/service";
+import { getCurrentUserWithRole } from "@/features/auth/server";
 
 export default async function DashboardIndexPage() {
   const { profile, type } = await getCurrentUserWithRole();

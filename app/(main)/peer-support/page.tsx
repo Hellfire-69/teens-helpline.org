@@ -1,6 +1,6 @@
 import { ChatInterface } from "@/features/peer-support/components/chat-interface";
 import type { Metadata } from "next";
-import { getCurrentUserWithRole } from "@/features/auth/service";
+import { getCurrentUserWithRole } from "@/features/auth/server";
 import { UsersThree, WarningCircle } from "@phosphor-icons/react/dist/ssr";
 
 export const metadata: Metadata = {

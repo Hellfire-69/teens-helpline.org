@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { submitMessageSchema } from "@/features/peer-support/schema";
 import { submitMessage } from "@/features/peer-support/service";
-import { getCurrentUserWithRole } from "@/features/auth/service";
+import { getCurrentUserWithRole } from "@/features/auth/server";
 
 export async function POST(req: NextRequest): Promise<Response> {
   try {

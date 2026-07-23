@@ -1,73 +1,80 @@
-/**
- * Auth feature — service layer
- *
- * Business logic for anonymous session creation, magic link sign-in,
- * Google OAuth, and session/role resolution.
- */
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { createProfileData, getProfileData, updateProfileData } from "./data";
+import type { Profile, UserPreferences } from "./types";
+import { createClient as createServerClient } from "@/lib/supabase/server";
 
-import { createClient } from "@/lib/supabase/server";
-import { createProfile, getProfile } from "./data";
-import type { AuthUserContext } from "./types";
+export class AuthService {
+  constructor(private supabase: SupabaseClient) { }
 
-export async function continueAnonymously() {
-  const supabase = await createClient();
-  const { data, error } = await supabase.auth.signInAnonymously();
-  if (error) throw new Error(error.message);
-  return data;
-}
+  async signUp(email: string, password: string, displayName: string, role: "teen" | "parent") {
+    const { data: authData, error: authError } = await this.supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          display_name: displayName,
+          role,
+        },
+      },
+    });
 
-export async function signInWithEmail(email: string, redirectTo: string) {
-  const supabase = await createClient();
-  const { data, error } = await supabase.auth.signInWithOtp({
-    email,
-    options: {
-      emailRedirectTo: redirectTo,
-    },
-  });
-  if (error) throw new Error(error.message);
-  return data;
-}
+    if (authError) throw new Error(authError.message);
+    if (!authData.user) throw new Error("No user returned from signup");
 
-export async function signInWithGoogle(redirectTo: string) {
-  const supabase = await createClient();
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: "google",
-    options: {
-      redirectTo,
-    },
-  });
-  if (error) throw new Error(error.message);
-  return data;
-}
-
-export async function getCurrentUserWithRole(): Promise<AuthUserContext> {
-  const supabase = await createClient();
-  const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-
-  if (sessionError || !session) {
-    return { type: "guest", user: null, profile: null };
+    // Profile creation is now handled entirely by the handle_new_user DB trigger.
+    return { user: authData.user, profile: null, preferences: null };
   }
 
-  const { user } = session;
-  
-  if (user.is_anonymous) {
-    return { type: "anonymous", user: { ...user, is_anonymous: !!user.is_anonymous }, profile: null };
+  async signIn(email: string, password: string) {
+    const { data, error } = await this.supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) throw new Error(error.message);
+    return data.user;
   }
 
-  const profile = await getProfile(supabase, user.id);
-  
-  // If the user has a session but no profile, they likely just signed in for the first time via OAuth or Magic Link.
-  // In a real app, we might redirect to an onboarding flow. For now, if profile is missing, we create it.
-  if (!profile) {
-    const newProfile = await createProfile(user.id);
-    return { type: "authenticated", user: { ...user, is_anonymous: !!user.is_anonymous }, profile: newProfile };
+  async signInAnonymously() {
+    const { data, error } = await this.supabase.auth.signInAnonymously();
+    if (error) throw new Error(error.message);
+    return data.user;
   }
 
-  return { type: "authenticated", user: { ...user, is_anonymous: !!user.is_anonymous }, profile };
-}
+  async signInWithGoogle(redirectTo: string) {
+    const { data, error } = await this.supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo,
+      },
+    });
+    if (error) throw new Error(error.message);
+    return data;
+  }
 
-export async function signOut() {
-  const supabase = await createClient();
-  const { error } = await supabase.auth.signOut();
-  if (error) throw new Error(error.message);
+  async signOut() {
+    const { error } = await this.supabase.auth.signOut();
+    if (error) throw new Error(error.message);
+  }
+
+  async refreshSession() {
+    const { data, error } = await this.supabase.auth.refreshSession();
+    if (error) throw new Error(error.message);
+    return data.session;
+  }
+
+
+
+  async updateProfile(userId: string, updates: Partial<Profile & UserPreferences>) {
+    await updateProfileData(this.supabase, userId, updates);
+  }
+
+  async loadProfile(userId: string) {
+    return await getProfileData(this.supabase, userId);
+  }
+
+  async getCurrentUser() {
+    const { data: { user }, error } = await this.supabase.auth.getUser();
+    if (error || !user) return null;
+    return user;
+  }
 }

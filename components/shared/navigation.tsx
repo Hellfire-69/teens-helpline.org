@@ -2,15 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { House, Books, UsersThree, ChatCircleDots, Heartbeat, Gear, SignOut, ShieldCheck } from "@phosphor-icons/react";
+import { House, Books, UsersThree, ChatCircleDots, Heartbeat, Gear, SignOut, ShieldCheck, UserCircle } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "motion/react";
-import { useState } from "react";
+import { motion } from "motion/react";
 import { signOutAction } from "@/features/auth/actions";
 
 export function Navigation({ role }: { role: string | null }) {
   const pathname = usePathname();
-  const [showSettingsToast, setShowSettingsToast] = useState(false);
 
   // The dashboard route defaults to teen for anonymous/guests.
   const dashboardHref = role === "parent" ? "/dashboard/parent" : "/dashboard/teen";
@@ -22,11 +20,6 @@ export function Navigation({ role }: { role: string | null }) {
     { name: "Peer Support", href: "/peer-support", icon: UsersThree, disabled: false },
     { name: "Study Hub", href: "/study-hub", icon: Books, disabled: false },
   ];
-
-  const handleSettingsClick = () => {
-    setShowSettingsToast(true);
-    setTimeout(() => setShowSettingsToast(false), 3000);
-  };
 
   return (
     <>
@@ -145,16 +138,39 @@ export function Navigation({ role }: { role: string | null }) {
             <span className="text-type-body-sm font-medium text-ink-600 dark:text-ink-300">Support is available 24/7</span>
           </div>
 
-          {/* Settings — Coming Soon */}
-          <button
-            onClick={handleSettingsClick}
-            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-radius-lg text-ink-600 dark:text-ink-300 hover:bg-ink-100/50 dark:hover:bg-ink-800/50 transition-colors text-left"
-            aria-label="Settings (coming soon)"
+          {/* Profile */}
+          <Link
+            href="/profile"
+            className={cn(
+              "flex items-center gap-3 px-4 py-2.5 rounded-radius-lg transition-colors duration-fast outline-none focus-visible:ring-2 focus-visible:ring-aurora-sea",
+              pathname === "/profile" 
+                ? "text-aurora-sea bg-aurora-sea/10" 
+                : "text-ink-600 dark:text-ink-300 hover:bg-ink-100/50 dark:hover:bg-ink-800/50 hover:text-ink-900 dark:hover:text-white"
+            )}
+            aria-label="Profile"
           >
-            <Gear weight="duotone" className="w-5 h-5" aria-hidden="true" />
-            <span className="text-type-body-md font-medium">Settings</span>
-            <span className="ml-auto text-[10px] uppercase bg-ink-200 dark:bg-ink-800 text-ink-500 dark:text-ink-400 px-2 py-0.5 rounded-radius-full font-bold tracking-wide">Soon</span>
-          </button>
+            <UserCircle weight={pathname === "/profile" ? "fill" : "duotone"} className="w-5 h-5" aria-hidden="true" />
+            <span className={cn("text-type-body-md", pathname === "/profile" ? "font-semibold" : "font-medium")}>
+              Profile
+            </span>
+          </Link>
+
+          {/* Settings */}
+          <Link
+            href="/settings"
+            className={cn(
+              "flex items-center gap-3 px-4 py-2.5 rounded-radius-lg transition-colors duration-fast outline-none focus-visible:ring-2 focus-visible:ring-aurora-sea",
+              pathname === "/settings" 
+                ? "text-aurora-sea bg-aurora-sea/10" 
+                : "text-ink-600 dark:text-ink-300 hover:bg-ink-100/50 dark:hover:bg-ink-800/50 hover:text-ink-900 dark:hover:text-white"
+            )}
+            aria-label="Settings"
+          >
+            <Gear weight={pathname === "/settings" ? "fill" : "duotone"} className="w-5 h-5" aria-hidden="true" />
+            <span className={cn("text-type-body-md", pathname === "/settings" ? "font-semibold" : "font-medium")}>
+              Settings
+            </span>
+          </Link>
 
           {/* Log Out — functional via server action */}
           <form action={signOutAction}>
@@ -168,22 +184,7 @@ export function Navigation({ role }: { role: string | null }) {
             </button>
           </form>
 
-          {/* Settings Coming Soon Toast */}
-          <AnimatePresence>
-            {showSettingsToast && (
-              <motion.div
-                initial={{ opacity: 0, y: 8, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                className="absolute bottom-full mb-2 left-2 right-2 bg-ink-900 dark:bg-white text-white dark:text-ink-900 text-type-body-sm font-medium px-4 py-3 rounded-radius-lg shadow-lg text-center"
-                role="status"
-                aria-live="polite"
-              >
-                ⚙️ Settings will be available soon!
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {/* Removed Settings Toast */}
         </div>
       </nav>
     </>

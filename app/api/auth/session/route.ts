@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getCurrentUserWithRole } from "@/features/auth/service";
+import { getCurrentUserWithRole } from "@/features/auth/server";
 import type { ApiResponse } from "@/types";
 
 export async function GET() {
