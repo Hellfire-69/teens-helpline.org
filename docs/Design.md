@@ -592,7 +592,7 @@ Where AI-assisted image generation is used for illustration exploration (never f
 ## 48. Dependency Guidelines
 
 - No new visual/animation dependency is added without checking it against the performance budget (§43) first — Context7 MCP is consulted for current, accurate docs before adoption (TRD "AI-Assisted Development Standards").
-- Anything that would pull in a WebGL/3D engine (Three.js, React Three Fiber) requires an explicit Phase 2 design + engineering sign-off — out of baseline architecture per TRD ADR-008/§3 callout.
+- Anything that would pull in a WebGL/3D engine (Three.js, React Three Fiber) is strictly confined exclusively to `features/onboarding/`, dynamically imported, code-split from the global bundle, with a graceful-degradation guardrail. This scoped exception was explicitly signed off and is now the only allowed usage of Three.js.
 - No component library is used wholesale as a visual system (i.e., never "just use shadcn's default theme") — every primitive is retokenized through this document before shipping.
 
 ---

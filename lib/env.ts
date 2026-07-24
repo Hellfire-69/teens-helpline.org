@@ -52,11 +52,13 @@ function validateEnv<T extends z.ZodTypeAny>(
   return result.data as z.infer<T>;
 }
 
-// These run at module import time — if a required var is absent the process
-// exits immediately with a readable error, not a cryptic runtime failure.
-export const serverEnv = validateEnv(serverEnvSchema, process.env as Record<string, string | undefined>);
-
+// These run at module import time. To prevent client-side crashes when a 
+// Client Component imports publicEnv from this file, we only validate serverEnv 
+// if we are running in a Node.js/server context.
+export const serverEnv = typeof window === "undefined"
+  ? validateEnv(serverEnvSchema, process.env as Record<string, string | undefined>)
+  : ({} as z.infer<typeof serverEnvSchema>);
 export const publicEnv = validateEnv(publicEnvSchema, {
-  NEXT_PUBLIC_SUPABASE_URL: process.env["NEXT_PUBLIC_SUPABASE_URL"],
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env["NEXT_PUBLIC_SUPABASE_ANON_KEY"],
+  NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
 });

@@ -1,9 +1,27 @@
-﻿/**
- * mood-engine feature — TypeScript types stub
- *
- * Feature-specific types. Cross-cutting types (UserRole, ApiResponse) live in
- * /types/index.ts and are imported from there — never duplicated here.
- * Implemented on the corresponding feature branch.
+/**
+ * mood-engine feature — TypeScript types
  */
 
-export {};
+export type RecommendationCategory =
+  | "article"
+  | "study-hub-tool"
+  | "breathing-exercise"
+  | "journal"
+  | "peer-support"
+  | "professional-help";
+
+export type MoodEngineResult = {
+  escalation: boolean;
+  escalationReason?: string | null;
+  recommendationCategory?: RecommendationCategory | null;
+  safeReply?: string; // Used if escalation is true
+};
+
+export type MoodEntry = {
+  id: string;
+  user_id: string | null;
+  mood_value: string;
+  note: string | null;
+  risk_flagged: boolean;
+  created_at: string;
+};

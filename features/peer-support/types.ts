@@ -1,4 +1,4 @@
-﻿/**
+/**
  * peer-support feature — TypeScript types stub
  *
  * Feature-specific types. Cross-cutting types (UserRole, ApiResponse) live in
@@ -6,4 +6,12 @@
  * Implemented on the corresponding feature branch.
  */
 
-export {};
+export type PeerSession = {
+  id: string;
+  user_id: string | null;
+  anon_token: string | null;
+  status: string;
+  moderator_flag: boolean;
+  created_at: string;
+  updated_at: string;
+};

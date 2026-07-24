@@ -148,14 +148,14 @@ main          ← production releases only (via release branch)
 
 | Branch | Module | Key files |
 |---|---|---|
-| `feature/auth-scaffold` | Auth (anonymous + Google/Email sign-in) | `features/auth/`, `app/(auth)/`, `app/api/auth/` |
-| `feature/nova-conversation` | Nova AI chat + Safety/Escalation Layer | `features/nova/`, `app/api/chat/`, `tests/e2e/` |
-| `feature/mood-engine` | Mood check-in + recommendations | `features/mood-engine/`, `app/api/mood/` |
-| `feature/study-hub` | Resource content + search | `features/study-hub/`, `app/study-hub/`, `app/api/resources/` |
-| `feature/peer-support` | Peer sessions + moderation | `features/peer-support/`, `app/peer-support/`, `app/api/peer-support/` |
-| `feature/dashboard` | Teen + Parent dashboards | `features/dashboard/`, `app/dashboard/` |
-| `feature/public-pages` | Landing page, About, Safety, FAQ, Contact | `app/(public)/` |
-| `feature/onboarding` | Onboarding flow (avatar, role, mood) | `app/onboarding/` |
+| `feature/auth-scaffold` | Auth (anonymous + Google/Email sign-in) | (Merged) |
+| `feature/nova-conversation` | Nova AI chat + Safety/Escalation Layer | (Merged) |
+| `feature/mood-engine` | Mood check-in + recommendations | (Merged) |
+| `feature/study-hub` | Resource content + search | (Merged) |
+| `feature/peer-support` | Peer sessions + moderation | (Merged) |
+| `feature/dashboard` | Teen + Parent dashboards | **Next/Final** (Blocked on UI teammate) |
+| `feature/public-pages` | Landing page, About, Safety, FAQ, Contact | **Next** (Unconfirmed UI/UX start) |
+| `feature/onboarding` | Onboarding flow (avatar, role, mood) | **Next** (Unconfirmed UI/UX start) |
 | `feature/admin` | Admin reports/escalation views (Coming Soon) | `features/admin/`, `app/api/admin/` |
 
 > **Start with `feature/auth-scaffold` and `feature/nova-conversation`** — auth is a prerequisite for everything, and Nova's safety layer is the highest-priority code path in the system.
@@ -180,7 +180,7 @@ GitHub Actions runs on every PR to `main` or `develop`:
 
 1. Install → Lint → Typecheck → Unit/Integration tests → Build check
 
-All jobs must pass for merge. The Playwright E2E job is scaffolded but disabled (`if: false`) until the safety-critical suite exists on `feature/nova-conversation`.
+All jobs must pass for merge. The Playwright E2E job is fully enabled and gates all PRs touching safety-critical paths (Nova, Peer Support, Mood Engine), verifying the safety suite and Crisis Banner functionality.
 
 ---
 

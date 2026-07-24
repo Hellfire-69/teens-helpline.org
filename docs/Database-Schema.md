@@ -67,11 +67,14 @@ Extends `auth.users` with the application's public-facing profile data. One row 
 |---|---|---|---|---|
 | `id` | uuid (PK) | No | — | Same value as `auth.users.id` (1:1 extension, not a separate identity) |
 | `alias` | text | No | — | The only display identity; never a real name |
-| `age_band` | text | No | — | Self-declared bracket (e.g. `13-15`, `16-19`), never exact birthdate |
+| `email` | text | Yes | null | Included for persistent accounts |
+| `age_band` | text | No | — | Self-declared bracket (e.g. `13-15`, `16-19`), never exact birthdate. Parent accounts intentionally default to 'Unknown'. |
 | `role` | text (enum-like) | No | `'teen'` | One of: `teen`, `parent`, `counsellor`, `teacher_educator`, `moderator`, `admin` |
 | `preferred_persona` | text | Yes | `'big_brother'` | One of the four Nova personas (Persona.md §1); null defaults to Big Brother |
 | `avatar_id` | text | Yes | null | References a fixed illustrated set id, not a Storage file path (no uploads in MVP) |
 | `school_verified` | boolean | Yes | `false` | Reserved for Teacher/Educator role verification, Phase 2 |
+| `onboarding_completed` | boolean | No | `false` | Core application flag to track if initial flow is finished |
+| `onboarding_completed_at` | timestamptz | Yes | null | Dead/unused column in MVP; safe to leave as-is for future analytics |
 | `created_at` | timestamptz | No | now() | |
 | `updated_at` | timestamptz | No | now() | Updated via trigger, §9 |
 
@@ -163,7 +166,7 @@ Maps to TRD's conceptual `counsellor_bookings`. Renamed here to reflect that thi
 | Column | Type | Nullable | Default | Notes |
 |---|---|---|---|---|
 | `id` | uuid (PK) | No | gen_random_uuid() | |
-| `slug` | text | No | — | Unique, URL-safe (e.g. `academic-stress`, `bullying`, `faq`) |
+| `slug` | text | No | — | Unique, URL-safe (e.g. `academic-stress`, `bullying`, `family-concerns`, `friendships-relationships`, `emotional-overwhelm`, `behavioural-concerns`, `confidence-identity`, `career-exploration`, `faq`) |
 | `label` | text | No | — | Human-readable display name |
 | `audience` | text | No | `'teen'` | `teen`, `parent`, `teacher_educator` — this is what replaces the separate `teacher_resources`/`parent_resources` tables |
 | `created_at` | timestamptz | No | now() | |
@@ -177,7 +180,13 @@ Maps to TRD's conceptual `counsellor_bookings`. Renamed here to reflect that thi
 | `title` | text | No | — | |
 | `content` | text | No | — | Markdown/rich text body |
 | `content_warning_flag` | boolean | No | `false` | Per CRD content-governance requirements |
+| `content_warning_text` | text | Yes | null | Displayed on the blur-veil if flagged |
 | `published` | boolean | No | `false` | Draft/publish workflow for content review sign-off (TRD §6 Content Management) |
+| `slug` | text | No | — | Unique, URL-friendly identifier |
+| `content_type` | text | No | — | `article`, `breathing-exercise`, `study-hub-tool`, `journal` |
+| `content_tier` | text | No | — | `reviewed`, `seed_draft` |
+| `summary` | text | No | — | Short preview text for cards |
+| `seo_description` | text | Yes | null | Meta description for search engines |
 | `created_at` | timestamptz | No | now() | |
 | `updated_at` | timestamptz | No | now() | |
 

@@ -7,8 +7,11 @@
  * headline, Nova name, milestone text). Inter is the workhorse.
  */
 import type { Metadata } from "next";
-import { Inter, Fraunces } from "next/font/google";
+import { Inter, Fraunces, Geist } from "next/font/google";
 import "@/styles/globals.css";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const inter = Inter({
   subsets: ["latin"],
@@ -38,15 +41,19 @@ export const metadata: Metadata = {
   },
 };
 
+import { AuthProvider } from "@/features/auth/components/auth-provider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${fraunces.variable}`} suppressHydrationWarning>
+    <html lang="en" className={cn(inter.variable, fraunces.variable, "font-sans", geist.variable)} suppressHydrationWarning>
       <body>
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );
