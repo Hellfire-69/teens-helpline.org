@@ -107,7 +107,7 @@ export function ParentDashboard({ data: _data }: { data: ParentDashboardData }) 
                 </p>
               </div>
               <Button asChild variant="secondary" size="sm" className="mt-4 md:mt-0 whitespace-nowrap bg-white hover:bg-ink-50 dark:bg-night-950 dark:hover:bg-ink-900">
-                <Link href="/study-hub/article/conversation-starters">
+                <Link href="/study-hub">
                   <BookOpenText weight="duotone" className="w-4 h-4 mr-2" />
                   Read Guide
                 </Link>

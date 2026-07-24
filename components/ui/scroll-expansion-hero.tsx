@@ -38,23 +38,41 @@ const ScrollExpandMedia = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [showContent, setShowContent] = useState<boolean>(false);
   const [mediaFullyExpanded, setMediaFullyExpanded] = useState<boolean>(false);
-  const [touchStartY, setTouchStartY] = useState<number>(0);
   const [isMobileState, setIsMobileState] = useState<boolean>(false);
 
   const sectionRef = useRef<HTMLDivElement | null>(null);
+
+  // Stable refs so event handlers never read stale state via closure.
+  // Using refs instead of state in dependency array prevents re-registration
+  // of listeners on every touch move / expansion state change — which was the
+  // root cause of the production double-scroll (listener gap race condition).
+  const mediaFullyExpandedRef = useRef<boolean>(false);
+  const touchStartYRef = useRef<number>(0);
+
+  // Keep ref in sync with state (state still drives rendering, ref drives event handlers).
+  useEffect(() => {
+    mediaFullyExpandedRef.current = mediaFullyExpanded;
+  }, [mediaFullyExpanded]);
 
   useEffect(() => {
     scrollProgress.set(0);
     setShowContent(false);
     setMediaFullyExpanded(false);
+    mediaFullyExpandedRef.current = false;
   }, [mediaType, scrollProgress]);
 
+  // Single stable effect — listeners are registered once on mount and removed on unmount.
+  // Stale-closure reads are avoided by using refs; no re-registration on state changes.
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
-      if (mediaFullyExpanded && e.deltaY < 0 && window.scrollY <= 5) {
+      const expanded = mediaFullyExpandedRef.current;
+      if (expanded && e.deltaY < 0 && window.scrollY <= 5) {
         setMediaFullyExpanded(false);
+        mediaFullyExpandedRef.current = false;
         e.preventDefault();
-      } else if (!mediaFullyExpanded) {
+      } else if (!expanded) {
+        // Intercept wheel and drive animation — preventDefault stops native scroll.
+        // No scrollTo(0,0) needed; preventDefault alone is sufficient and avoids the race.
         e.preventDefault();
         const scrollDelta = e.deltaY * 0.0018;
         const current = scrollProgress.get();
@@ -63,6 +81,7 @@ const ScrollExpandMedia = ({
 
         if (newProgress >= 1) {
           setMediaFullyExpanded(true);
+          mediaFullyExpandedRef.current = true;
           setShowContent(true);
         } else if (newProgress < 0.75) {
           setShowContent(false);
@@ -73,21 +92,24 @@ const ScrollExpandMedia = ({
     const handleTouchStart = (e: TouchEvent) => {
       if (e.touches.length > 0) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        setTouchStartY(e.touches[0]!.clientY);
+        touchStartYRef.current = e.touches[0]!.clientY;
       }
     };
 
     const handleTouchMove = (e: TouchEvent) => {
-      if (!touchStartY || e.touches.length === 0) return;
+      const startY = touchStartYRef.current;
+      if (!startY || e.touches.length === 0) return;
 
+      const expanded = mediaFullyExpandedRef.current;
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const touchY = e.touches[0]!.clientY;
-      const deltaY = touchStartY - touchY;
+      const deltaY = startY - touchY;
 
-      if (mediaFullyExpanded && deltaY < -20 && window.scrollY <= 5) {
+      if (expanded && deltaY < -20 && window.scrollY <= 5) {
         setMediaFullyExpanded(false);
+        mediaFullyExpandedRef.current = false;
         e.preventDefault();
-      } else if (!mediaFullyExpanded) {
+      } else if (!expanded) {
         e.preventDefault();
         const scrollFactor = deltaY < 0 ? 0.012 : 0.010;
         const scrollDelta = deltaY * scrollFactor;
@@ -97,49 +119,34 @@ const ScrollExpandMedia = ({
 
         if (newProgress >= 1) {
           setMediaFullyExpanded(true);
+          mediaFullyExpandedRef.current = true;
           setShowContent(true);
         } else if (newProgress < 0.75) {
           setShowContent(false);
         }
 
-        setTouchStartY(touchY);
+        touchStartYRef.current = touchY;
       }
     };
 
     const handleTouchEnd = (): void => {
-      setTouchStartY(0);
+      touchStartYRef.current = 0;
     };
 
-    const handleScroll = (): void => {
-      if (!mediaFullyExpanded) {
-        window.scrollTo(0, 0);
-      }
-    };
-
-    window.addEventListener('wheel', handleWheel as unknown as EventListener, {
-      passive: false,
-    });
-    window.addEventListener('scroll', handleScroll as EventListener);
-    window.addEventListener(
-      'touchstart',
-      handleTouchStart as unknown as EventListener,
-      { passive: false }
-    );
-    window.addEventListener(
-      'touchmove',
-      handleTouchMove as unknown as EventListener,
-      { passive: false }
-    );
+    window.addEventListener('wheel', handleWheel as unknown as EventListener, { passive: false });
+    window.addEventListener('touchstart', handleTouchStart as unknown as EventListener, { passive: false });
+    window.addEventListener('touchmove', handleTouchMove as unknown as EventListener, { passive: false });
     window.addEventListener('touchend', handleTouchEnd as EventListener);
 
     return () => {
       window.removeEventListener('wheel', handleWheel as unknown as EventListener);
-      window.removeEventListener('scroll', handleScroll as EventListener);
       window.removeEventListener('touchstart', handleTouchStart as unknown as EventListener);
       window.removeEventListener('touchmove', handleTouchMove as unknown as EventListener);
       window.removeEventListener('touchend', handleTouchEnd as EventListener);
     };
-  }, [scrollProgress, mediaFullyExpanded, touchStartY]);
+    // scrollProgress is a stable MotionValue ref — safe single dependency.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scrollProgress]);
 
   useEffect(() => {
     const checkIfMobile = (): void => {
