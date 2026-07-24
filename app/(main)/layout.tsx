@@ -23,18 +23,18 @@ export default async function MainLayout({ children }: { children: React.ReactNo
   const role = profile?.role || (type === "anonymous" ? "anonymous" : "guest");
 
   return (
-    <div className="relative h-screen flex flex-col md:flex-row overflow-hidden">
+    <div className="relative min-h-screen flex flex-col md:flex-row">
       <AuroraMesh />
       
-      {/* Sidebar Navigation */}
+      {/* Sidebar Navigation — desktop: fixed; mobile: fixed bottom tab bar (see navigation.tsx) */}
       <Navigation role={role} />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col md:ml-64 w-full">
+      <div className="flex-1 flex flex-col md:ml-64 w-full min-h-screen">
         {/* Top Safety & Utility Bar */}
         <SafetyBar />
         
-        {/* Page Content */}
+        {/* Page Content — pb-24 clears the fixed mobile tab bar (≈60px) + safe area */}
         <main className="flex-1 flex flex-col pb-24 md:pb-8 w-full max-w-[1440px] mx-auto overflow-x-hidden">
           <PageTransition>
             {children}
