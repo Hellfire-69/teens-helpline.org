@@ -77,7 +77,6 @@ function ChatPageContent() {
   }, [messages, isEscalated]);
 
   const handleCardSelect = async (e: React.MouseEvent<HTMLDivElement>, id: PersonaId) => {
-    console.log("handleCardSelect called for", id);
     if (activeOnboardingCard) return; // Prevent double-clicks
 
     setActiveOnboardingCard(id);

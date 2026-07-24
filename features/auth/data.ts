@@ -11,8 +11,8 @@ export async function createProfileData(
 ): Promise<{ profile: Profile; preferences: UserPreferences }> {
   const adminClient = createAdminClient();
 
-  // placeholder age band until onboarding
-  const placeholderAgeBand = "13-15";
+  // Default age band written at profile creation; overwritten during onboarding (PRD §4.2).
+  const ageBandDefault = "13-15";
 
   const { data, error } = await adminClient
     .from("profiles")
@@ -20,7 +20,7 @@ export async function createProfileData(
       id: userId,
       alias,
       email,
-      age_band: placeholderAgeBand,
+      age_band: ageBandDefault,
       role,
       onboarding_completed: false,
     })
