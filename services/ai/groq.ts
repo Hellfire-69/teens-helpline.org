@@ -22,7 +22,7 @@ export class GroqProvider implements AIProvider {
     // We enforce compliance by repeating the core directive immediately before the user's message.
     const securedLastMessage = {
       role: "user" as const,
-      content: `System Instructions for Assistant:\n${ANTI_INJECTION_GUARD}\n\nUser Message:\n${lastMessage!.content}`
+      content: `System Instructions for Assistant:\n${ANTI_INJECTION_GUARD}\n\nUser Message:\n${lastMessage?.content ?? ""}`
     };
 
     const messages: Array<{ role: "system" | "user" | "assistant"; content: string }> = [

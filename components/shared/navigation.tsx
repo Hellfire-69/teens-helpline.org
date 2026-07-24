@@ -19,6 +19,7 @@ export function Navigation({ role }: { role: string | null }) {
     { name: "Mood Check", href: "/mood", icon: Heartbeat, disabled: false },
     { name: "Journal", href: "/journal", icon: PenNib, disabled: false },
     { name: "Peer Support", href: "/peer-support", icon: UsersThree, disabled: false },
+    { name: "Support", href: "/consultation", icon: ShieldCheck, disabled: false },
     { name: "Study Hub", href: "/study-hub", icon: Books, disabled: false },
   ];
 
