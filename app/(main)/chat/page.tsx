@@ -313,9 +313,9 @@ export default function ChatPage() {
                         onClick={() => sendMessage(chip.text)}
                         aria-label={`Start conversation: ${chip.text}`}
                         className={`flex flex-col items-center text-center p-space-4 bg-white/50 dark:bg-black/20 hover:bg-white/80 dark:hover:bg-black/40 border border-white/20 dark:border-white/10 rounded-radius-lg shadow-sm transition-all duration-[180ms] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${activePersona === "big_brother" ? "focus-visible:ring-aurora-sea" :
-                            activePersona === "big_sister" ? "focus-visible:ring-aurora-blush" :
-                              activePersona === "mentor" ? "focus-visible:ring-aurora-dusk" :
-                                "focus-visible:ring-aurora-dawn"
+                          activePersona === "big_sister" ? "focus-visible:ring-aurora-blush" :
+                            activePersona === "mentor" ? "focus-visible:ring-aurora-dusk" :
+                              "focus-visible:ring-aurora-dawn"
                           }`}
                       >
                         <chip.icon weight="duotone" className={`w-6 h-6 mb-space-3 ${activeTheme.textClass}`} aria-hidden="true" />
@@ -359,7 +359,7 @@ export default function ChatPage() {
                 })}
               </div>
 
-              <div className="h-8 w-full shrink-0" />
+              <div className="h-36 w-full shrink-0" />
             </div>
           </div>
 
