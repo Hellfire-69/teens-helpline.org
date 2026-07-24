@@ -4,6 +4,7 @@ import { QuickExit } from "@/components/shared/quick-exit";
 import { getCurrentUserWithRole } from "@/features/auth/server";
 import { PageTransition } from "@/components/shared/page-transition";
 import { AuroraMesh } from "@/components/shared/aurora-mesh";
+import { GlobalCrisisBanner } from "@/components/shared/global-crisis-banner";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -42,6 +43,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
       </div>
 
       <QuickExit />
+      <GlobalCrisisBanner />
     </div>
   );
 }

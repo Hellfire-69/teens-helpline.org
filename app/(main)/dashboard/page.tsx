@@ -5,7 +5,7 @@ export default async function DashboardIndexPage() {
   const { profile, type } = await getCurrentUserWithRole();
 
   if (type === "anonymous") {
-    redirect("/chat"); // Anonymous users go to chat
+    redirect("/dashboard/teen");
   }
 
   if (!profile) {
