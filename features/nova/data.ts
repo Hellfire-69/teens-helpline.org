@@ -5,7 +5,7 @@ import type { RiskSignal } from "./escalation";
 export async function logEscalationEvent(
   supabase: SupabaseClient, // Still passed but we'll use adminClient for this specific table
   userId: string | null,
-  triggerSource: "nova" | "mood_entry" | "peer_chat" | "content_page",
+  triggerSource: "nova" | "mood_entry" | "peer_chat" | "content_page" | "journal",
   riskSignal: RiskSignal
 ) {
   const adminClient = createAdminClient();
