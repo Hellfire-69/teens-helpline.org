@@ -73,7 +73,7 @@ export default function SignInPage() {
     try {
       await signInAnonymously()
       router.refresh()
-      router.push("/dashboard")
+      router.push("/onboarding")
     } catch {
       setError("Network error. Please try again.")
       setLoading(false)
