@@ -64,7 +64,7 @@ export function TeenDashboard({ data }: { data: TeenDashboardData }) {
               </Button>
               {isAnonymous && (
                 <Button asChild variant="secondary" size="lg" className="rounded-radius-full">
-                  <Link href="/auth">Create an account</Link>
+                  <Link href="/signup">Create an account</Link>
                 </Button>
               )}
             </div>
@@ -218,7 +218,7 @@ export function TeenDashboard({ data }: { data: TeenDashboardData }) {
                 </p>
                 <div className="pt-2">
                   <Button asChild variant="secondary" size="sm" className="bg-white hover:bg-ink-50 dark:bg-night-950 dark:hover:bg-ink-900">
-                    <Link href="/study-hub/article/grounding-techniques">Read Article</Link>
+                    <Link href="/study-hub">Read Article</Link>
                   </Button>
                 </div>
               </div>

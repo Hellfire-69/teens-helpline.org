@@ -15,8 +15,11 @@ export default async function ProfessionalConsultationPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  // Apply authentication gating logic
-  if (!user) {
+  // Apply authentication gating: block both unauthenticated users and Supabase
+  // anonymous-auth users. Anonymous sessions receive a real user object, so
+  // !user alone is not sufficient — we must also check user.is_anonymous.
+  // Per PRD Consultation Flow: professional booking requires a persistent account.
+  if (!user || user.is_anonymous) {
     return (
       <div className="flex-1 w-full max-w-3xl mx-auto px-4 md:px-space-8 py-space-12 flex flex-col items-center justify-center">
         <div className="w-16 h-16 bg-aurora-sea/10 rounded-radius-full flex items-center justify-center mb-space-6 text-aurora-sea">
@@ -26,15 +29,26 @@ export default async function ProfessionalConsultationPage() {
           Account Required
         </h2>
         <p className="text-type-body-md text-ink-600 dark:text-ink-400 text-center max-w-md mb-space-8">
-          Professional Consultation Booking is a structured service that requires you to be signed in to your account.
+          Professional Consultation Booking requires a verified account. Create a free account or sign in to continue.
         </p>
-        <div className="flex gap-4">
-          <Link href="/consultation" className="inline-flex items-center text-ink-600 hover:text-ink-900 transition-colors">
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+          <Link href="/consultation" className="inline-flex items-center text-ink-600 hover:text-ink-900 dark:text-ink-400 dark:hover:text-white transition-colors text-type-body-sm">
             <ArrowLeft className="w-4 h-4 mr-2" /> Back to Support Options
           </Link>
-          <Link href="/signin" className="bg-gradient-to-r from-aurora-dusk to-aurora-sea text-white h-11 px-6 rounded-radius-sm flex items-center justify-center font-semibold hover:brightness-110 transition-all">
-            Sign In
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/signin"
+              className="border border-aurora-sea text-aurora-sea h-11 px-5 rounded-radius-sm flex items-center justify-center font-semibold hover:bg-aurora-sea/10 transition-all text-type-body-sm"
+            >
+              Sign In
+            </Link>
+            <Link
+              href="/signup"
+              className="bg-gradient-to-r from-aurora-dusk to-aurora-sea text-white h-11 px-5 rounded-radius-sm flex items-center justify-center font-semibold hover:brightness-110 transition-all text-type-body-sm"
+            >
+              Create Account
+            </Link>
+          </div>
         </div>
       </div>
     );
