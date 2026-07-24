@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { House, Books, UsersThree, ChatCircleDots, Heartbeat, Gear, SignOut, ShieldCheck, UserCircle } from "@phosphor-icons/react";
+import { House, Books, UsersThree, ChatCircleDots, Heartbeat, Gear, SignOut, ShieldCheck, UserCircle, PenNib } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
 import { signOutAction } from "@/features/auth/actions";
@@ -17,6 +17,7 @@ export function Navigation({ role }: { role: string | null }) {
     { name: "Dashboard", href: dashboardHref, icon: House, disabled: false },
     { name: "Nova", href: "/chat", icon: ChatCircleDots, disabled: false },
     { name: "Mood Check", href: "/mood", icon: Heartbeat, disabled: false },
+    { name: "Journal", href: "/journal", icon: PenNib, disabled: false },
     { name: "Peer Support", href: "/peer-support", icon: UsersThree, disabled: false },
     { name: "Study Hub", href: "/study-hub", icon: Books, disabled: false },
   ];

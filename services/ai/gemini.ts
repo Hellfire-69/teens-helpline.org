@@ -9,9 +9,9 @@ export class GeminiProvider implements AIProvider {
   async generateReply(context: AIProviderContext): Promise<string> {
     logger.info("Generating reply with Gemini...", { messagesCount: context.messages.length });
     
-    // We use gemini-flash-latest as the standard conversational model for speed and efficiency.
+    // We use gemini-flash-lite-latest as the standard conversational model for speed and efficiency.
     const model = genAI.getGenerativeModel({
-      model: "gemini-flash-latest",
+      model: "gemini-flash-lite-latest",
       systemInstruction: context.systemPrompt,
     });
 

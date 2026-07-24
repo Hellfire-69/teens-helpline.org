@@ -39,7 +39,7 @@ export function usePeerSession() {
           setMyUserId(authData.user?.id || null);
         }
 
-        if (!json.success) {
+        if (!json.success || !json.data) {
           throw new Error(json.error?.message || "Failed to join session");
         }
         

@@ -32,9 +32,11 @@ export default function SignUpPage() {
 
     try {
       await signUp(email, password, displayName, role)
-      // Routing is handled by layout, but we can navigate to dashboard (layout will catch incomplete onboarding)
-      router.push("/dashboard")
+      router.refresh()
+      // Since this is a new signup, redirect directly to onboarding
+      router.push("/onboarding")
     } catch (err: unknown) {
+      console.error("Signup error details:", err);
       setError(err instanceof Error ? err.message : "Network error. Please try again.")
     } finally {
       setLoading(false)
