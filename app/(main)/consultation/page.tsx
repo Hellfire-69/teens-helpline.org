@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function ConsultationChooserPage() {
   return (
-    <div className="flex-1 w-full max-w-4xl mx-auto px-4 md:px-space-8 py-space-12 flex flex-col items-center justify-center min-h-[calc(100vh-80px)]">
+    <div className="flex-1 w-full max-w-4xl mx-auto px-4 md:px-space-8 py-space-12 flex flex-col items-center justify-center">
       <div className="text-center mb-space-12">
         <h1 className="text-type-display font-fraunces text-ink-900 dark:text-white mb-space-4">
           How can we support you today?

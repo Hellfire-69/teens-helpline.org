@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function MoodPage() {
   return (
-    <main className="min-h-screen py-space-8 px-4 md:px-space-8 w-full max-w-6xl mx-auto relative z-10 space-y-space-12 pt-16">
+    <div className="w-full py-8 space-y-12">
       
       <div className="flex flex-col lg:flex-row gap-space-8 w-full">
         {/* Main Check-in Area */}
@@ -64,6 +64,6 @@ export default function MoodPage() {
 
         </div>
       </div>
-    </main>
+    </div>
   );
 }
