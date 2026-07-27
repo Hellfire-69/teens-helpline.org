@@ -188,7 +188,7 @@ const ScrollExpandMedia = ({
   return (
     <div
       ref={sectionRef}
-      className='overflow-x-hidden'
+      className='overflow-x-clip'
     >
       <section className='relative flex flex-col items-center justify-start min-h-[100dvh]'>
         <div className='relative w-full flex flex-col items-center min-h-[100dvh]'>

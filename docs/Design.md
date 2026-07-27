@@ -384,8 +384,8 @@ The crisis banner **always** uses `easing.settle` — zero bounce, zero overshoo
 
 ## 26. Navigation Behavior
 
-- **Primary navigation** is a floating glass tab bar (mobile) / floating glass sidebar (desktop) — `glass.standard` tier, always visible, never auto-hiding on scroll (auto-hide nav creates exactly the kind of unpredictability §3.3 warns against).
-- The crisis "I need help now" entry point lives **outside** the standard nav rhythm — visually distinct, fixed position, same location on every single screen (top-of-viewport on mobile, always-visible in the sidebar header on desktop) so it never has to be relearned or searched for.
+- **Primary navigation** uses a hamburger + slide-out drawer (mobile) / collapsible floating glass sidebar (desktop) — `glass.standard` tier (`glass.prominent` for the mobile drawer panel with backdrop scrim), always accessible, never auto-hiding on scroll (auto-hide nav creates exactly the kind of unpredictability §3.3 warns against).
+- The crisis "I need help now" entry point and Quick Exit live **outside** the standard nav rhythm — visually distinct, fixed position, same location on every single screen (top-of-viewport / persistent bottom bar on mobile, always-visible in the sidebar header / bottom corner on desktop) so they never have to be relearned or searched for, and are never gated behind opening the mobile drawer or delayed by its animation.
 - Back navigation is always explicit (visible back control), never reliant on OS gesture alone, and never destructive (returning never discards unsaved input without a gentle confirmation).
 
 ---

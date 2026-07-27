@@ -64,7 +64,7 @@ export const ChatInterface = memo(function ChatInterface() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className="flex flex-col h-[calc(100vh-100px)] md:h-[calc(100vh-80px)] bg-white/70 dark:bg-night-900/70 border border-white/30 dark:border-white/10 rounded-radius-2xl shadow-sm overflow-hidden w-full max-w-4xl mx-auto"
+      className="flex flex-col flex-1 min-h-[400px] bg-white/70 dark:bg-night-900/70 border border-white/30 dark:border-white/10 rounded-radius-2xl shadow-sm overflow-hidden w-full max-w-4xl mx-auto"
       style={{ backdropFilter: "blur(16px)" }}
     >
       {/* Header — single blur layer, no nested backdrop */}
