@@ -34,7 +34,7 @@ export default async function PeerSupportPage() {
   }
 
   return (
-    <main className="flex flex-col py-space-6 px-4 md:px-space-8 w-full min-h-screen">
+    <main className="flex flex-col py-space-6 px-4 md:px-space-8 w-full flex-1">
       {/* Page header */}
       <div className="max-w-4xl mx-auto w-full mb-space-6">
         <div className="flex items-center gap-3 mb-space-2">

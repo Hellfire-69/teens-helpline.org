@@ -40,7 +40,7 @@ export default async function CategoryPage(
   const resources = await getResources({ category: category.slug, limit: 50 });
 
   return (
-    <main className="min-h-screen py-space-12 px-space-5 md:px-space-8 max-w-content mx-auto w-full pt-24 relative z-10">
+    <main className="flex-1 py-space-12 px-space-5 md:px-space-8 max-w-content mx-auto w-full pt-24 relative z-10">
       <div className="mb-space-10">
         <Link href="/study-hub" className="inline-flex items-center text-aurora-sea font-medium hover:underline mb-space-4 outline-none focus-visible:ring-2 focus-visible:ring-aurora-sea rounded-sm">
           <ArrowLeft className="mr-2" /> Back to Study Hub

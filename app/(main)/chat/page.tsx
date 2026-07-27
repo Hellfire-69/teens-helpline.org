@@ -140,7 +140,7 @@ function ChatPageContent() {
   }));
 
   return (
-    <div className="relative flex flex-col flex-1 h-[calc(100vh-80px)] md:h-[calc(100vh-64px)] max-h-[calc(100vh-80px)] md:max-h-[calc(100vh-64px)] min-h-0 w-full overflow-hidden pt-4">
+    <div className="relative flex flex-col flex-1 h-[calc(100vh-80px)] md:h-[calc(100vh-94px)] max-h-[calc(100vh-80px)] md:max-h-[calc(100vh-94px)] min-h-0 w-full overflow-hidden pt-4">
 
       {/* 1. Dynamic Page-wide Scene Warmth Layer (Mood lighting) */}
       <motion.div
@@ -284,14 +284,14 @@ function ChatPageContent() {
       {/* Main Content Area */}
       {hasSelectedPersona ? (
         // ACTIVE CHAT SCENE
-        // Note: calc(100vh-80px) and calc(100vh-64px) are magic numbers tied to current header/nav height; update if header height tokens change.
+        // Note: calc(100vh-80px) and calc(100vh-94px) are magic numbers tied to current header/nav height; update if header height tokens change (94px accounts for ~93.6px SafetyBar on desktop).
         <motion.div
           initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="relative flex-1 flex flex-col h-[calc(100vh-80px)] md:h-[calc(100vh-64px)] max-h-[calc(100vh-80px)] md:max-h-[calc(100vh-64px)] min-h-0 w-full overflow-hidden"
+          className="relative flex-1 flex flex-col h-[calc(100vh-80px)] md:h-[calc(100vh-94px)] max-h-[calc(100vh-80px)] md:max-h-[calc(100vh-94px)] min-h-0 w-full overflow-hidden"
         >
-          <div className="flex-1 overflow-y-auto min-h-0 pb-72 px-4 md:px-space-8 scroll-smooth scrollbar-hide" ref={scrollContainerRef}>
+          <div className="flex-1 overflow-y-auto min-h-0 pb-72 px-4 md:px-8 scroll-smooth scrollbar-hide" ref={scrollContainerRef}>
             <div className={`max-w-3xl mx-auto w-full flex flex-col items-start ${messages.length === 0 ? "min-h-full" : ""}`}>
               {messages.length === 0 && !error && (
                 <div className="flex-1 w-full flex flex-col items-center justify-center mt-12 md:mt-24">
@@ -371,8 +371,8 @@ function ChatPageContent() {
         </motion.div>
       ) : (
         // ONBOARDING PERSONA SELECTION SCENE
-        <div className="flex-1 w-full flex flex-col items-center justify-center px-4">
-          <div className="max-w-4xl w-full flex flex-col items-center mt-4">
+        <div className="flex-1 w-full flex flex-col items-center justify-center px-4 md:px-8">
+          <div className="max-w-4xl w-full mx-auto flex flex-col items-center mt-4">
 
             {/* Centered avatar with bloom binding */}
             <div ref={avatarRef} data-testid="onboarding-avatar" className="mb-4">

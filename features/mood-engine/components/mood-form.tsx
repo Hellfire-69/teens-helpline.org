@@ -121,13 +121,13 @@ export function MoodForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto flex flex-col items-center">
+    <form onSubmit={handleSubmit} className="w-full max-w-3xl mx-auto flex flex-col items-center">
       <div className="text-center mb-space-10">
         <h2 className="text-type-display font-fraunces text-ink-900 dark:text-white mb-space-3 tracking-tight">How are you feeling?</h2>
         <p className="text-type-body-lg text-ink-600 dark:text-ink-300">Take a moment to check in with yourself.</p>
       </div>
 
-      <div className="flex flex-wrap justify-center gap-space-4 md:gap-space-6 mb-space-8 w-full">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4 mb-space-8 w-full">
         {MOODS.map((mood) => {
           const isSelected = selectedMood === mood.value;
           return (
@@ -137,11 +137,11 @@ export function MoodForm() {
               aria-pressed={isSelected}
               aria-label={`Select mood: ${mood.label}`}
               onClick={() => setSelectedMood(mood.value)}
-              className="relative outline-none group focus-visible:ring-2 focus-visible:ring-aurora-sea rounded-radius-xl"
+              className="relative outline-none group focus-visible:ring-2 focus-visible:ring-aurora-sea rounded-radius-xl w-full"
             >
               <div 
                 className={cn(
-                  "w-24 h-28 md:w-28 md:h-32 rounded-radius-xl flex flex-col items-center justify-center gap-space-3 transition-all duration-[180ms] border relative z-10",
+                  "w-full h-28 md:h-32 rounded-radius-xl flex flex-col items-center justify-center gap-space-3 transition-all duration-[180ms] border relative z-10",
                   isSelected
                     ? mood.activeClass + " shadow-sm border-transparent"
                     : "bg-white/50 dark:bg-black/20 border-white/30 dark:border-white/10 hover:shadow-sm " + mood.colorClass

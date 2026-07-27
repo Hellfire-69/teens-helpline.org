@@ -27,7 +27,7 @@ export default async function StudyHubPage(props: {
     const safeResults = results.filter((r: Resource) => !r.content_warning_flag);
     
     return (
-      <main className="min-h-screen py-space-8 px-4 md:px-space-8 w-full relative z-10">
+      <main className="flex-1 py-space-8 px-4 md:px-space-8 w-full relative z-10">
         <div className="mb-space-10 max-w-4xl">
           <Link
             href="/study-hub"
@@ -77,7 +77,7 @@ export default async function StudyHubPage(props: {
   const hasFeatured = featuredResources.length > 0;
 
   return (
-    <main className="min-h-screen py-space-8 px-4 md:px-space-8 w-full relative z-10 space-y-space-12">
+    <main className="flex-1 py-space-8 px-4 md:px-space-8 w-full relative z-10 space-y-space-12">
       
       {/* Hero Section */}
       <section
@@ -131,7 +131,7 @@ export default async function StudyHubPage(props: {
               See all →
             </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-4 md:gap-space-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-space-4 md:gap-space-6">
             {featuredResources.map(resource => (
               <ResourceCard key={resource.id} resource={resource} />
             ))}
