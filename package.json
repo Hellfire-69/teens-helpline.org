@@ -1,6 +1,7 @@
 {
   "name": "teenshelpline-org",
   "version": "0.1.0",
+  "description": "A safety-critical emotional support platform for Indian teenagers",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
