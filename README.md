@@ -104,8 +104,9 @@ npm run dev
 │   ├── unit/                   # Vitest
 │   ├── integration/            # Vitest + Supabase test project
 │   └── e2e/                    # Playwright — safety-critical flows (non-negotiable)
+├── scripts/                    # Latency & benchmark scripts (scripts/test-latency.ts)
 ├── supabase/                   # Migrations + RLS (managed via Supabase MCP)
-└── docs/                       # Project documentation
+└── docs/                       # Project documentation (reports in docs/reports/lighthouse-report.html)
 ```
 
 ### Import direction (code-review blocker, not style note)
@@ -153,10 +154,10 @@ main          ← production releases only (via release branch)
 | `feature/mood-engine` | Mood check-in + recommendations | (Merged) |
 | `feature/study-hub` | Resource content + search | (Merged) |
 | `feature/peer-support` | Peer sessions + moderation | (Merged) |
-| `feature/dashboard` | Teen + Parent dashboards | **Next/Final** (Blocked on UI teammate) |
-| `feature/public-pages` | Landing page, About, Safety, FAQ, Contact | **Next** (Unconfirmed UI/UX start) |
-| `feature/onboarding` | Onboarding flow (avatar, role, mood) | **Next** (Unconfirmed UI/UX start) |
-| `feature/admin` | Admin reports/escalation views (Coming Soon) | `features/admin/`, `app/api/admin/` |
+| `feature/dashboard` | Teen + Parent dashboards | (Merged via `feature/dashboard-redesign`) |
+| `feature/public-pages` | Landing page, About, Safety, FAQ, Contact | (Merged via `feature/landing-page-redesign`) |
+| `feature/onboarding` | Onboarding flow (avatar, role, mood) | (Merged via `feature/auth-onboarding-audit`) |
+| `feature/admin` | Admin reports/escalation views (Coming Soon) | `features/admin/`, `app/api/admin/` (Deferred) |
 
 > **Start with `feature/auth-scaffold` and `feature/nova-conversation`** — auth is a prerequisite for everything, and Nova's safety layer is the highest-priority code path in the system.
 
