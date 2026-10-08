@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useOnboardingStore } from "@/stores/onboardingStore";
+import { useOnboardingStore } from "@/stores/onboarding-store";
 import { WelcomeStep } from "./steps/WelcomeStep";
 import { AvatarStep } from "./steps/AvatarStep";
 import { MoodStep } from "./steps/MoodStep";

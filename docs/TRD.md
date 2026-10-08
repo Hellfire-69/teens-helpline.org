@@ -550,7 +550,7 @@ Zustand stores, kept small and single-purpose:
 
 | Store | Holds | Persistence |
 |---|---|---|
-| `onboardingStore` | Current step, optional avatar choice, selected role, mood-at-onboarding, stated concern | In-memory only; not written to browser storage (privacy — see PRD Chat Memory) |
+| `onboarding-store` | Current step, optional avatar choice, selected role, mood-at-onboarding, stated concern | In-memory only; not written to browser storage (privacy — see PRD Chat Memory) |
 | `moodStore` | Current session's mood entry + optional note | In-memory for anonymous; synced to Supabase only for logged-in users |
 | `novaStore` | Transient conversation UI state (typing indicator, current escalation flag) | In-memory only |
 | `uiStore` | Quick-exit state, modal/dialog visibility | In-memory only |

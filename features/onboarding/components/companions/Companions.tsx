@@ -1,7 +1,7 @@
 "use client";
 
 
-import { type Avatar } from "@/stores/onboardingStore";
+import { type Avatar } from "@/stores/onboarding-store";
 
 interface CompanionProps {
   id: Avatar;
