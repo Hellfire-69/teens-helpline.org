@@ -161,7 +161,7 @@ graph TD
 ├── hooks/                       # Shared React hooks (non-feature-specific)
 ├── lib/                         # Cross-cutting utilities (supabase client, env, logger)
 ├── services/                    # Cross-feature service abstractions (AI provider abstraction, rate limiter)
-├── stores/                      # Zustand stores (onboarding, mood, nova UI, ui/quick-exit)
+├── stores/                      # Zustand stores (onboarding-store, mood-store; Nova store in features/nova/)
 ├── types/                       # Shared TypeScript types/interfaces
 ├── utils/                       # Pure helper functions
 ├── public/                      # Static assets, Lottie JSON files, illustrations
@@ -550,10 +550,10 @@ Zustand stores, kept small and single-purpose:
 
 | Store | Holds | Persistence |
 |---|---|---|
-| `onboardingStore` | Current step, optional avatar choice, selected role, mood-at-onboarding, stated concern | In-memory only; not written to browser storage (privacy — see PRD Chat Memory) |
-| `moodStore` | Current session's mood entry + optional note | In-memory for anonymous; synced to Supabase only for logged-in users |
-| `novaStore` | Transient conversation UI state (typing indicator, current escalation flag) | In-memory only |
-| `uiStore` | Quick-exit state, modal/dialog visibility | In-memory only |
+| `onboarding-store` | Current step, optional avatar choice, selected role, mood-at-onboarding, stated concern | In-memory only; not written to browser storage (privacy — see PRD Chat Memory) |
+| `mood-store` | Current session's mood entry + optional note | In-memory for anonymous; synced to Supabase only for logged-in users |
+| `features/nova/store.ts` (`useNovaStore`) | Transient conversation UI state (typing indicator, current escalation flag) | In-memory only (colocated in feature module) |
+| *(Component-level)* | Quick-exit handled directly in `components/shared/quick-exit.tsx` via window.location | N/A (no external store) |
 
 > **No `localStorage`/`sessionStorage` for any teen-identifying or conversation data**, anonymous or logged-in — this would create a persistence path the PRD explicitly says shouldn't exist for anonymous users, and would put PII in a less-secured storage layer for logged-in users. Logged-in persistence goes through Supabase (RLS-protected), never the browser's storage APIs.
 

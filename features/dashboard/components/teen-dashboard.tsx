@@ -7,7 +7,7 @@ import type { TeenDashboardData } from "@/features/dashboard/types";
 import Link from "next/link";
 import { motion } from "motion/react";
 import { useEffect } from "react";
-import { useOnboardingStore } from "@/stores/onboardingStore";
+import { useOnboardingStore } from "@/stores/onboarding-store";
 
 export function TeenDashboard({ data }: { data: TeenDashboardData }) {
   const isAnonymous = !data.profile;
