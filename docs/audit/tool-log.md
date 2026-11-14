@@ -3,3 +3,8 @@
 - **Find-Skills**: Searched Skills CLI (`skills find "accessibility"` -> 0 matches; applied local design system).
 - **Design Skills**: Enforced Design.md precedence (Fraunces ≤5xl, 6deg hover tilt limit, glass tokens, 44px+ touch targets).
 - **Ponytail Review & Verification**: Confirmed clean lean diff, 0 typecheck errors, and 0 lint errors.
+- **Modern Web Guidance**: Retrieved accordion & accessibility specs; legacy-scan reported 0 findings across all 5 changed files.
+- **Context7**: Queried shadcn base-nova accordion and Base UI primitives; confirmed zero additional npm packages required.
+- **Find-Skills & shadcn**: Checked shadcn CLI setup with components.json and verified MIT license and Base UI bindings.
+- **Design Skills (impeccable / design-taste-frontend)**: Enforced Design.md tokens (aurora/ink/night), light/dark mode parity, max text-5xl, and no Quick Exit button overlap.
+- **Ponytail Review & Superpowers Verification**: Validated minimal surgical diffs, 0 new dependencies, 0 typecheck errors, and 0 lint errors before final commit.
