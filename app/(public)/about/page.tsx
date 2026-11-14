@@ -5,8 +5,8 @@ import Link from "next/link"
 import { motion, useReducedMotion } from "motion/react"
 import { Heart, EyeSlash, Shield, ArrowRight } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
-import { PeerSupportSection } from "@/features/marketing/components/PeerSupportSection"
-import { FAQ } from "@/features/marketing/components/FAQ"
+import { AboutPeerSupport } from "@/features/marketing/components/AboutPeerSupport"
+import { AboutFAQ } from "@/features/marketing/components/AboutFAQ"
 
 export default function AboutPage() {
   const shouldReduceMotion = useReducedMotion()
@@ -112,11 +112,11 @@ export default function AboutPage() {
         </motion.div>
       </section>
 
-      {/* ─── Peer Support Section ─── */}
-      <PeerSupportSection />
+      {/* ─── Peer Support Section (About Only) ─── */}
+      <AboutPeerSupport />
 
-      {/* ─── Frequently Asked Questions ─── */}
-      <FAQ />
+      {/* ─── Frequently Asked Questions (About Only) ─── */}
+      <AboutFAQ />
 
       {/* ─── Closing Block ─── */}
       <section className="max-w-4xl mx-auto text-center my-16 md:my-24">
