@@ -166,6 +166,9 @@ export default function SignUpPage() {
               <div className="relative">
                 <input
                   type="email"
+                  id="email"
+                  name="email"
+                  autoComplete="username"
                   required
                   placeholder="you@example.com"
                   value={email}
@@ -176,6 +179,9 @@ export default function SignUpPage() {
               <div className="relative">
                 <input
                   type="password"
+                  id="new-password"
+                  name="password"
+                  autoComplete="new-password"
                   required
                   placeholder="Password (min 6 chars)"
                   value={password}
@@ -186,6 +192,9 @@ export default function SignUpPage() {
               <div className="relative">
                 <input
                   type="password"
+                  id="confirm-password"
+                  name="confirmPassword"
+                  autoComplete="new-password"
                   required
                   placeholder="Confirm Password"
                   value={confirmPassword}

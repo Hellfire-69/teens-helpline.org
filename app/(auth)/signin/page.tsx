@@ -230,6 +230,9 @@ export default function SignInPage() {
               <div className="relative">
                 <input
                   type="email"
+                  id="email"
+                  name="email"
+                  autoComplete="username"
                   required
                   placeholder="you@example.com"
                   value={email}
@@ -241,6 +244,9 @@ export default function SignInPage() {
               <div className="relative">
                 <input
                   type="password"
+                  id="password"
+                  name="password"
+                  autoComplete="current-password"
                   required
                   placeholder="Password (min 6 chars)"
                   value={password}
