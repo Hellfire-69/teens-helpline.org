@@ -174,6 +174,7 @@ Mesh gradients are pre-rendered to a static image on low-power-mode/reduced-moti
 - Achieved via `perspective` + `transform-style: preserve-3d` with a Motion-driven `whileHover`/`whileTap` tilt, max rotation **6deg** on any axis — anything more reads as gimmicky, not premium.
 - Light source is fixed top-left across the entire product (consistent with the fixed aurora light metaphor) — gradient highlight and shadow angle on 3D elements must always agree with this, never flipped per-component.
 - Depth is reinforced with a soft radial highlight (12–18% white overlay) at the simulated light-facing edge, not a literal gloss/reflection — avoids a "plastic toy" look.
+- **Home Page Exception (`ConcernsGrid`):** The scroll-pinned card fan-out in `ConcernsGrid` on the home page exceeds the standard rotation limit, applying rotation angles from -28° to +28° (`[-28, -16, -4, 4, 16, 28]`) across a 6-card spread pinned in a `210vh` container. This is an approved home-page-only showcase exception to give visual presence to the variety of concerns teens bring. Elsewhere across the product (onboarding, dashboard, modal dialogs, and interactive cards), the **6deg** rotation limit remains strictly enforced.
 
 ---
 
@@ -195,6 +196,12 @@ Mesh gradients are pre-rendered to a static image on low-power-mode/reduced-moti
 | `type.label` | 12px → 13px | 600, uppercase, 0.04em tracking | 1.2 | Eyebrows, badges, form labels |
 
 **Rules:** body copy line length capped at 68 characters; no text below 12px anywhere in the product; Nova's replies always render at `body.lg`, never smaller, regardless of viewport — this is a deliberate legibility floor for a safety-critical reading context.
+
+- **Home Page Exception (Fraunces Scale & Heading Frequency):** The marketing home page is an approved exception to both the 48px size ceiling and the <10% frequency rule, establishing an editorial, warm entrance:
+  - **Hero Headings:** In `Hero.tsx` / `scroll-expansion-hero.tsx`, headlines scale up to `text-3xl md:text-5xl lg:text-6xl` (30px → 60px) and `text-4xl md:text-5xl lg:text-6xl` (36px → 60px) with `font-bold tracking-tight`.
+  - **Section Titles:** Major section H2 titles across the home page use `font-fraunces font-semibold` at `text-4xl md:text-5xl lg:text-6xl` (`NovaCallout`, `FeaturesGrid`, `ConcernsGrid`), `text-3xl md:text-5xl` (`Flow`), and `text-4xl md:text-5xl` (`Testimonials`), rather than the Inter `type.title.xl` (26px → 34px) specified for product pages.
+  - **Section Accents:** Home page card headings (`Trust` cards at `text-xl`), flow step numerals and titles (`Flow` step badges and `text-xl md:text-2xl` headings), and brand wordmarks (`Navbar`, `Footer`) also use `font-fraunces`.
+  - **Inner Pages:** All inner product pages (dashboard, onboarding flow, chat, journal, peer support, study hub, consultation, settings) must adhere strictly to the baseline limits: Fraunces strictly reserved for emotional accents (<10% screen text), `type.display` capped at 48px, and section/page headers using Inter.
 
 ---
 
@@ -321,6 +328,11 @@ Nova is **not** a humanoid character and is never rendered as one — this avoid
 - Nova has three visual states, each with a distinct but subtle animation: **resting** (slow 4s breathing pulse, opacity 85–100%), **listening** (gentle inward contraction while the user types), **responding** (soft outward bloom synced to text streaming in).
 - Nova's glow **never** turns red, orange, or any alert-adjacent hue — even during an escalation hand-off, Nova's own visual stays in its calm palette; the crisis banner (a separate, clearly distinct UI element) carries the urgency instead. This is a deliberate signal: Nova itself is never the source of alarm.
 - No mouth, no eyes, no literal face — the form communicates presence and attentiveness through motion and light alone.
+- **Current Home Page Representation (`NovaCallout`):** On the marketing home page today, Nova is presented in `NovaCallout.tsx` via a rendered raster image asset:
+  - **Asset:** Rendered via `<Image src="/images/Nova.png" alt="Nova AI Avatar" ... />`.
+  - **Dimensions & Container:** Placed in a centered `w-56 h-56 md:w-72 md:h-72` container with pointer events disabled.
+  - **Motion & Aura:** The image features a 7s vertical floating animation (`y: [-8, 8, -8]`, easeInOut) layered over a continuous pulsing radial aura (`scale: [1, 1.05, 1]`, `opacity: [0.4, 0.7, 0.4]` over 5s) styled as `bg-aurora-sea/30 blur-3xl mix-blend-screen`, with a cyan/teal glow filter (`drop-shadow-[0_0_60px_rgba(45,212,191,0.5)]`).
+  - **Context:** Rendered alongside simulated floating conversation bubbles (user prompt and Nova reassuring reply) to illustrate conversational support. In-app surfaces (active chat canvas, dashboard status) continue to follow the abstracted procedural glow blob described above.
 
 ---
 
@@ -392,9 +404,11 @@ The crisis banner **always** uses `easing.settle` — zero bounce, zero overshoo
 
 ## 27. Landing Page Guidelines
 
-- Hero: Fraunces `type.display` headline, single clear value statement, immediate visibility of "Continue Anonymously" as the visually primary CTA (Google/Email secondary, per PRD's anonymous-first product philosophy) — the landing page's entire job is to get someone into safety fast, not to sell features.
+- Hero: Fraunces headline, single clear value statement, immediate visibility of "Continue Anonymously" as the visually primary CTA (Google/Email secondary, per PRD's anonymous-first product philosophy) — the landing page's entire job is to get someone into safety fast, not to sell features.
 - The crisis banner **appears on the landing page too**, before any login state exists — safety access is never gated behind entry-method choice.
-- No auto-playing video, no animated hero illustration competing with the CTA, no scroll-jacking.
+- No auto-playing video, no animated hero illustration competing with the CTA.
+- **Hero Scroll-Expansion Exception:** The home page hero implements an interactive scroll-expansion pattern via `ScrollExpandMedia` (`components/ui/scroll-expansion-hero.tsx`), which intercepts initial wheel and touch events (`e.preventDefault()`) to smoothly expand the hero media frame (`/images/hero-foreground.png` against `/images/hero-background.png`) from a centered card to full viewport before presenting the full headline ("You don't have to carry it all alone.") and primary CTAs. This scroll-expansion is an **approved home-page-only exception** designed to create an immersive visual introduction.
+- **Other Pages Rule:** No scroll-jacking or scroll-intercepting mechanics are permitted anywhere else in the application. All inner pages (onboarding, dashboard, chat, journal, peer support, study hub, consultation, settings) must maintain standard, unobstructed native browser scrolling at all times.
 
 ---
 
