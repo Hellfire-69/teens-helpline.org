@@ -25,6 +25,55 @@ export function Navbar() {
   const [hoveredPath, setHoveredPath] = React.useState<string | null>(null)
   const [hoveredDropdownPath, setHoveredDropdownPath] = React.useState<string | null>(null)
   const [dropdownOpen, setDropdownOpen] = React.useState(false)
+  const [bannerHeight, setBannerHeight] = React.useState<number | null>(null)
+
+  React.useEffect(() => {
+    let resizeObserver: ResizeObserver | null = null
+    let observedElement: HTMLElement | null = null
+
+    const updateHeight = (el: HTMLElement) => {
+      setBannerHeight(el.getBoundingClientRect().height)
+    }
+
+    const sync = () => {
+      const banner = document.getElementById("crisis-banner")
+      if (banner) {
+        if (banner !== observedElement) {
+          if (resizeObserver) {
+            resizeObserver.disconnect()
+          }
+          observedElement = banner
+          resizeObserver = new ResizeObserver(() => {
+            updateHeight(banner)
+          })
+          resizeObserver.observe(banner)
+        }
+        updateHeight(banner)
+      } else {
+        if (resizeObserver) {
+          resizeObserver.disconnect()
+          resizeObserver = null
+        }
+        observedElement = null
+        setBannerHeight(null)
+      }
+    }
+
+    sync()
+
+    const mutationObserver = new MutationObserver(() => {
+      sync()
+    })
+
+    mutationObserver.observe(document.body, { childList: true, subtree: true })
+
+    return () => {
+      if (resizeObserver) {
+        resizeObserver.disconnect()
+      }
+      mutationObserver.disconnect()
+    }
+  }, [])
 
   const handleOtherEnter = () => {
     setHoveredPath('other')
@@ -38,7 +87,10 @@ export function Navbar() {
   return (
     <>
       {/* ─── DESKTOP TOP BAR NAV (lg breakpoint and up) ─── */}
-      <header className="hidden lg:block fixed top-14 left-1/2 -translate-x-1/2 z-50 w-max transition-all duration-300">
+      <header
+        className="hidden lg:block fixed top-14 left-1/2 -translate-x-1/2 z-50 w-max transition-all duration-300"
+        style={bannerHeight !== null ? { top: `${bannerHeight + 8}px` } : undefined}
+      >
         <nav
           className="rounded-full bg-white/80 dark:bg-night-950/80 backdrop-blur-2xl border border-white/40 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.1)] p-1.5 flex items-center gap-2"
           onMouseLeave={() => setHoveredPath(null)}
