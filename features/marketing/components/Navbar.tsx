@@ -28,50 +28,20 @@ export function Navbar() {
   const [bannerHeight, setBannerHeight] = React.useState<number | null>(null)
 
   React.useEffect(() => {
-    let resizeObserver: ResizeObserver | null = null
-    let observedElement: HTMLElement | null = null
+    const banner = document.getElementById("crisis-banner")
+    if (!banner) return
 
-    const updateHeight = (el: HTMLElement) => {
-      setBannerHeight(el.getBoundingClientRect().height)
+    const updateHeight = () => {
+      setBannerHeight(banner.getBoundingClientRect().height)
     }
 
-    const sync = () => {
-      const banner = document.getElementById("crisis-banner")
-      if (banner) {
-        if (banner !== observedElement) {
-          if (resizeObserver) {
-            resizeObserver.disconnect()
-          }
-          observedElement = banner
-          resizeObserver = new ResizeObserver(() => {
-            updateHeight(banner)
-          })
-          resizeObserver.observe(banner)
-        }
-        updateHeight(banner)
-      } else {
-        if (resizeObserver) {
-          resizeObserver.disconnect()
-          resizeObserver = null
-        }
-        observedElement = null
-        setBannerHeight(null)
-      }
-    }
+    updateHeight()
 
-    sync()
-
-    const mutationObserver = new MutationObserver(() => {
-      sync()
-    })
-
-    mutationObserver.observe(document.body, { childList: true, subtree: true })
+    const resizeObserver = new ResizeObserver(updateHeight)
+    resizeObserver.observe(banner)
 
     return () => {
-      if (resizeObserver) {
-        resizeObserver.disconnect()
-      }
-      mutationObserver.disconnect()
+      resizeObserver.disconnect()
     }
   }, [])
 
@@ -233,7 +203,10 @@ export function Navbar() {
       </header>
 
       {/* ─── MOBILE TOP BAR (lg breakpoint and below) ─── */}
-      <header className="lg:hidden fixed top-14 left-4 right-4 z-50 flex items-center justify-between">
+      <header
+        className="lg:hidden fixed top-14 left-4 right-4 z-50 flex items-center justify-between transition-all duration-300"
+        style={bannerHeight !== null ? { top: `${bannerHeight + 8}px` } : undefined}
+      >
         {/* Logo / Wordmark */}
         <Link
           href="/"
