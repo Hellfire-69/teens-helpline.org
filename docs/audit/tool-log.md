@@ -1,0 +1,5 @@
+- **Modern Web Guidance**: Retrieved motion/accessibility guides; legacy-scan reported 0 findings across 33 guides.
+- **Context7**: Queried motion.dev documentation for `useReducedMotion` hook syntax and fallback patterns.
+- **Find-Skills**: Searched Skills CLI (`skills find "accessibility"` -> 0 matches; applied local design system).
+- **Design Skills**: Enforced Design.md precedence (Fraunces ≤5xl, 6deg hover tilt limit, glass tokens, 44px+ touch targets).
+- **Ponytail Review & Verification**: Confirmed clean lean diff, 0 typecheck errors, and 0 lint errors.

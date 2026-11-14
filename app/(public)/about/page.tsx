@@ -1,114 +1,152 @@
 "use client"
 
 import * as React from "react"
-import { motion } from "motion/react"
-import { Heart, EyeSlash, Shield } from "@phosphor-icons/react"
+import Link from "next/link"
+import { motion, useReducedMotion } from "motion/react"
+import { Heart, EyeSlash, Shield, ArrowRight } from "@phosphor-icons/react"
+import { Button } from "@/components/ui/button"
 import { PeerSupportSection } from "@/features/marketing/components/PeerSupportSection"
 import { FAQ } from "@/features/marketing/components/FAQ"
 
 export default function AboutPage() {
-  return (
-    <main className="w-full bg-night-950 min-h-screen text-white pt-32 pb-20 px-4 md:px-8">
-      
-      {/* Aurora Ambient Lighting */}
-      <div className="absolute top-0 left-0 right-0 h-screen pointer-events-none overflow-hidden z-0">
-        <div className="absolute top-[-20%] left-[-10%] w-[70vw] h-[70vw] max-w-[800px] max-h-[800px] bg-aurora-dusk/20 blur-[120px] rounded-full mix-blend-screen animate-pulse duration-[10000ms]" />
-        <div className="absolute top-[20%] right-[-10%] w-[60vw] h-[60vw] max-w-[700px] max-h-[700px] bg-aurora-sea/20 blur-[150px] rounded-full mix-blend-screen animate-pulse duration-[12000ms]" />
-      </div>
+  const shouldReduceMotion = useReducedMotion()
 
-      <div className="max-w-6xl mx-auto relative z-10 text-center mb-24 mt-10">
-        <motion.span 
-          initial={{ opacity: 0, y: 10 }}
+  return (
+    <main className="w-full min-h-screen pt-28 md:pt-36 pb-20 px-4 md:px-8">
+      {/* ─── Hero Section ─── */}
+      <section className="max-w-4xl mx-auto text-center mb-16 md:mb-24 mt-6 md:mt-10">
+        <motion.span
+          initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="inline-block px-4 py-1.5 rounded-full bg-aurora-sea/20 text-aurora-sea text-[11px] font-bold tracking-widest uppercase mb-6 shadow-sm border border-aurora-sea/20 backdrop-blur-md"
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          className="inline-block px-4 py-1.5 rounded-full bg-aurora-sea/10 dark:bg-aurora-sea/20 text-aurora-sea text-xs font-semibold tracking-wider uppercase mb-6 border border-aurora-sea/20 backdrop-blur-md"
         >
-          Our Mission
+          About TeensHelpline
         </motion.span>
-        
-        <motion.h1 
-          initial={{ opacity: 0, y: 20 }}
+
+        <motion.h1
+          initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="font-fraunces text-6xl md:text-8xl font-semibold mb-8 tracking-tight drop-shadow-xl"
+          transition={{ duration: 0.4, delay: shouldReduceMotion ? 0 : 0.05, ease: "easeOut" }}
+          className="font-fraunces text-4xl md:text-5xl font-semibold tracking-tight text-ink-900 dark:text-white mb-6"
         >
-          A safer internet <br className="hidden md:block" /> for every teen.
+          A quiet place to catch your breath.
         </motion.h1>
 
-        <motion.p 
-          initial={{ opacity: 0, y: 20 }}
+        <motion.p
+          initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="text-xl md:text-2xl text-white/70 max-w-3xl mx-auto leading-relaxed"
+          transition={{ duration: 0.4, delay: shouldReduceMotion ? 0 : 0.1, ease: "easeOut" }}
+          className="text-lg md:text-xl text-ink-600 dark:text-ink-300 max-w-2xl mx-auto leading-relaxed"
         >
-          TeensHelpline was built by young people, for young people, to provide anonymous, immediate emotional support without judgment.
+          TeensHelpline was built by young people, for young people, to provide immediate emotional support whenever you need to talk.
         </motion.p>
-      </div>
+      </section>
 
-      {/* Bento Grid Pillars */}
-      <div className="max-w-6xl mx-auto relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6 mb-32">
-        
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
+      {/* ─── Three Pillar Cards ─── */}
+      <section aria-label="Core Pillars" className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-20 md:mb-32">
+        {/* Pillar 1: Warm Support */}
+        <motion.div
+          initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="relative bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[3rem] p-10 overflow-hidden group"
+          whileHover={shouldReduceMotion ? undefined : { y: -4, rotate: -1.5 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          className="rounded-[2.5rem] bg-white/80 dark:bg-night-900/60 backdrop-blur-xl border border-ink-900/10 dark:border-white/10 shadow-lg p-8 md:p-10 flex flex-col justify-between"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-aurora-dusk/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-          <div className="w-16 h-16 rounded-2xl bg-aurora-dusk/20 border border-aurora-dusk/30 flex items-center justify-center mb-8">
-            <Heart className="w-8 h-8 text-aurora-dusk" weight="duotone" />
+          <div>
+            <div className="w-14 h-14 rounded-2xl bg-aurora-sea/10 border border-aurora-sea/20 flex items-center justify-center mb-6">
+              <Heart className="w-7 h-7 text-aurora-sea" weight="duotone" />
+            </div>
+            <h2 className="font-fraunces text-2xl md:text-3xl font-semibold text-ink-900 dark:text-white mb-3">
+              Warm Support
+            </h2>
+            <p className="text-ink-600 dark:text-ink-300 leading-relaxed text-base md:text-lg">
+              Empathy first. No sterile clinical language. We meet you where you are, sounding like a supportive companion who understands everyday stress.
+            </p>
           </div>
-          <h2 className="font-fraunces text-3xl font-semibold mb-4">Warm Support</h2>
-          <p className="text-white/70 leading-relaxed text-lg">
-            Empathy first. No sterile clinical language. We meet you exactly where you are, sounding like a peer who actually gets it.
-          </p>
         </motion.div>
 
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
+        {/* Pillar 2: Anonymous First */}
+        <motion.div
+          initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.1 }}
-          className="relative bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[3rem] p-10 overflow-hidden group"
+          whileHover={shouldReduceMotion ? undefined : { y: -4, rotate: 1.5 }}
+          transition={{ duration: 0.4, delay: shouldReduceMotion ? 0 : 0.08, ease: "easeOut" }}
+          className="rounded-[2.5rem] bg-white/80 dark:bg-night-900/60 backdrop-blur-xl border border-ink-900/10 dark:border-white/10 shadow-lg p-8 md:p-10 flex flex-col justify-between"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-aurora-sea/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-          <div className="w-16 h-16 rounded-2xl bg-aurora-sea/20 border border-aurora-sea/30 flex items-center justify-center mb-8">
-            <EyeSlash className="w-8 h-8 text-aurora-sea" weight="duotone" />
+          <div>
+            <div className="w-14 h-14 rounded-2xl bg-aurora-dusk/10 border border-aurora-dusk/20 flex items-center justify-center mb-6">
+              <EyeSlash className="w-7 h-7 text-aurora-dusk" weight="duotone" />
+            </div>
+            <h2 className="font-fraunces text-2xl md:text-3xl font-semibold text-ink-900 dark:text-white mb-3">
+              Anonymous First
+            </h2>
+            <p className="text-ink-600 dark:text-ink-300 leading-relaxed text-base md:text-lg">
+              You can start right away without creating an account or giving your real name, through the &apos;Continue Anonymously&apos; flow. Chat content is never shared with parents.
+            </p>
           </div>
-          <h2 className="font-fraunces text-3xl font-semibold mb-4">Anonymous First</h2>
-          <p className="text-white/70 leading-relaxed text-lg">
-            Your identity stays yours. No tracking, no forced logins for crisis help. We don't need your name to help you.
-          </p>
         </motion.div>
 
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
+        {/* Pillar 3: Safety Layer & Crisis Support */}
+        <motion.div
+          initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
-          className="relative bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[3rem] p-10 overflow-hidden group"
+          whileHover={shouldReduceMotion ? undefined : { y: -4, rotate: -1.5 }}
+          transition={{ duration: 0.4, delay: shouldReduceMotion ? 0 : 0.16, ease: "easeOut" }}
+          className="rounded-[2.5rem] bg-white/80 dark:bg-night-900/60 backdrop-blur-xl border border-ink-900/10 dark:border-white/10 shadow-lg p-8 md:p-10 flex flex-col justify-between"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-signal-crisis/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-          <div className="w-16 h-16 rounded-2xl bg-signal-crisis/20 border border-signal-crisis/30 flex items-center justify-center mb-8">
-            <Shield className="w-8 h-8 text-signal-crisis" weight="duotone" />
+          <div>
+            <div className="w-14 h-14 rounded-2xl bg-aurora-blush/10 border border-aurora-blush/20 flex items-center justify-center mb-6">
+              <Shield className="w-7 h-7 text-aurora-blush" weight="duotone" />
+            </div>
+            <h2 className="font-fraunces text-2xl md:text-3xl font-semibold text-ink-900 dark:text-white mb-3">
+              Safety Layer &amp; Crisis Support
+            </h2>
+            <p className="text-ink-600 dark:text-ink-300 leading-relaxed text-base md:text-lg">
+              Every message passes through keyword safety detection before reaching the AI. If acute risk or self-harm is detected, a crisis banner immediately displays direct emergency helpline numbers. Peer chats include automated filtering and a report button to flag unsafe messages.
+            </p>
           </div>
-          <h2 className="font-fraunces text-3xl font-semibold mb-4">Safety Net</h2>
-          <p className="text-white/70 leading-relaxed text-lg">
-            Backed by professional safeguarding protocols. If things get dangerous, we securely escalate to emergency services.
-          </p>
         </motion.div>
-      </div>
+      </section>
 
-      <div className="w-full relative z-10 max-w-6xl mx-auto rounded-[3rem] bg-paper-100 dark:bg-night-900 border border-ink-100 dark:border-white/10 overflow-hidden pt-10 mb-32">
-        <PeerSupportSection />
-      </div>
+      {/* ─── Peer Support Section ─── */}
+      <PeerSupportSection />
 
-      <div className="w-full relative z-10 max-w-4xl mx-auto bg-white/5 backdrop-blur-xl border border-white/10 rounded-[3rem] p-8 mb-32">
-        <h2 className="text-center font-fraunces text-4xl font-semibold mb-12 mt-8">Frequently Asked Questions</h2>
-        <div className="bg-white dark:bg-night-900 rounded-3xl p-6">
-          <FAQ />
+      {/* ─── Frequently Asked Questions ─── */}
+      <FAQ />
+
+      {/* ─── Closing Block ─── */}
+      <section className="max-w-4xl mx-auto text-center my-16 md:my-24">
+        <div className="rounded-[2.5rem] bg-white/80 dark:bg-night-900/60 backdrop-blur-xl border border-ink-900/10 dark:border-white/10 shadow-lg p-10 md:p-14 flex flex-col items-center justify-center gap-6">
+          <h2 className="font-fraunces text-3xl md:text-4xl font-semibold text-ink-900 dark:text-white tracking-tight">
+            Ready to take your next right step?
+          </h2>
+
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <Button
+              size="lg"
+              variant="primary"
+              className="group relative overflow-hidden rounded-full px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all duration-300"
+              asChild
+            >
+              <Link href="/onboarding" className="flex items-center gap-3">
+                <span className="font-semibold text-lg">Continue Anonymously</span>
+                <ArrowRight className="w-5 h-5 opacity-80 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+          </div>
+
+          <Link
+            href="/get-help"
+            className="text-sm md:text-base font-medium text-ink-600 dark:text-ink-300 hover:text-ink-900 dark:hover:text-white transition-colors underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aurora-sea rounded-sm"
+          >
+            Need urgent help right now?
+          </Link>
         </div>
-      </div>
-
+      </section>
     </main>
   )
 }
