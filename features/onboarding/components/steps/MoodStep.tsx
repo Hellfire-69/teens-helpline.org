@@ -1,5 +1,5 @@
 import { useOnboardingStore, type Mood } from "@/stores/onboardingStore";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { StepContainer } from "./StepContainer";
 
 const MOODS: { id: Mood; label: string; color: string; icon: React.ReactNode }[] = [

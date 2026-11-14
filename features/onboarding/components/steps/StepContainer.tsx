@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 export function StepContainer({ children, className = "" }: { children: React.ReactNode, className?: string }) {
   return (

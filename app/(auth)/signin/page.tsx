@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/features/auth/components/auth-provider"
-import { motion } from "framer-motion"
+import { motion } from "motion/react"
 import { ArrowRight, UserCircle, Loader2 } from "lucide-react"
 import Link from "next/link"
 
