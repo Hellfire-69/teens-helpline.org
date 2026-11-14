@@ -100,6 +100,8 @@ Color in this system is not decorative — it's a **regulation tool**. Color tem
 | `color.signal.safe` | `#6FBF9E` | Confirmation, success, "you're okay" moments |
 | `color.signal.caution` | `#F2C169` | Gentle caution, non-urgent notices |
 
+- **Crisis Hue Isolation & Marketing Exception:** `signal.crisis` is strictly reserved for live crisis intervention and the crisis banner, with a single approved marketing exception: the "Crisis Help Always Visible" step card in `Flow.tsx` on the home page, which uses the token because it directly showcases the crisis banner feature itself.
+
 ### 5.2 Contextual Color Rules
 
 - **Crisis/escalation surfaces:** desaturate everything *except* the crisis signal itself. The banner should be the only saturated thing on screen when it's active.
