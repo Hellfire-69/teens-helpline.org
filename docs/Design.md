@@ -409,6 +409,7 @@ The crisis banner **always** uses `easing.settle` — zero bounce, zero overshoo
 - No auto-playing video, no animated hero illustration competing with the CTA.
 - **Hero Scroll-Expansion Exception:** The home page hero implements an interactive scroll-expansion pattern via `ScrollExpandMedia` (`components/ui/scroll-expansion-hero.tsx`), which intercepts initial wheel and touch events (`e.preventDefault()`) to smoothly expand the hero media frame (`/images/hero-foreground.png` against `/images/hero-background.png`) from a centered card to full viewport before presenting the full headline ("You don't have to carry it all alone.") and primary CTAs. This scroll-expansion is an **approved home-page-only exception** designed to create an immersive visual introduction.
 - **Other Pages Rule:** No scroll-jacking or scroll-intercepting mechanics are permitted anywhere else in the application. All inner pages (onboarding, dashboard, chat, journal, peer support, study hub, consultation, settings) must maintain standard, unobstructed native browser scrolling at all times.
+- **Public Marketing Pages Language:** The public marketing pages (home, about, parents, schools, get-help) share the home page's visual language: Fraunces for page title and section headings, aurora tokens, glass cards, large radii, and the root aurora mesh background. On public pages other than home: headings max `text-5xl`, no scroll interception, card rotation max **6deg**, and no crisis red outside the crisis banner. The home page keeps its documented exceptions.
 
 ---
 
