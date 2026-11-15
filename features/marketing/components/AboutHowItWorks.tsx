@@ -489,8 +489,10 @@ export function AboutHowItWorks() {
                   return (
                     <button
                       key={step.id}
+                      type="button"
                       role="tab"
                       id={`tab-${step.id}`}
+                      tabIndex={isActive ? 0 : -1}
                       aria-selected={isActive}
                       aria-controls={`panel-${step.id}`}
                       onClick={() => setActive(idx)}
@@ -562,9 +564,10 @@ export function AboutHowItWorks() {
               {/* Demo card container with template blur transition */}
               <div
                 role="tabpanel"
+                tabIndex={0}
                 id={`panel-${currentStep.id}`}
                 aria-labelledby={`tab-${currentStep.id}`}
-                className="relative z-10 w-full max-w-xl bg-paper-50/95 dark:bg-night-950/95 backdrop-blur-md border border-ink-900/10 dark:border-white/10 rounded-2xl p-6 sm:p-8 shadow-xl"
+                className="relative z-10 w-full max-w-xl bg-paper-50/95 dark:bg-night-950/95 backdrop-blur-md border border-ink-900/10 dark:border-white/10 rounded-2xl p-6 sm:p-8 shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aurora-sea"
               >
                 <AnimatePresence mode="wait">
                   <motion.div

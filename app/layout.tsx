@@ -49,7 +49,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn(inter.variable, fraunces.variable, "font-sans", geist.variable)} suppressHydrationWarning>
+    <html lang="en" data-scroll-behavior="smooth" className={cn(inter.variable, fraunces.variable, "font-sans", geist.variable)} suppressHydrationWarning>
       <body>
         <AuthProvider>
           {children}

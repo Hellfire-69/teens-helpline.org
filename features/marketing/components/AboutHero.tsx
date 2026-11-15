@@ -72,7 +72,7 @@ export function AboutHero() {
       </div>
 
       {/* Ridge Window with Expanding Frame & Floating Nova Example Card */}
-      <div ref={containerRef} className="w-full max-w-6xl mx-auto px-4 sm:px-6 md:px-8 overflow-hidden">
+      <div ref={containerRef} className="relative w-full max-w-6xl mx-auto px-4 sm:px-6 md:px-8 overflow-hidden">
         <motion.div
           style={{
             clipPath: prefersReduced ? "inset(0% 0% 0% 0% round 14px)" : clipPath,

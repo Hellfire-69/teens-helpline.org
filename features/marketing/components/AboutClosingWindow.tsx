@@ -37,7 +37,7 @@ export function AboutClosingWindow() {
   const ridgeY = useTransform(smoothProgress, [0, 1], ["-6%", "6%"])
 
   return (
-    <section ref={containerRef} className="w-full overflow-hidden">
+    <section ref={containerRef} className="relative w-full overflow-hidden">
       <motion.div
         style={{
           clipPath: prefersReduced ? "inset(0% 0% 0% 0% round 14px)" : clipPath,
