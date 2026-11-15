@@ -25,3 +25,9 @@
 - **Context7**: Queried motion/react useScroll, useTransform, useSpring, and useMotionValueEvent; verified clip-path and translateY interpolation.
 - **Design Skills (impeccable / design-taste-frontend)**: Ran detector (0 findings); updated Design.md scroll exception rule; polished full-bleed cream canvas and dusk ridges.
 - **Ponytail Review & Superpowers Verification**: Confirmed zero new packages, strict sentence removals, and 100% pass on typecheck and lint across all revision commits.
+
+- **Superpowers Brainstorming**: Analyzed user reference image to scale CTA window to clamp(560px, 86vh, 820px) and balance scroll physics.
+- **Modern Web Guidance**: Eliminated willChange rasterization bottlenecks and tuned spring mass/stiffness for zero-lag responsiveness.
+- **Context7 & Motion Primitives**: Realigned scroll trigger offsets to start: 95% and end: 25% matching Cairn CTA vista expansion curves.
+- **Design Skills (impeccable / design-taste-frontend)**: Removed nested opaque card in closing window; floated typography and action pill directly on dusk vista.
+- **Ponytail Review & Verification**: Calibrated How It Works pinned container from 400vh to 300vh, verified 0 type errors, and 0 lint errors.
