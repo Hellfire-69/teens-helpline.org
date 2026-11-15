@@ -13,3 +13,9 @@
 - **Modern Web Guidance**: Verified scroll-linked transforms, image optimization, and reduced-motion standards; legacy-scan reported 0 findings across all 7 changed files.
 - **Design Skills (impeccable / design-taste-frontend)**: Ran antipattern detector (0 findings after refining side-tab styling), enforced Fraunces ≤5xl, no backdrop-blur/neon/glow, and body text ≥18px.
 - **Ponytail Review**: Executed minimal-change diff review, confirming 0 new npm packages, 0 typecheck errors, 0 lint errors, and zero alterations to home/banner/nav/footer.
+
+- **Modern Web Guidance**: Validated keyboard navigation (arrow keys/Home/End) for accordion/tabs, reduced motion support, and run legacy-scan (0 findings across modified files).
+- **Context7 & API Standards**: Verified Next.js 16 / React 19 compatibility, motion/react layout transitions, and fluid SVG mask-image standards without extra dependencies.
+- **Design Skills (impeccable / design-taste-frontend)**: Ran antipattern detector (0 findings), enforced Fraunces <=text-5xl, warm cream background, SVG mountain ridges with project tokens, and left-aligned headings.
+- **Ponytail & AGENTS.md Audits**: Enforced minimal surgical diffs, no new packages, no deletion of dead code components, no edits to home/crisis-banner/Navbar, and preserved all safety disclaimers.
+- **Superpowers (verification-before-completion)**: Confirmed 100% pass on npm run typecheck and npm run lint across all 5 discrete task commits.
