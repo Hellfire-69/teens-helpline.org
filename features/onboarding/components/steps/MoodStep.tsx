@@ -1,4 +1,4 @@
-import { useOnboardingStore, type Mood } from "@/stores/onboardingStore";
+import { useOnboardingStore, type Mood } from "@/stores/onboarding-store";
 import { motion } from "motion/react";
 import { StepContainer } from "./StepContainer";
 

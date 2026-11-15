@@ -7,7 +7,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion } from "motion/react";
 import { useEffect } from "react";
-import { useOnboardingStore } from "@/stores/onboardingStore";
+import { useOnboardingStore } from "@/stores/onboarding-store";
 
 export function ParentDashboard({ data: _data }: { data: ParentDashboardData }) {
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { useOnboardingStore, type Avatar } from "@/stores/onboardingStore";
+import { useOnboardingStore, type Avatar } from "@/stores/onboarding-store";
 import { motion, AnimatePresence } from "motion/react";
 import { StepContainer } from "./StepContainer";
 import { Button } from "@/components/ui/button";

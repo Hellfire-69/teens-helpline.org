@@ -1,4 +1,4 @@
-import { generateWithFailover } from "./services/ai/manager";
+import { generateWithFailover } from "../services/ai/manager";
 
 async function runTest() {
   const context = {

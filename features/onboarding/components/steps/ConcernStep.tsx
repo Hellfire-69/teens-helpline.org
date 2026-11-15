@@ -1,4 +1,4 @@
-import { useOnboardingStore } from "@/stores/onboardingStore";
+import { useOnboardingStore } from "@/stores/onboarding-store";
 import { motion } from "motion/react";
 import { StepContainer } from "./StepContainer";
 

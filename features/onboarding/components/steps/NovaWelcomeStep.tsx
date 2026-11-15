@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useOnboardingStore, type AgeBand } from "@/stores/onboardingStore";
+import { useOnboardingStore, type AgeBand } from "@/stores/onboarding-store";
 import { motion, AnimatePresence } from "motion/react";
 import { StepContainer } from "./StepContainer";
 import { Button } from "@/components/ui/button";
