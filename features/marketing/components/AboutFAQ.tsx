@@ -50,14 +50,19 @@ export function AboutFAQ() {
   return (
     <section
       aria-labelledby="about-faq-heading"
-      className="w-full rounded-3xl bg-paper-50 dark:bg-night-900 border border-ink-900/10 dark:border-white/10 shadow-lg p-8 sm:p-10 md:p-14 transition-colors"
+      className="w-full rounded-3xl bg-paper-50 dark:bg-night-900 border border-ink-900/10 dark:border-white/10 shadow-sm p-6 sm:p-10 md:p-12 text-left transition-colors"
     >
-      <h2
-        id="about-faq-heading"
-        className="font-fraunces text-3xl md:text-4xl font-semibold text-ink-900 dark:text-white text-center mb-10 tracking-tight"
-      >
-        Frequently Asked Questions
-      </h2>
+      <div className="mb-8 text-left">
+        <span className="text-xs font-semibold uppercase tracking-wider text-aurora-sea block mb-2">
+          Questions
+        </span>
+        <h2
+          id="about-faq-heading"
+          className="font-fraunces text-3xl sm:text-4xl md:text-5xl font-semibold text-ink-900 dark:text-white text-left tracking-tight"
+        >
+          Frequently Asked Questions
+        </h2>
+      </div>
 
       <Accordion className="w-full divide-y divide-ink-900/10 dark:divide-white/10">
         {ABOUT_FAQ_ITEMS.map((item, index) => (
