@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { AboutHeroWindow } from "@/features/marketing/components/AboutHeroWindow"
+import { AboutHero } from "@/features/marketing/components/AboutHero"
 import { AboutPillars } from "@/features/marketing/components/AboutPillars"
 import { AboutPeerSupport } from "@/features/marketing/components/AboutPeerSupport"
 import { AboutFAQ } from "@/features/marketing/components/AboutFAQ"
@@ -13,11 +13,11 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <main className="w-full min-h-screen pt-24 md:pt-32 pb-20 px-4 md:px-8 max-w-6xl mx-auto flex flex-col gap-16 md:gap-24">
-      {/* 1. Hero Window onto calm landscape with floating Nova conversation */}
-      <AboutHeroWindow />
+    <main className="w-full min-h-screen bg-paper-50 dark:bg-night-950 text-ink-900 dark:text-white px-4 sm:px-6 md:px-8 max-w-6xl mx-auto flex flex-col gap-16 md:gap-24">
+      {/* 1. Static Hero with warm cream tone, SVG ridges window, and Nova example card */}
+      <AboutHero />
 
-      {/* 2. Core Pillar Windows: Warm Support, Anonymous First, Safety Layer */}
+      {/* 2. Core Pillar Windows */}
       <AboutPillars />
 
       {/* 3. Peer Support Section */}
@@ -26,7 +26,7 @@ export default function AboutPage() {
       {/* 4. Frequently Asked Questions */}
       <AboutFAQ />
 
-      {/* 5. Closing Window in warm dusk tones */}
+      {/* 5. Closing Window */}
       <AboutClosingWindow />
     </main>
   )
