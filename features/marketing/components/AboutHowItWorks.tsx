@@ -137,11 +137,10 @@ function DemoMood() {
               key={m.id}
               type="button"
               onClick={() => setSelectedMood(m.id)}
-              className={`flex flex-col items-center justify-center p-2.5 sm:p-3 rounded-2xl border transition-all text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aurora-sea ${
-                isSelected
-                  ? "bg-white dark:bg-night-800 border-ink-900/30 dark:border-white/40 shadow-md scale-105 text-ink-900 dark:text-white"
-                  : "bg-white/60 dark:bg-night-900/60 border-ink-900/10 dark:border-white/10 hover:bg-white/80 dark:hover:bg-night-800/80 text-ink-700 dark:text-ink-300"
-              }`}
+              className={`flex flex-col items-center justify-center p-2.5 sm:p-3 rounded-2xl border transition-all text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aurora-sea ${isSelected
+                ? "bg-white dark:bg-night-800 border-ink-900/30 dark:border-white/40 shadow-md scale-105 text-ink-900 dark:text-white"
+                : "bg-white/60 dark:bg-night-900/60 border-ink-900/10 dark:border-white/10 hover:bg-white/80 dark:hover:bg-night-800/80 text-ink-700 dark:text-ink-300"
+                }`}
             >
               <div className="mb-1 text-ink-800 dark:text-ink-200">{m.icon}</div>
               <span className="text-xs font-medium truncate w-full">{m.label}</span>
@@ -213,11 +212,10 @@ function DemoNova() {
             key={p.id}
             type="button"
             onClick={() => setActivePromptIndex(idx)}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aurora-sea ${
-              activePromptIndex === idx
-                ? "bg-aurora-sea text-white shadow-sm font-semibold"
-                : "bg-white/70 dark:bg-night-800/70 border border-ink-900/10 dark:border-white/10 text-ink-700 dark:text-ink-300 hover:bg-white dark:hover:bg-night-800"
-            }`}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aurora-sea ${activePromptIndex === idx
+              ? "bg-aurora-sea text-white shadow-sm font-semibold"
+              : "bg-white/70 dark:bg-night-800/70 border border-ink-900/10 dark:border-white/10 text-ink-700 dark:text-ink-300 hover:bg-white dark:hover:bg-night-800"
+              }`}
           >
             {p.title}
           </button>
@@ -378,10 +376,11 @@ export function AboutHowItWorks() {
     offset: ["start start", "end end"],
   })
 
-  // Light spring lag comparable to GSAP scrub 0.5
+  // Snappy spring (mass 0.1) for zero perceptible lag while smoothing wheel tick jitter
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
+    stiffness: 220,
+    damping: 28,
+    mass: 0.1,
     restDelta: 0.001,
   })
 
@@ -439,7 +438,7 @@ export function AboutHowItWorks() {
       {/* ─── DESKTOP PINNED SCROLL STORY (1024px+) ─── */}
       <div
         ref={containerRef}
-        className="hidden lg:block relative w-full h-[400vh]"
+        className="hidden lg:block relative w-full h-[300vh]"
       >
         <div className="sticky top-0 h-screen w-full flex items-center overflow-hidden">
           <div className="max-w-7xl mx-auto w-full px-6 xl:px-8 flex items-center justify-between gap-12">
@@ -474,19 +473,17 @@ export function AboutHowItWorks() {
                       aria-controls={`panel-${step.id}`}
                       onClick={() => setActive(idx)}
                       onKeyDown={(e) => handleKeyDown(e, idx)}
-                      className={`text-left p-4 rounded-2xl transition-all border ${
-                        isActive
-                          ? "bg-white dark:bg-night-900 border-ink-900/15 dark:border-white/20 shadow-sm"
-                          : "bg-transparent border-transparent hover:bg-paper-100/60 dark:hover:bg-night-900/40 text-ink-600 dark:text-ink-400"
-                      }`}
+                      className={`text-left p-4 rounded-2xl transition-all border ${isActive
+                        ? "bg-white dark:bg-night-900 border-ink-900/15 dark:border-white/20 shadow-sm"
+                        : "bg-transparent border-transparent hover:bg-paper-100/60 dark:hover:bg-night-900/40 text-ink-600 dark:text-ink-400"
+                        }`}
                     >
                       <div className="flex items-center gap-3">
                         <span
-                          className={`font-mono text-xs font-bold px-2 py-0.5 rounded-full ${
-                            isActive
-                              ? "bg-ink-900 text-white dark:bg-white dark:text-ink-900"
-                              : "bg-paper-200 dark:bg-night-800 text-ink-600 dark:text-ink-400"
-                          }`}
+                          className={`font-mono text-xs font-bold px-2 py-0.5 rounded-full ${isActive
+                            ? "bg-ink-900 text-white dark:bg-white dark:text-ink-900"
+                            : "bg-paper-200 dark:bg-night-800 text-ink-600 dark:text-ink-400"
+                            }`}
                         >
                           {step.num}
                         </span>

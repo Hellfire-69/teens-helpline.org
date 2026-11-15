@@ -15,13 +15,14 @@ export function AboutHero() {
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start end", "center center"],
+    offset: ["start 95%", "start 25%"],
   })
 
-  // Light spring lag comparable to GSAP scrub 0.5
+  // Responsive, low-latency spring matching Cairn scrub 0.5 without sluggish drag
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
+    stiffness: 160,
+    damping: 26,
+    mass: 0.15,
     restDelta: 0.001,
   })
 
@@ -75,15 +76,13 @@ export function AboutHero() {
         <motion.div
           style={{
             clipPath: prefersReduced ? "inset(0% 0% 0% 0% round 14px)" : clipPath,
-            willChange: "clip-path",
           }}
-          className="relative w-full rounded-2xl md:rounded-3xl overflow-hidden border border-ink-900/10 dark:border-white/10 min-h-[480px] md:min-h-[540px] flex items-center justify-center p-5 sm:p-8 md:p-12"
+          className="relative w-full rounded-2xl md:rounded-3xl overflow-hidden border border-ink-900/10 dark:border-white/10 min-h-[480px] md:min-h-[540px] flex items-center justify-center p-5 sm:p-8 md:p-12 shadow-xl"
         >
           {/* Parallax Mountains Container */}
           <motion.div
             style={{
               y: prefersReduced ? 0 : ridgeY,
-              willChange: "transform",
             }}
             className="absolute -inset-x-0 -top-[10%] -bottom-[10%] w-full h-[120%] pointer-events-none"
           >

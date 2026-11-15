@@ -27,8 +27,8 @@ export default function AboutPage() {
           <AboutFAQ />
         </div>
 
-        {/* 4. Closing Window */}
-        <div className="max-w-6xl mx-auto w-full px-4 sm:px-6 md:px-8 pb-16">
+        {/* 4. Large Cinematic Closing Window (Matches Cairn CTA template) */}
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 md:pb-28">
           <AboutClosingWindow />
         </div>
       </main>
