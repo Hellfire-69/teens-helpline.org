@@ -119,7 +119,7 @@ function DemoMood() {
         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-ink-900/10 dark:bg-white/15 text-ink-700 dark:text-ink-200">
           Example
         </span>
-        <span className="text-xs text-ink-500 dark:text-ink-400">Step 1 of Onboarding</span>
+        <span className="text-xs text-ink-500 dark:text-ink-400 font-mono">Step 1 of Onboarding</span>
       </div>
 
       <div>
@@ -137,10 +137,11 @@ function DemoMood() {
               key={m.id}
               type="button"
               onClick={() => setSelectedMood(m.id)}
-              className={`flex flex-col items-center justify-center p-2.5 sm:p-3 rounded-2xl border transition-all text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aurora-sea ${isSelected
-                ? "bg-white dark:bg-night-800 border-ink-900/30 dark:border-white/40 shadow-md scale-105 text-ink-900 dark:text-white"
-                : "bg-white/60 dark:bg-night-900/60 border-ink-900/10 dark:border-white/10 hover:bg-white/80 dark:hover:bg-night-800/80 text-ink-700 dark:text-ink-300"
-                }`}
+              className={`flex flex-col items-center justify-center p-2.5 sm:p-3 rounded-2xl border transition-all text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aurora-sea active:scale-95 ${
+                isSelected
+                  ? "bg-white dark:bg-night-800 border-ink-900/30 dark:border-white/40 shadow-md scale-105 text-ink-900 dark:text-white"
+                  : "bg-white/60 dark:bg-night-900/60 border-ink-900/10 dark:border-white/10 hover:bg-white/80 dark:hover:bg-night-800/80 text-ink-700 dark:text-ink-300"
+              }`}
             >
               <div className="mb-1 text-ink-800 dark:text-ink-200">{m.icon}</div>
               <span className="text-xs font-medium truncate w-full">{m.label}</span>
@@ -203,7 +204,7 @@ function DemoNova() {
         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-ink-900/10 dark:bg-white/15 text-ink-700 dark:text-ink-200">
           Example
         </span>
-        <span className="text-xs text-ink-500 dark:text-ink-400">Interactive Nova Sounding Board</span>
+        <span className="text-xs text-ink-500 dark:text-ink-400 font-mono">Interactive Nova Sounding Board</span>
       </div>
 
       <div className="flex flex-wrap gap-2">
@@ -212,10 +213,11 @@ function DemoNova() {
             key={p.id}
             type="button"
             onClick={() => setActivePromptIndex(idx)}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aurora-sea ${activePromptIndex === idx
-              ? "bg-aurora-sea text-white shadow-sm font-semibold"
-              : "bg-white/70 dark:bg-night-800/70 border border-ink-900/10 dark:border-white/10 text-ink-700 dark:text-ink-300 hover:bg-white dark:hover:bg-night-800"
-              }`}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aurora-sea active:scale-95 ${
+              activePromptIndex === idx
+                ? "bg-aurora-sea text-white shadow-sm font-semibold"
+                : "bg-white/70 dark:bg-night-800/70 border border-ink-900/10 dark:border-white/10 text-ink-700 dark:text-ink-300 hover:bg-white dark:hover:bg-night-800"
+            }`}
           >
             {p.title}
           </button>
@@ -267,7 +269,7 @@ function DemoPeer() {
         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-ink-900/10 dark:bg-white/15 text-ink-700 dark:text-ink-200">
           Example
         </span>
-        <span className="inline-flex items-center gap-1.5 text-xs text-aurora-sea font-medium">
+        <span className="inline-flex items-center gap-1.5 text-xs text-aurora-sea font-medium font-mono">
           <span className="w-2 h-2 rounded-full bg-aurora-sea animate-pulse" />
           Online Peer Matching Active
         </span>
@@ -309,7 +311,7 @@ function DemoSafety() {
         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-ink-900/10 dark:bg-white/15 text-ink-700 dark:text-ink-200">
           Example
         </span>
-        <span className="text-xs text-ink-500 dark:text-ink-400">Pre-AI Rule-Based Pipeline</span>
+        <span className="text-xs text-ink-500 dark:text-ink-400 font-mono">Pre-AI Rule-Based Pipeline</span>
       </div>
 
       {/* Visual Flow Diagram */}
@@ -376,15 +378,16 @@ export function AboutHowItWorks() {
     offset: ["start start", "end end"],
   })
 
-  // Snappy spring (mass 0.1) for zero perceptible lag while smoothing wheel tick jitter
+  // Ultra-snappy spring (mass 0.08) for instantaneous zero-lag response with smooth line glide
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 220,
+    stiffness: 260,
     damping: 28,
-    mass: 0.1,
+    mass: 0.08,
     restDelta: 0.001,
   })
 
-  useMotionValueEvent(smoothProgress, "change", (latest) => {
+  // Update discrete step instantly on threshold crossing for crisp zero-lag interaction
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
     if (prefersReduced) return
     const stepIndex = Math.min(STEPS.length - 1, Math.max(0, Math.floor(latest * STEPS.length)))
     setActive((prev) => (prev === stepIndex ? prev : stepIndex))
@@ -438,14 +441,14 @@ export function AboutHowItWorks() {
       {/* ─── DESKTOP PINNED SCROLL STORY (1024px+) ─── */}
       <div
         ref={containerRef}
-        className="hidden lg:block relative w-full h-[300vh]"
+        className="hidden lg:block relative w-full h-[250vh]"
       >
         <div className="sticky top-0 h-screen w-full flex items-center overflow-hidden">
           <div className="max-w-7xl mx-auto w-full px-6 xl:px-8 flex items-center justify-between gap-12">
             {/* Left Column: 35% narrow list with step titles & active sentence */}
             <div className="w-[35%] shrink-0 flex flex-col gap-6 text-left">
               <div>
-                <span className="text-xs font-semibold uppercase tracking-wider text-aurora-sea block mb-2">
+                <span className="text-xs font-semibold uppercase tracking-wider text-aurora-sea block mb-2 font-mono">
                   Experience
                 </span>
                 <h2
@@ -454,6 +457,25 @@ export function AboutHowItWorks() {
                 >
                   How it works
                 </h2>
+              </div>
+
+              {/* Scroll Progress Line right above the first part (Cairn style indicator) */}
+              <div className="w-full flex flex-col gap-2 pt-1 pb-1">
+                <div className="flex items-center justify-between text-xs font-mono text-ink-500 dark:text-ink-400">
+                  <span className="uppercase tracking-widest font-semibold">
+                    Step {active + 1} of {STEPS.length}
+                  </span>
+                  <span>{Math.round(((active + 1) / STEPS.length) * 100)}%</span>
+                </div>
+                <div className="w-full h-1 bg-ink-900/10 dark:bg-white/10 rounded-full overflow-hidden relative">
+                  <motion.div
+                    style={{
+                      scaleX: prefersReduced ? (active + 1) / STEPS.length : smoothProgress,
+                      transformOrigin: "0% 50%",
+                    }}
+                    className="absolute inset-0 bg-gradient-to-r from-aurora-sea via-aurora-dawn to-aurora-dusk rounded-full"
+                  />
+                </div>
               </div>
 
               {/* Step tabs */}
@@ -473,17 +495,27 @@ export function AboutHowItWorks() {
                       aria-controls={`panel-${step.id}`}
                       onClick={() => setActive(idx)}
                       onKeyDown={(e) => handleKeyDown(e, idx)}
-                      className={`text-left p-4 rounded-2xl transition-all border ${isActive
-                        ? "bg-white dark:bg-night-900 border-ink-900/15 dark:border-white/20 shadow-sm"
-                        : "bg-transparent border-transparent hover:bg-paper-100/60 dark:hover:bg-night-900/40 text-ink-600 dark:text-ink-400"
-                        }`}
+                      className={`text-left p-4 rounded-2xl transition-all border relative overflow-hidden ${
+                        isActive
+                          ? "bg-white dark:bg-night-900 border-ink-900/15 dark:border-white/20 shadow-sm"
+                          : "bg-transparent border-transparent hover:bg-paper-100/60 dark:hover:bg-night-900/40 text-ink-600 dark:text-ink-400"
+                      }`}
                     >
+                      {/* Active indicator bar along top edge */}
+                      {isActive && (
+                        <motion.span
+                          layoutId="active-tab-indicator"
+                          className="absolute top-0 left-0 right-0 h-0.5 bg-aurora-sea"
+                        />
+                      )}
+
                       <div className="flex items-center gap-3">
                         <span
-                          className={`font-mono text-xs font-bold px-2 py-0.5 rounded-full ${isActive
-                            ? "bg-ink-900 text-white dark:bg-white dark:text-ink-900"
-                            : "bg-paper-200 dark:bg-night-800 text-ink-600 dark:text-ink-400"
-                            }`}
+                          className={`font-mono text-xs font-bold px-2 py-0.5 rounded-full ${
+                            isActive
+                              ? "bg-ink-900 text-white dark:bg-white dark:text-ink-900"
+                              : "bg-paper-200 dark:bg-night-800 text-ink-600 dark:text-ink-400"
+                          }`}
                         >
                           {step.num}
                         </span>
@@ -494,9 +526,14 @@ export function AboutHowItWorks() {
 
                       {/* Active step short sentence (≤ 20 words) */}
                       {isActive && (
-                        <p className="mt-2 text-sm text-ink-700 dark:text-ink-300 font-sans leading-relaxed pl-9">
+                        <motion.p
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          transition={{ duration: 0.25 }}
+                          className="mt-2 text-sm text-ink-700 dark:text-ink-300 font-sans leading-relaxed pl-9"
+                        >
                           {step.sentence}
-                        </p>
+                        </motion.p>
                       )}
                     </button>
                   )
@@ -506,9 +543,23 @@ export function AboutHowItWorks() {
 
             {/* Right Column: 65% big window (~75vh tall) with shifting mountain ridges */}
             <div className="w-[65%] h-[75vh] relative rounded-3xl overflow-hidden border border-ink-900/10 dark:border-white/10 shadow-sm flex items-center justify-center p-8 xl:p-12">
-              <AboutRidges tones={currentStep.tones} />
+              {/* Crossfade transitions for mountain sky palette between steps */}
+              <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                <AnimatePresence mode="sync">
+                  <motion.div
+                    key={currentStep.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                    className="absolute inset-0"
+                  >
+                    <AboutRidges tones={currentStep.tones} />
+                  </motion.div>
+                </AnimatePresence>
+              </div>
 
-              {/* Demo card container */}
+              {/* Demo card container with template blur transition */}
               <div
                 role="tabpanel"
                 id={`panel-${currentStep.id}`}
@@ -518,10 +569,22 @@ export function AboutHowItWorks() {
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={active}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.3 }}
+                    initial={
+                      prefersReduced
+                        ? { opacity: 0 }
+                        : { opacity: 0, y: 14, filter: "blur(6px)" }
+                    }
+                    animate={
+                      prefersReduced
+                        ? { opacity: 1 }
+                        : { opacity: 1, y: 0, filter: "blur(0px)" }
+                    }
+                    exit={
+                      prefersReduced
+                        ? { opacity: 0 }
+                        : { opacity: 0, y: -10, filter: "blur(6px)" }
+                    }
+                    transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                   >
                     {renderCardContent(active)}
                   </motion.div>
@@ -535,7 +598,7 @@ export function AboutHowItWorks() {
       {/* ─── MOBILE / TABLET STACKED SECTIONS (< 1024px) ─── */}
       <div className="lg:hidden max-w-6xl mx-auto px-4 sm:px-6 flex flex-col gap-10">
         <div>
-          <span className="text-xs font-semibold uppercase tracking-wider text-aurora-sea block mb-2">
+          <span className="text-xs font-semibold uppercase tracking-wider text-aurora-sea block mb-2 font-mono">
             Experience
           </span>
           <h2 className="font-fraunces text-3xl sm:text-4xl font-semibold tracking-tight text-ink-900 dark:text-white">
