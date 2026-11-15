@@ -118,8 +118,30 @@ export function Footer() {
         </div>
       </div>
 
+      {/* Very large wordmark fading to transparent with CSS mask */}
+      <div
+        aria-hidden="true"
+        className="w-full overflow-hidden text-center mt-12 mb-4 pointer-events-none select-none"
+        style={{
+          maskImage: "linear-gradient(180deg, rgba(0,0,0,0.85) 15%, transparent 95%)",
+          WebkitMaskImage: "linear-gradient(180deg, rgba(0,0,0,0.85) 15%, transparent 95%)",
+        }}
+      >
+        <span
+          className="font-fraunces font-bold text-ink-900/20 dark:text-white/20 tracking-tighter whitespace-nowrap inline-block leading-none"
+          style={{
+            fontSize: "clamp(2.35rem, 11.2vw, 11rem)",
+          }}
+        >
+          TeensHelpline
+        </span>
+      </div>
+
+      {/* Thin divider line */}
+      <div className="w-full border-t border-ink-900/10 dark:border-white/10 mb-6" aria-hidden="true" />
+
       {/* Bottom bar with Quick Exit safe padding */}
-      <div className="relative z-10 max-w-7xl mx-auto border-t border-ink-900/10 dark:border-white/10 pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs md:text-sm text-ink-500 dark:text-ink-400 font-medium md:pr-36">
+      <div className="relative z-10 max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs md:text-sm text-ink-500 dark:text-ink-400 font-medium md:pr-36">
         <span>&copy; {currentYear} TeensHelpline.org. All rights reserved.</span>
         <div className="flex flex-wrap gap-3 items-center">
           <span>Prototype Version 2.0</span>
