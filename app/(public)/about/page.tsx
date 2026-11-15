@@ -1,7 +1,6 @@
 import type { Metadata } from "next"
 import { AboutHero } from "@/features/marketing/components/AboutHero"
-import { AboutPillars } from "@/features/marketing/components/AboutPillars"
-import { AboutPeerSupport } from "@/features/marketing/components/AboutPeerSupport"
+import { AboutHowItWorks } from "@/features/marketing/components/AboutHowItWorks"
 import { AboutFAQ } from "@/features/marketing/components/AboutFAQ"
 import { AboutClosingWindow } from "@/features/marketing/components/AboutClosingWindow"
 
@@ -13,20 +12,17 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <main className="w-full min-h-screen bg-paper-50 dark:bg-night-950 text-ink-900 dark:text-white px-4 sm:px-6 md:px-8 max-w-6xl mx-auto flex flex-col gap-16 md:gap-24">
+    <main className="w-full min-h-screen bg-paper-50 dark:bg-night-950 text-ink-900 dark:text-white px-4 sm:px-6 md:px-8 max-w-6xl mx-auto flex flex-col gap-20 md:gap-28">
       {/* 1. Static Hero with warm cream tone, SVG ridges window, and Nova example card */}
       <AboutHero />
 
-      {/* 2. Core Pillar Windows */}
-      <AboutPillars />
+      {/* 2. "How it works" story adapted from Agent Canvas (desktop tabbed, mobile accordion) */}
+      <AboutHowItWorks />
 
-      {/* 3. Peer Support Section */}
-      <AboutPeerSupport />
-
-      {/* 4. Frequently Asked Questions */}
+      {/* 3. Frequently Asked Questions */}
       <AboutFAQ />
 
-      {/* 5. Closing Window */}
+      {/* 4. Closing Window */}
       <AboutClosingWindow />
     </main>
   )
