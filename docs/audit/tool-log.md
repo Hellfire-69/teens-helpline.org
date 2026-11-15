@@ -19,3 +19,9 @@
 - **Design Skills (impeccable / design-taste-frontend)**: Ran antipattern detector (0 findings), enforced Fraunces <=text-5xl, warm cream background, SVG mountain ridges with project tokens, and left-aligned headings.
 - **Ponytail & AGENTS.md Audits**: Enforced minimal surgical diffs, no new packages, no deletion of dead code components, no edits to home/crisis-banner/Navbar, and preserved all safety disclaimers.
 - **Superpowers (verification-before-completion)**: Confirmed 100% pass on npm run typecheck and npm run lint across all 5 discrete task commits.
+
+- **Superpowers Brainstorming**: Designed the 400vh desktop pinned scroll story and sticky viewport container with discrete step state transitions.
+- **Modern Web Guidance**: Applied scroll-linked animation without interception, sticky layout, tab semantics, and useReducedMotion fallback (0 findings across modified files).
+- **Context7**: Queried motion/react useScroll, useTransform, useSpring, and useMotionValueEvent; verified clip-path and translateY interpolation.
+- **Design Skills (impeccable / design-taste-frontend)**: Ran detector (0 findings); updated Design.md scroll exception rule; polished full-bleed cream canvas and dusk ridges.
+- **Ponytail Review & Superpowers Verification**: Confirmed zero new packages, strict sentence removals, and 100% pass on typecheck and lint across all revision commits.
