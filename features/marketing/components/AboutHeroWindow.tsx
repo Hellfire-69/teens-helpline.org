@@ -4,7 +4,7 @@
 import * as React from "react"
 import Image from "next/image"
 import { motion, useScroll, useTransform, useReducedMotion } from "motion/react"
-import heroImage from "@/public/images/about/about-1.jpg"
+const heroImage = "/images/about/about-1.jpg"
 import { AboutHeroChat } from "./AboutHeroChat"
 
 export function AboutHeroWindow() {
@@ -61,7 +61,6 @@ export function AboutHeroWindow() {
           <Image
             src={heroImage}
             alt="Tranquil foggy mountain lake landscape"
-            placeholder="blur"
             priority
             fill
             sizes="100vw"

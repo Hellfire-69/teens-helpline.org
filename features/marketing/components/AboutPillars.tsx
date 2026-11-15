@@ -4,16 +4,16 @@
 import * as React from "react"
 import Image from "next/image"
 import { Heart, EyeSlash, Shield } from "@phosphor-icons/react"
-import dawnImage from "@/public/images/about/about-2.jpg"
-import middayImage from "@/public/images/about/about-3.jpg"
-import duskImage from "@/public/images/about/about-4.jpg"
+const dawnImage = "/images/about/about-2.jpg"
+const middayImage = "/images/about/about-3.jpg"
+const duskImage = "/images/about/about-4.jpg"
 
 interface PillarItem {
   eyebrow: string
   title: string
   description: string
   icon: React.ReactNode
-  image: typeof dawnImage
+  image: string
   imageAlt: string
 }
 
@@ -59,7 +59,6 @@ export function AboutPillars() {
           <Image
             src={pillar.image}
             alt={pillar.imageAlt}
-            placeholder="blur"
             loading="lazy"
             fill
             sizes="(max-width: 1200px) 100vw, 1200px"
