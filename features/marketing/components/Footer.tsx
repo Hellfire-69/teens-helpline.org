@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
+import { motion, useScroll, useTransform, useSpring, useReducedMotion } from "motion/react"
 import { Heart, ShieldWarning } from "@phosphor-icons/react"
 
 const EXPLORE_LINKS = [
@@ -25,13 +26,31 @@ const CRISIS_LINKS = [
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
+  const footerRef = React.useRef<HTMLElement>(null)
+  const prefersReduced = useReducedMotion()
+
+  const { scrollYProgress } = useScroll({
+    target: footerRef,
+    offset: ["start end", "end end"],
+  })
+
+  // Light spring lag comparable to GSAP scrub 0.5
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001,
+  })
+
+  // Slides up into place as footer scrolls into view
+  const wordmarkY = useTransform(smoothProgress, [0, 1], ["50%", "0%"])
 
   return (
     <footer
+      ref={footerRef}
       aria-label="Site Footer"
-      className="relative w-full mt-auto border-t border-ink-900/10 dark:border-white/10 bg-paper-50/90 dark:bg-night-950/90 backdrop-blur-xl text-ink-900 dark:text-white pt-16 md:pt-20 pb-36 md:pb-28 px-4 md:px-8 overflow-hidden transition-colors duration-200"
+      className="relative w-full mt-auto border-t border-ink-900/10 dark:border-white/10 bg-paper-50/90 dark:bg-night-950/90 backdrop-blur-xl text-ink-900 dark:text-white pt-12 md:pt-16 pb-36 md:pb-28 px-4 md:px-8 overflow-hidden transition-colors duration-200"
     >
-      <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8 mb-14">
+      <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-8 mb-6">
         {/* Brand column */}
         <div className="md:col-span-4 flex flex-col items-start gap-4">
           <Link
@@ -118,27 +137,29 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Very large wordmark fading to transparent with CSS mask */}
+      {/* Strong wordmark fading to transparent with CSS mask, animated with scroll scrub */}
       <div
         aria-hidden="true"
-        className="w-full overflow-hidden text-center mt-12 mb-4 pointer-events-none select-none"
+        className="w-full overflow-hidden text-center mt-4 mb-2 pointer-events-none select-none"
         style={{
-          maskImage: "linear-gradient(180deg, rgba(0,0,0,0.85) 15%, transparent 95%)",
-          WebkitMaskImage: "linear-gradient(180deg, rgba(0,0,0,0.85) 15%, transparent 95%)",
+          maskImage: "linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 45%, transparent 95%)",
+          WebkitMaskImage: "linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 45%, transparent 95%)",
         }}
       >
-        <span
-          className="font-fraunces font-bold text-ink-900/20 dark:text-white/20 tracking-tighter whitespace-nowrap inline-block leading-none"
+        <motion.span
           style={{
+            y: prefersReduced ? 0 : wordmarkY,
             fontSize: "clamp(2.35rem, 11.2vw, 11rem)",
+            willChange: "transform",
           }}
+          className="font-fraunces font-bold text-ink-900 dark:text-white tracking-tighter whitespace-nowrap inline-block leading-none"
         >
           TeensHelpline
-        </span>
+        </motion.span>
       </div>
 
       {/* Thin divider line */}
-      <div className="w-full border-t border-ink-900/10 dark:border-white/10 mb-6" aria-hidden="true" />
+      <div className="w-full border-t border-ink-900/10 dark:border-white/10 mb-5" aria-hidden="true" />
 
       {/* Bottom bar with Quick Exit safe padding */}
       <div className="relative z-10 max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs md:text-sm text-ink-500 dark:text-ink-400 font-medium md:pr-36">
