@@ -52,3 +52,6 @@ next-env.d.ts
 playwright-report/
 test-results/
 .playwright-mcp/
+
+# Local mockups & reference docs
+docs/mockups/
