@@ -12,18 +12,26 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <main className="w-full min-h-screen bg-paper-50 dark:bg-night-950 text-ink-900 dark:text-white px-4 sm:px-6 md:px-8 max-w-6xl mx-auto flex flex-col gap-20 md:gap-28">
-      {/* 1. Static Hero with warm cream tone, SVG ridges window, and Nova example card */}
-      <AboutHero />
+    <div className="w-full min-h-screen bg-paper-50 dark:bg-night-950 text-ink-900 dark:text-white selection:bg-aurora-dawn/20">
+      <main className="w-full flex flex-col gap-20 md:gap-32">
+        {/* 1. Hero with expanding ridge window & Nova example card */}
+        <AboutHero />
 
-      {/* 2. "How it works" story adapted from Agent Canvas (desktop tabbed, mobile accordion) */}
-      <AboutHowItWorks />
+        {/* 2. "How it works" story adapted from Agent Canvas */}
+        <div className="w-full">
+          <AboutHowItWorks />
+        </div>
 
-      {/* 3. Frequently Asked Questions */}
-      <AboutFAQ />
+        {/* 3. Frequently Asked Questions */}
+        <div className="max-w-6xl mx-auto w-full px-4 sm:px-6 md:px-8">
+          <AboutFAQ />
+        </div>
 
-      {/* 4. Closing Window */}
-      <AboutClosingWindow />
-    </main>
+        {/* 4. Closing Window */}
+        <div className="max-w-6xl mx-auto w-full px-4 sm:px-6 md:px-8 pb-16">
+          <AboutClosingWindow />
+        </div>
+      </main>
+    </div>
   )
 }
