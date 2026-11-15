@@ -1,7 +1,7 @@
 import { useOnboardingStore } from "@/stores/onboarding-store";
 import { StepContainer } from "./StepContainer";
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 export function WelcomeStep() {
   const nextStep = useOnboardingStore((s) => s.nextStep);

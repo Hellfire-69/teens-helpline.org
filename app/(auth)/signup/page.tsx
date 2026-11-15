@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/features/auth/components/auth-provider"
-import { motion } from "framer-motion"
+import { motion } from "motion/react"
 import { Loader2 } from "lucide-react"
 import Link from "next/link"
 
@@ -166,6 +166,9 @@ export default function SignUpPage() {
               <div className="relative">
                 <input
                   type="email"
+                  id="email"
+                  name="email"
+                  autoComplete="username"
                   required
                   placeholder="you@example.com"
                   value={email}
@@ -176,6 +179,9 @@ export default function SignUpPage() {
               <div className="relative">
                 <input
                   type="password"
+                  id="new-password"
+                  name="password"
+                  autoComplete="new-password"
                   required
                   placeholder="Password (min 6 chars)"
                   value={password}
@@ -186,6 +192,9 @@ export default function SignUpPage() {
               <div className="relative">
                 <input
                   type="password"
+                  id="confirm-password"
+                  name="confirmPassword"
+                  autoComplete="new-password"
                   required
                   placeholder="Confirm Password"
                   value={confirmPassword}

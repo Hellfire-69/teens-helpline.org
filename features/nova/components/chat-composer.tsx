@@ -32,6 +32,9 @@ export function ChatComposer() {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
+      if (e.nativeEvent.isComposing || e.keyCode === 229) {
+        return;
+      }
       e.preventDefault();
       handleSubmit();
     }

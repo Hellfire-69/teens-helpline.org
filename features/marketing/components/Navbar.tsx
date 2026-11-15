@@ -25,6 +25,25 @@ export function Navbar() {
   const [hoveredPath, setHoveredPath] = React.useState<string | null>(null)
   const [hoveredDropdownPath, setHoveredDropdownPath] = React.useState<string | null>(null)
   const [dropdownOpen, setDropdownOpen] = React.useState(false)
+  const [bannerHeight, setBannerHeight] = React.useState<number | null>(null)
+
+  React.useEffect(() => {
+    const banner = document.getElementById("crisis-banner")
+    if (!banner) return
+
+    const updateHeight = () => {
+      setBannerHeight(banner.getBoundingClientRect().height)
+    }
+
+    updateHeight()
+
+    const resizeObserver = new ResizeObserver(updateHeight)
+    resizeObserver.observe(banner)
+
+    return () => {
+      resizeObserver.disconnect()
+    }
+  }, [])
 
   const handleOtherEnter = () => {
     setHoveredPath('other')
@@ -38,7 +57,10 @@ export function Navbar() {
   return (
     <>
       {/* ─── DESKTOP TOP BAR NAV (lg breakpoint and up) ─── */}
-      <header className="hidden lg:block fixed top-14 left-1/2 -translate-x-1/2 z-50 w-max transition-all duration-300">
+      <header
+        className="hidden lg:block fixed top-14 left-1/2 -translate-x-1/2 z-50 w-max transition-all duration-300"
+        style={bannerHeight !== null ? { top: `${bannerHeight + 8}px` } : undefined}
+      >
         <nav
           className="rounded-full bg-white/80 dark:bg-night-950/80 backdrop-blur-2xl border border-white/40 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.1)] p-1.5 flex items-center gap-2"
           onMouseLeave={() => setHoveredPath(null)}
@@ -181,7 +203,10 @@ export function Navbar() {
       </header>
 
       {/* ─── MOBILE TOP BAR (lg breakpoint and below) ─── */}
-      <header className="lg:hidden fixed top-14 left-4 right-4 z-50 flex items-center justify-between">
+      <header
+        className="lg:hidden fixed top-14 left-4 right-4 z-50 flex items-center justify-between transition-all duration-300"
+        style={bannerHeight !== null ? { top: `${bannerHeight + 8}px` } : undefined}
+      >
         {/* Logo / Wordmark */}
         <Link
           href="/"

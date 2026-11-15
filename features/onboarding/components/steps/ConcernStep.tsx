@@ -1,5 +1,5 @@
 import { useOnboardingStore } from "@/stores/onboarding-store";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { StepContainer } from "./StepContainer";
 
 const CONCERNS = [

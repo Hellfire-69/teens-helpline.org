@@ -64,7 +64,7 @@ const CONCERNS: ConcernItem[] = [
     title: "Anxiety & Overwhelm",
     description: "Finding grounding exercises and advice when feeling emotionally overloaded.",
     slug: "emotional-overwhelm",
-    colorClass: "bg-signal-crisis/10 border-signal-crisis/20 shadow-signal-crisis/5"
+    colorClass: "bg-aurora-blush/10 border-aurora-blush/20 shadow-aurora-blush/5"
   }
 ]
 
