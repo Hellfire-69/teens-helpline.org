@@ -52,7 +52,7 @@ const ROW_2: TestimonialItem[] = [
     quote: "literally used the grounding exercise before my math exam and it actually worked 😭",
     alias: "Rohan",
     age: 16,
-    avatarColor: "bg-signal-crisis/10 text-signal-crisis",
+    avatarColor: "bg-aurora-blush/20 text-aurora-blush",
     avatarChar: "R",
     reaction: "🙌 2"
   },

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { useOnboardingStore } from "@/stores/onboardingStore";
 import { WelcomeStep } from "./steps/WelcomeStep";
 import { AvatarStep } from "./steps/AvatarStep";

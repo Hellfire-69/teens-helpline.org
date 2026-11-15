@@ -7,7 +7,7 @@ import {
 } from 'react';
 import type { ReactNode } from 'react';
 import Image from 'next/image';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
 
 interface ScrollExpandMediaProps {
   mediaType?: 'video' | 'image';
@@ -188,7 +188,7 @@ const ScrollExpandMedia = ({
   return (
     <div
       ref={sectionRef}
-      className='overflow-x-clip'
+      className='relative overflow-x-clip'
     >
       <section className='relative flex flex-col items-center justify-start min-h-[100dvh]'>
         <div className='relative w-full flex flex-col items-center min-h-[100dvh]'>
@@ -279,7 +279,7 @@ const ScrollExpandMedia = ({
                       src={mediaSrc}
                       alt={title || 'Media content'}
                       fill
-                      sizes="100vw"
+                      sizes="(max-width: 1280px) 100vw, 1280px"
                       className='object-cover'
                     />
                     <motion.div

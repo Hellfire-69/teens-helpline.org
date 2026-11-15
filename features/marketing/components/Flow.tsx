@@ -73,7 +73,7 @@ export function Flow() {
                   <stop offset="0%" stopColor="#8b5cf6" />
                   <stop offset="33%" stopColor="#f97316" />
                   <stop offset="66%" stopColor="#0ea5e9" />
-                  <stop offset="100%" stopColor="#ef4444" />
+                  <stop offset="100%" stopColor="#E8A0A0" />
                 </linearGradient>
               </defs>
               

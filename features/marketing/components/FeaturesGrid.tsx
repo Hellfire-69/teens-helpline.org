@@ -101,10 +101,10 @@ export function FeaturesGrid() {
             Everything you need
           </div>
           <h2 className="font-fraunces text-4xl md:text-5xl lg:text-6xl font-semibold text-ink-900 dark:text-white mb-6 tracking-tight max-w-3xl leading-[1.1]">
-            Plug-and-play agents ready to deploy.
+            Support that meets you where you are.
           </h2>
           <p className="text-lg md:text-xl text-ink-600 dark:text-ink-300 max-w-xl leading-relaxed">
-            No cluttered stubs. We build what is genuinely helpful to get you to your next right step. Every feature is tested, secure, and ready.
+            No pressure, no complicated steps. Just practical tools to help you reflect, plan, and reach out when you need to.
           </p>
         </div>
 
