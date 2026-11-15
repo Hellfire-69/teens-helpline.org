@@ -37,3 +37,9 @@
 - **Scroll Physics & Travel Calibration**: Reduced scroll container height from 300vh to 250vh and tuned spring mass to 0.08 for zero-latency step triggers.
 - **Modern Web Guidance & Accessibility**: Maintained aria-selected/tablist contracts and guarded blur filters with useReducedMotion fallback.
 - **Ponytail Review & Verification**: Confirmed clean surgical diff on AboutHowItWorks, 0 typecheck errors, and 0 lint errors before commit.
+
+- **Modern Web Guidance Review**: Enforced WAI-ARIA tablist roving tabindex (tabIndex={isActive ? 0 : -1}), explicit type="button", and tabpanel focusability.
+- **Browser & DevTools Diagnostics**: Resolved non-static container positioning warning on useScroll targets by enforcing relative containers on AboutHero and AboutClosingWindow.
+- **Next.js Image & Routing Optimization**: Calibrated responsive sizes prop on hero media and added data-scroll-behavior="smooth" to html tag in root layout.
+- **Ponytail Code Review**: Conducted complete quality audit across all 8 About page files; verified zero dead code, strict types, no memory leaks, and lean diffs.
+- **Superpowers Verification**: Verified 100% pass on typecheck, ESLint, and impeccable antipattern detector across the entire repository.
