@@ -31,3 +31,9 @@
 - **Context7 & Motion Primitives**: Realigned scroll trigger offsets to start: 95% and end: 25% matching Cairn CTA vista expansion curves.
 - **Design Skills (impeccable / design-taste-frontend)**: Removed nested opaque card in closing window; floated typography and action pill directly on dusk vista.
 - **Ponytail Review & Verification**: Calibrated How It Works pinned container from 400vh to 300vh, verified 0 type errors, and 0 lint errors.
+
+- **Design Critique (impeccable / design-taste-frontend)**: Audited How It Works visual hierarchy; added template-inspired scroll progress track above step 01.
+- **Template Motion & Blur Transitions**: Integrated Cairn-matched blur filter transitions (blur(6px) -> blur(0px)) and ambient mountain sky crossfading.
+- **Scroll Physics & Travel Calibration**: Reduced scroll container height from 300vh to 250vh and tuned spring mass to 0.08 for zero-latency step triggers.
+- **Modern Web Guidance & Accessibility**: Maintained aria-selected/tablist contracts and guarded blur filters with useReducedMotion fallback.
+- **Ponytail Review & Verification**: Confirmed clean surgical diff on AboutHowItWorks, 0 typecheck errors, and 0 lint errors before commit.
