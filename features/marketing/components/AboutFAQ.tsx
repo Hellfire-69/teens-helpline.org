@@ -50,29 +50,27 @@ export function AboutFAQ() {
   return (
     <section
       aria-labelledby="about-faq-heading"
-      className="w-full max-w-4xl mx-auto my-16 md:my-24 px-4"
+      className="w-full rounded-3xl bg-paper-50 dark:bg-night-900 border border-ink-900/10 dark:border-white/10 shadow-lg p-8 sm:p-10 md:p-14 transition-colors"
     >
-      <div className="rounded-[2.5rem] bg-white/80 dark:bg-night-900/60 backdrop-blur-xl border border-ink-900/10 dark:border-white/10 shadow-lg p-8 md:p-12">
-        <h2
-          id="about-faq-heading"
-          className="font-fraunces text-3xl md:text-4xl font-semibold text-ink-900 dark:text-white text-center mb-8 tracking-tight"
-        >
-          Frequently Asked Questions
-        </h2>
+      <h2
+        id="about-faq-heading"
+        className="font-fraunces text-3xl md:text-4xl font-semibold text-ink-900 dark:text-white text-center mb-10 tracking-tight"
+      >
+        Frequently Asked Questions
+      </h2>
 
-        <Accordion className="w-full">
-          {ABOUT_FAQ_ITEMS.map((item, index) => (
-            <AccordionItem key={index} value={`about-faq-${index}`}>
-              <AccordionTrigger className="text-base md:text-lg font-medium text-ink-900 dark:text-white hover:text-aurora-sea dark:hover:text-aurora-sea py-5">
-                {item.question}
-              </AccordionTrigger>
-              <AccordionContent className="text-sm md:text-base text-ink-600 dark:text-ink-300 leading-relaxed">
-                {item.answer}
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
-      </div>
+      <Accordion className="w-full divide-y divide-ink-900/10 dark:divide-white/10">
+        {ABOUT_FAQ_ITEMS.map((item, index) => (
+          <AccordionItem key={index} value={`about-faq-${index}`} className="border-none py-2">
+            <AccordionTrigger className="text-lg md:text-xl font-medium text-ink-900 dark:text-white hover:text-aurora-sea dark:hover:text-aurora-sea py-4 text-left">
+              {item.question}
+            </AccordionTrigger>
+            <AccordionContent className="text-lg text-ink-700 dark:text-ink-300 leading-relaxed pt-2 pb-4 font-sans">
+              {item.answer}
+            </AccordionContent>
+          </AccordionItem>
+        ))}
+      </Accordion>
     </section>
   )
 }

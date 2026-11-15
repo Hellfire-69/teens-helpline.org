@@ -8,3 +8,8 @@
 - **Find-Skills & shadcn**: Checked shadcn CLI setup with components.json and verified MIT license and Base UI bindings.
 - **Design Skills (impeccable / design-taste-frontend)**: Enforced Design.md tokens (aurora/ink/night), light/dark mode parity, max text-5xl, and no Quick Exit button overlap.
 - **Ponytail Review & Superpowers Verification**: Validated minimal surgical diffs, 0 new dependencies, 0 typecheck errors, and 0 lint errors before final commit.
+- **Context7**: Queried Next.js Image static import behavior, verifying automatic blurDataURL generation and priority deprecation/preload mapping.
+- **Superpowers (Brainstorming & Verification)**: Mapped Cairn reference window-and-card art direction to About sections and validated all constraints before completion.
+- **Modern Web Guidance**: Verified scroll-linked transforms, image optimization, and reduced-motion standards; legacy-scan reported 0 findings across all 7 changed files.
+- **Design Skills (impeccable / design-taste-frontend)**: Ran antipattern detector (0 findings after refining side-tab styling), enforced Fraunces ≤5xl, no backdrop-blur/neon/glow, and body text ≥18px.
+- **Ponytail Review**: Executed minimal-change diff review, confirming 0 new npm packages, 0 typecheck errors, 0 lint errors, and zero alterations to home/banner/nav/footer.
