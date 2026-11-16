@@ -64,7 +64,7 @@ export default function GetHelpPage() {
           {HELPLINES.map((line) => (
             <div
               key={line.name}
-              className="py-space-8 first:pt-0 last:pb-0 flex flex-col md:flex-row md:items-center justify-between gap-6"
+              className="py-space-8 first:pt-0 last:pb-0 flex flex-col sm:flex-row sm:items-center justify-between gap-6"
             >
               <div className="flex-1">
                 <span className="font-inter font-semibold text-base sm:text-lg text-ink-900 dark:text-white block mb-1">
@@ -84,7 +84,7 @@ export default function GetHelpPage() {
 
               <Button
                 asChild
-                className="shrink-0 w-full md:w-auto rounded-full bg-ink-900 hover:bg-ink-800 text-white dark:bg-white dark:text-ink-900 dark:hover:bg-paper-100 min-h-[44px] px-6 py-3 text-base font-semibold shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aurora-sea focus-visible:ring-offset-2"
+                className="shrink-0 w-full sm:w-auto rounded-full bg-ink-900 hover:bg-ink-800 text-white dark:bg-white dark:text-ink-900 dark:hover:bg-paper-100 min-h-[44px] px-6 py-3 text-base font-semibold shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aurora-sea focus-visible:ring-offset-2"
               >
                 <a
                   href={`tel:${line.number.replace(/[^0-9]/g, "")}`}
@@ -98,7 +98,7 @@ export default function GetHelpPage() {
           ))}
         </section>
 
-        {/* Not in a crisis? Options */}
+        {/* If you aren't in a crisis Options */}
         <section
           aria-labelledby="non-crisis-heading"
           className="pt-space-8 border-t border-ink-900/10 dark:border-white/10"
@@ -107,7 +107,7 @@ export default function GetHelpPage() {
             id="non-crisis-heading"
             className="font-fraunces text-2xl sm:text-3xl font-semibold text-ink-900 dark:text-white mb-6"
           >
-            Not in a crisis?
+            If you aren&apos;t in a crisis
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
