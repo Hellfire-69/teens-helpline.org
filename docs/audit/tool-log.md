@@ -50,3 +50,10 @@
 - **Impeccable & Design Skills**: Enforced Fraunces visual hero numbers, Inter labels, calm apricot/rose/plum static SVG ridge window, 44px tap targets, and eliminated alarm-red cues.
 - **Ponytail Review**: Verified minimal surgical diffs, 0 new packages, fixed broken /study-hub route, and preserved Server Component architecture.
 - **Audit & Type Safety Verification**: Confirmed 0 typecheck errors and 0 lint errors across the repository and audited cross-component helpline consistency.
+
+
+- **Superpowers (Brainstorming & Verification)**: Planned and validated the scroll-driven curtain story reveal with interlocking seam geometry, 180svh mobile ergonomics, and comprehensive keyboard/reduced-motion fallbacks.
+- **Modern Web Guidance**: Verified native scroll-driven MotionValues (useScroll, useTransform, useSpring) without wheel/touch interception; legacy-scan reported 0 findings.
+- **Impeccable & Design Skills**: Enforced Design.md illustration rules (soft-geometric, no faces/distress, Aurora tokens only) with the Mountain Beacon and Guiding Lantern SVG vector artwork.
+- **Ponytail Review**: Kept the curtain wrapper strictly isolated as a client component while preserving the full Server Component DOM and tel: links underneath with zero new packages.
+- **Accessibility & Next.js Build Verification**: Verified accessible visible skip link, WCAG AA compliance, and confirmed 100% pass on npm run build, typecheck, and ESLint.
