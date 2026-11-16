@@ -2,34 +2,28 @@
 
 import * as React from "react"
 import { motion, useScroll, useTransform, useSpring, useReducedMotion } from "motion/react"
-import { ArrowDown } from "@phosphor-icons/react"
+import { ArrowDown, Sparkle } from "@phosphor-icons/react"
 
 interface GetHelpCurtainProps {
-  children: React.ReactNode
+  /** Optional custom 16:9 illustration asset path (e.g., from Recraft) */
+  illustrationSrc?: string
 }
+
+// Shared deterministic diagonal zigzag seam from top-right (1080, 0) to bottom-left (520, 900)
+// Irregular organic deckle vertices with subtle natural jitter
+const SEAM_VERTICES =
+  "L 1028 95 L 955 190 L 914 285 L 838 380 L 792 475 L 718 570 L 674 665 L 596 760 L 552 835 L 520 900"
+const LEFT_SEAM_PATH = `M 0 0 L 1080 0 ${SEAM_VERTICES} L 0 900 Z`
+const RIGHT_SEAM_PATH = `M 1600 0 L 1080 0 ${SEAM_VERTICES} L 1600 900 Z`
+const DECKLE_EDGE_PATH = `M 1080 0 ${SEAM_VERTICES}`
 
 /**
  * GetHelpCurtain
  *
- * Implements a scroll-driven "curtain" story reveal for the Help page.
- *
- * Story:
- * - CLOSED: One warm sunrise mountain scene. The soft sun sits right on the seam,
- *   bisected into two halves.
- * - OPENING: A gentle zigzag seam runs from top to bottom. As the user scrolls,
- *   the left panel slides left and the right panel slides right.
- *   - LEFT PANEL carries the Mountain Beacon ("You") resting on a high peak.
- *   - RIGHT PANEL carries the Guiding Lantern ("Someone who can help") in a calm valley.
- * - OPEN: As the curtains part, the headline, reassurance, and helplines appear.
- *
- * Safety & Accessibility:
- * - All content remains real server DOM text at all times (no display:none, no conditional drop).
- * - "Skip to helplines" visible pill allows instant bypass.
- * - Curtain panels are aria-hidden="true" and pointer-events-none.
- * - Keyboard tabbing to any helpline triggers native scrollIntoView, naturally opening the stage.
- * - prefers-reduced-motion: Bypasses curtain and sticky stage completely.
+ * Self-contained 155svh sticky hero reveal component with tactile diagonal paper-tear
+ * physics, edge highlights, drop shadows, and calm storytelling artwork.
  */
-export function GetHelpCurtain({ children }: GetHelpCurtainProps) {
+export function GetHelpCurtain({ illustrationSrc }: GetHelpCurtainProps) {
   const containerRef = React.useRef<HTMLDivElement>(null)
   const prefersReduced = useReducedMotion()
   const [mounted, setMounted] = React.useState(false)
@@ -38,286 +32,349 @@ export function GetHelpCurtain({ children }: GetHelpCurtainProps) {
     setMounted(true)
   }, [])
 
-  // 180svh wrapper scroll tracking
+  // Track progress strictly within the dedicated sticky reveal stage
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
   })
 
-  // Responsive spring with low mass (0.08) for instant zero-lag responsiveness
+  // Weighted tactile spring matching cardstock inertia
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 240,
-    damping: 28,
-    mass: 0.08,
-    restDelta: 0.001,
+    stiffness: 180,
+    damping: 26,
+    mass: 0.12,
   })
 
-  // Parting transforms: 0% -> 72% scroll fully moves curtains out of view
-  const leftX = useTransform(smoothProgress, [0, 0.72], ["0%", "-105%"])
-  const rightX = useTransform(smoothProgress, [0, 0.72], ["0%", "105%"])
-  const curtainOpacity = useTransform(smoothProgress, [0.65, 0.78], [1, 0])
+  // Parting transforms with subtle organic paper rotation
+  const leftX = useTransform(smoothProgress, [0, 0.82], ["0%", "-108%"])
+  const rightX = useTransform(smoothProgress, [0, 0.82], ["0%", "108%"])
+  const leftRotate = useTransform(smoothProgress, [0, 0.82], [0, -2.5])
+  const rightRotate = useTransform(smoothProgress, [0, 0.82], [0, 2.5])
+  const curtainOpacity = useTransform(smoothProgress, [0.75, 0.88], [1, 0])
 
-  // Shared deterministic zigzag seam points across 1000x1600 viewBox
-  // Top: (500,0) -> (485,220) -> (520,440) [sun center] -> (480,700) -> (525,960) -> (475,1200) -> (515,1420) -> Bottom: (500,1600)
-  const leftSeamPath =
-    "M 0 0 L 500 0 L 485 220 L 520 440 L 480 700 L 525 960 L 475 1200 L 515 1420 L 500 1600 L 0 1600 Z"
-  const rightSeamPath =
-    "M 1000 0 L 500 0 L 485 220 L 520 440 L 480 700 L 525 960 L 475 1200 L 515 1420 L 500 1600 L 1000 1600 Z"
+  // Centered hero reveal transforms
+  const heroScale = useTransform(smoothProgress, [0.05, 0.82], [0.95, 1])
+  const heroOpacity = useTransform(smoothProgress, [0.05, 0.75], [0.4, 1])
 
-  // If reduced motion is requested or before client mount, render plain accessible flow
+  // Scroll cue affordance transforms
+  const scrollCueOpacity = useTransform(smoothProgress, [0, 0.16], [1, 0])
+  const scrollCueY = useTransform(smoothProgress, [0, 0.16], [0, -12])
+
+  // Reduced motion and SSR fallback: render static hero in plain document flow
   if (!mounted || prefersReduced) {
     return (
-      <div className="relative w-full">
-        {children}
+      <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 md:px-8 pt-12 pb-8 text-center">
+        <h1 className="font-fraunces text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-ink-900 dark:text-white mb-3">
+          I Need Help Now
+        </h1>
+        <p className="font-sans text-lg sm:text-xl font-medium text-aurora-sea dark:text-aurora-sea mb-4">
+          You don't have to carry it all alone.
+        </p>
+        <p className="font-sans text-base sm:text-lg text-ink-700 dark:text-ink-300 leading-relaxed max-w-2xl mx-auto mb-6">
+          If you are in immediate danger, feeling overwhelmed, or need to talk to a professional right now, please reach out to one of the free, confidential Indian helplines below.
+        </p>
       </div>
     )
   }
 
   return (
-    <div ref={containerRef} className="relative w-full min-h-[180svh]">
-      {/* ─── STICKY 100svh CURTAIN OVERLAY ─── */}
-      <div
-        className="sticky top-0 h-[100svh] w-full overflow-hidden pointer-events-none z-30"
-        aria-hidden="true"
-      >
-        {/* Visible Skip to Helplines button (pointer-events-auto for touch & click) */}
-        <div className="absolute top-4 sm:top-6 left-4 sm:left-6 z-50 pointer-events-auto">
+    <div
+      ref={containerRef}
+      className="relative w-full h-[135svh] md:h-[155svh]"
+    >
+      {/* ─── STICKY 100svh VIEWPORT STAGE ─── */}
+      <div className="sticky top-0 h-[100svh] w-full overflow-hidden flex flex-col items-center justify-center">
+        {/* ─── LAYER 1 (z-10): CENTERED HERO REVEAL CONTENT ─── */}
+        <motion.div
+          style={{ scale: heroScale, opacity: heroOpacity }}
+          className="relative z-10 w-full max-w-3xl mx-auto px-4 sm:px-6 md:px-8 text-center flex flex-col items-center justify-center py-12"
+        >
+          <h1 className="font-fraunces text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-ink-900 dark:text-white mb-3">
+            I Need Help Now
+          </h1>
+          <p className="font-sans text-lg sm:text-xl font-medium text-aurora-sea dark:text-aurora-sea mb-4">
+            You don't have to carry it all alone.
+          </p>
+          <p className="font-sans text-base sm:text-lg text-ink-700 dark:text-ink-300 leading-relaxed max-w-2xl mx-auto mb-8">
+            If you are in immediate danger, feeling overwhelmed, or need to talk to a professional right now, please reach out to one of the free, confidential Indian helplines below.
+          </p>
           <a
             href="#helplines-list"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-paper-100/95 dark:bg-night-900/95 border border-ink-900/15 dark:border-white/15 text-xs sm:text-sm font-semibold text-ink-900 dark:text-white hover:text-aurora-sea dark:hover:text-aurora-sea shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aurora-sea"
+            className="group inline-flex items-center gap-2 text-sm font-semibold text-aurora-sea hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aurora-sea rounded-radius-sm py-2 px-3 transition-colors"
           >
-            <span>Skip to helplines</span>
-            <ArrowDown className="w-3.5 h-3.5 text-aurora-sea shrink-0" weight="bold" />
+            <span>Scroll down to view all 5 helplines</span>
+            <ArrowDown className="w-4 h-4 transition-transform group-hover:translate-y-0.5" />
           </a>
-        </div>
-
-        {/* ─── LEFT CURTAIN PANEL ─── */}
-        <motion.div
-          style={{ x: leftX, opacity: curtainOpacity }}
-          className="absolute inset-y-0 left-0 w-full h-full pointer-events-none will-change-transform"
-        >
-          <svg
-            className="w-full h-full object-cover select-none pointer-events-none"
-            viewBox="0 0 1000 1600"
-            preserveAspectRatio="xMidYMid slice"
-            aria-hidden="true"
-          >
-            <defs>
-              <clipPath id="left-curtain-clip">
-                <path d={leftSeamPath} />
-              </clipPath>
-            </defs>
-
-            <g clipPath="url(#left-curtain-clip)">
-              {/* Sky Background */}
-              <rect
-                width="1000"
-                height="1600"
-                className="fill-paper-100 dark:fill-night-900 transition-colors"
-              />
-
-              {/* Bisected Soft Low Sun (left half) */}
-              <circle
-                cx="500"
-                cy="440"
-                r="115"
-                className="fill-aurora-dawn/50 dark:fill-aurora-dawn/30"
-              />
-              <circle
-                cx="500"
-                cy="440"
-                r="75"
-                className="fill-aurora-dawn/75 dark:fill-aurora-dawn/50"
-              />
-
-              {/* Distant Ridge - Warm Apricot / Dawn */}
-              <path
-                d="M 0 980 Q 240 880 500 930 T 1000 900 L 1000 1600 L 0 1600 Z"
-                className="fill-aurora-dawn/40 dark:fill-aurora-dawn/25"
-              />
-
-              {/* Mid-far Ridge - Rose / Blush */}
-              <path
-                d="M 0 1120 Q 300 1040 600 1100 T 1000 1060 L 1000 1600 L 0 1600 Z"
-                className="fill-aurora-blush/60 dark:fill-aurora-blush/40"
-              />
-
-              {/* LEFT SIDE ARTWORK: Mountain Beacon ("You") */}
-              {/* Quiet peak beacon at cx=240, cy=1050 */}
-              <circle
-                cx="240"
-                cy="1050"
-                r="32"
-                className="stroke-aurora-dawn/40 fill-none"
-                strokeWidth="2"
-                strokeDasharray="4 4"
-              />
-              <circle
-                cx="240"
-                cy="1050"
-                r="18"
-                className="fill-aurora-dawn/40"
-              />
-              <circle
-                cx="240"
-                cy="1050"
-                r="9"
-                className="fill-aurora-dawn"
-              />
-              <circle
-                cx="240"
-                cy="1050"
-                r="4"
-                className="fill-paper-50 dark:fill-white"
-              />
-              {/* Natural peak support cairn */}
-              <path
-                d="M 226 1064 L 254 1064 L 248 1074 L 232 1074 Z"
-                className="fill-aurora-dusk/60 dark:fill-night-950"
-              />
-              <path
-                d="M 220 1074 L 260 1074 L 252 1088 L 228 1088 Z"
-                className="fill-aurora-dusk/80 dark:fill-night-950"
-              />
-
-              {/* Mid Ridge - Plum / Dusk */}
-              <path
-                d="M 0 1280 Q 360 1200 700 1260 T 1000 1220 L 1000 1600 L 0 1600 Z"
-                className="fill-aurora-dusk/75 dark:fill-aurora-dusk/60"
-              />
-
-              {/* Foreground Twilight Ridge */}
-              <path
-                d="M 0 1440 Q 420 1380 800 1420 T 1000 1390 L 1000 1600 L 0 1600 Z"
-                className="fill-aurora-dusk dark:fill-night-950"
-              />
-            </g>
-          </svg>
         </motion.div>
 
-        {/* ─── RIGHT CURTAIN PANEL ─── */}
+        {/* ─── LAYER 2 (z-30): SCROLL AFFORDANCE CUE ─── */}
         <motion.div
-          style={{ x: rightX, opacity: curtainOpacity }}
-          className="absolute inset-y-0 right-0 w-full h-full pointer-events-none will-change-transform"
+          style={{ opacity: scrollCueOpacity, y: scrollCueY }}
+          className="absolute top-[52%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none select-none flex flex-col items-center"
         >
-          <svg
-            className="w-full h-full object-cover select-none pointer-events-none"
-            viewBox="0 0 1000 1600"
-            preserveAspectRatio="xMidYMid slice"
-            aria-hidden="true"
+          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-paper-50/90 dark:bg-night-950/90 text-ink-900 dark:text-white border border-ink-900/15 dark:border-white/15 text-xs sm:text-sm font-semibold shadow-md backdrop-blur-sm animate-pulse-subtle">
+            <Sparkle className="w-3.5 h-3.5 text-aurora-dawn shrink-0" weight="fill" />
+            <span>Scroll to part the mist</span>
+            <ArrowDown className="w-3.5 h-3.5 text-aurora-sea shrink-0" weight="bold" />
+          </span>
+        </motion.div>
+
+        {/* ─── LAYER 3 (z-20): DIAGONAL PARTING CARDSTOCK CURTAIN PANELS ─── */}
+        <div
+          className="absolute inset-0 w-full h-full pointer-events-none z-20"
+          aria-hidden="true"
+        >
+          {/* LEFT CURTAIN PANEL */}
+          <motion.div
+            style={{
+              x: leftX,
+              rotate: leftRotate,
+              opacity: curtainOpacity,
+              transformOrigin: "bottom left",
+              filter: "drop-shadow(-8px 12px 28px rgba(28,27,41,0.28))",
+            }}
+            className="absolute inset-0 w-full h-full will-change-transform"
           >
-            <defs>
-              <clipPath id="right-curtain-clip">
-                <path d={rightSeamPath} />
-              </clipPath>
-            </defs>
+            <svg
+              className="w-full h-full object-cover select-none pointer-events-none"
+              viewBox="0 0 1600 900"
+              preserveAspectRatio="xMidYMid slice"
+              aria-hidden="true"
+            >
+              <defs>
+                <clipPath id="left-tear-clip">
+                  <path d={LEFT_SEAM_PATH} />
+                </clipPath>
+              </defs>
 
-            <g clipPath="url(#right-curtain-clip)">
-              {/* Sky Background */}
-              <rect
-                width="1000"
-                height="1600"
-                className="fill-paper-100 dark:fill-night-900 transition-colors"
-              />
+              <g clipPath="url(#left-tear-clip)">
+                {illustrationSrc ? (
+                  <image
+                    href={illustrationSrc}
+                    width="1600"
+                    height="900"
+                    preserveAspectRatio="xMidYMid slice"
+                  />
+                ) : (
+                  <>
+                    {/* Sky Background */}
+                    <rect
+                      width="1600"
+                      height="900"
+                      className="fill-paper-100 dark:fill-night-900 transition-colors"
+                    />
 
-              {/* Bisected Soft Low Sun (right half) */}
-              <circle
-                cx="500"
-                cy="440"
-                r="115"
-                className="fill-aurora-dawn/50 dark:fill-aurora-dawn/30"
-              />
-              <circle
-                cx="500"
-                cy="440"
-                r="75"
-                className="fill-aurora-dawn/75 dark:fill-aurora-dawn/50"
-              />
+                    {/* Atmospheric Mist & Gradient Bands */}
+                    <path
+                      d="M 0 320 C 450 280 850 340 1600 300 L 1600 900 L 0 900 Z"
+                      className="fill-aurora-dawn/15 dark:fill-aurora-dawn/10"
+                    />
+                    <path
+                      d="M 0 440 C 400 400 900 460 1600 420 L 1600 900 L 0 900 Z"
+                      className="fill-aurora-blush/25 dark:fill-aurora-blush/15"
+                    />
 
-              {/* Distant Ridge - Warm Apricot / Dawn */}
+                    {/* Diagonal Mist / Starlight River along the tear line */}
+                    <path
+                      d="M 1120 0 L 1040 0 L 480 900 L 560 900 Z"
+                      className="fill-aurora-sea/15 dark:fill-aurora-sea/10"
+                    />
+                    <circle cx="980" cy="150" r="2.5" className="fill-aurora-dawn/70" />
+                    <circle cx="900" cy="270" r="3" className="fill-white/80" />
+                    <circle cx="820" cy="410" r="2" className="fill-aurora-sea/70" />
+                    <circle cx="750" cy="520" r="3" className="fill-aurora-dawn/70" />
+                    <circle cx="650" cy="680" r="2.5" className="fill-white/80" />
+                    <circle cx="580" cy="800" r="3" className="fill-aurora-sea/70" />
+
+                    {/* Layered Mountain Ridges */}
+                    <path
+                      d="M 0 540 Q 380 470 780 520 T 1600 490 L 1600 900 L 0 900 Z"
+                      className="fill-aurora-dawn/30 dark:fill-aurora-dawn/20"
+                    />
+                    <path
+                      d="M 0 640 Q 420 570 900 620 T 1600 600 L 1600 900 L 0 900 Z"
+                      className="fill-aurora-blush/45 dark:fill-aurora-blush/30"
+                    />
+                    <path
+                      d="M 0 740 Q 460 670 980 720 T 1600 700 L 1600 900 L 0 900 Z"
+                      className="fill-aurora-dusk/75 dark:fill-aurora-dusk/60"
+                    />
+                    <path
+                      d="M 0 830 Q 520 780 1050 820 T 1600 800 L 1600 900 L 0 900 Z"
+                      className="fill-aurora-dusk dark:fill-night-950"
+                    />
+
+                    {/* LEFT STORYTELLING LANDMARK: Hilltop Lookout Under Stars ("You") */}
+                    <g transform="translate(40, 20)">
+                      <path
+                        d="M 210 560 L 240 535 L 270 560 Z"
+                        className="fill-aurora-dusk/90 dark:fill-night-950"
+                      />
+                      <line
+                        x1="220"
+                        y1="560"
+                        x2="220"
+                        y2="585"
+                        className="stroke-aurora-dusk/90 dark:stroke-night-900"
+                        strokeWidth="2.5"
+                      />
+                      <line
+                        x1="260"
+                        y1="560"
+                        x2="260"
+                        y2="585"
+                        className="stroke-aurora-dusk/90 dark:stroke-night-900"
+                        strokeWidth="2.5"
+                      />
+                      {/* Quiet amber beacon light */}
+                      <circle cx="240" cy="565" r="10" className="fill-aurora-dawn/40" />
+                      <circle cx="240" cy="565" r="5" className="fill-aurora-dawn" />
+                      <circle cx="240" cy="565" r="2" className="fill-white" />
+                      {/* Quiet starry constellation above */}
+                      <circle cx="190" cy="460" r="2" className="fill-aurora-dawn/80" />
+                      <circle cx="240" cy="430" r="2.5" className="fill-white/90" />
+                      <circle cx="290" cy="450" r="1.5" className="fill-aurora-dawn/70" />
+                      <circle cx="260" cy="390" r="2" className="fill-white/90" />
+                    </g>
+                  </>
+                )}
+              </g>
+
+              {/* Delicate Torn-Paper Edge Highlight along the open seam */}
               <path
-                d="M 0 980 Q 240 880 500 930 T 1000 900 L 1000 1600 L 0 1600 Z"
-                className="fill-aurora-dawn/40 dark:fill-aurora-dawn/25"
-              />
-
-              {/* Mid-far Ridge - Rose / Blush */}
-              <path
-                d="M 0 1120 Q 300 1040 600 1100 T 1000 1060 L 1000 1600 L 0 1600 Z"
-                className="fill-aurora-blush/60 dark:fill-aurora-blush/40"
-              />
-
-              {/* RIGHT SIDE ARTWORK: Guiding Lantern ("Someone who can help") */}
-              {/* Valley post lantern at cx=760, cy=1180 */}
-              <circle
-                cx="760"
-                cy="1180"
-                r="36"
-                className="stroke-aurora-sea/40 fill-none"
-                strokeWidth="2"
-                strokeDasharray="4 4"
-              />
-              <circle
-                cx="760"
-                cy="1180"
-                r="22"
-                className="fill-aurora-sea/30"
-              />
-              {/* Lantern housing */}
-              <rect
-                x="746"
-                y="1166"
-                width="28"
-                height="30"
-                rx="4"
-                className="stroke-aurora-sea fill-aurora-sea/25"
-                strokeWidth="2"
-              />
-              <path
-                d="M 742 1166 L 760 1152 L 778 1166 Z"
-                className="fill-aurora-sea"
-              />
-              <circle
-                cx="760"
-                cy="1181"
-                r="7"
-                className="fill-aurora-sea"
-              />
-              <circle
-                cx="760"
-                cy="1181"
-                r="3"
-                className="fill-white"
-              />
-              <line
-                x1="760"
-                y1="1196"
-                x2="760"
-                y2="1230"
-                className="stroke-aurora-sea"
-                strokeWidth="2.5"
+                d={DECKLE_EDGE_PATH}
+                className="stroke-paper-50/80 dark:stroke-aurora-dawn/50"
+                strokeWidth="3.5"
+                fill="none"
                 strokeLinecap="round"
+                strokeLinejoin="round"
               />
+            </svg>
+          </motion.div>
 
-              {/* Mid Ridge - Plum / Dusk */}
+          {/* RIGHT CURTAIN PANEL */}
+          <motion.div
+            style={{
+              x: rightX,
+              rotate: rightRotate,
+              opacity: curtainOpacity,
+              transformOrigin: "bottom right",
+              filter: "drop-shadow(8px 12px 28px rgba(28,27,41,0.28))",
+            }}
+            className="absolute inset-0 w-full h-full will-change-transform"
+          >
+            <svg
+              className="w-full h-full object-cover select-none pointer-events-none"
+              viewBox="0 0 1600 900"
+              preserveAspectRatio="xMidYMid slice"
+              aria-hidden="true"
+            >
+              <defs>
+                <clipPath id="right-tear-clip">
+                  <path d={RIGHT_SEAM_PATH} />
+                </clipPath>
+              </defs>
+
+              <g clipPath="url(#right-tear-clip)">
+                {illustrationSrc ? (
+                  <image
+                    href={illustrationSrc}
+                    width="1600"
+                    height="900"
+                    preserveAspectRatio="xMidYMid slice"
+                  />
+                ) : (
+                  <>
+                    {/* Sky Background */}
+                    <rect
+                      width="1600"
+                      height="900"
+                      className="fill-paper-100 dark:fill-night-900 transition-colors"
+                    />
+
+                    {/* Atmospheric Mist & Gradient Bands */}
+                    <path
+                      d="M 0 320 C 450 280 850 340 1600 300 L 1600 900 L 0 900 Z"
+                      className="fill-aurora-dawn/15 dark:fill-aurora-dawn/10"
+                    />
+                    <path
+                      d="M 0 440 C 400 400 900 460 1600 420 L 1600 900 L 0 900 Z"
+                      className="fill-aurora-blush/25 dark:fill-aurora-blush/15"
+                    />
+
+                    {/* Diagonal Mist / Starlight River along the tear line */}
+                    <path
+                      d="M 1120 0 L 1040 0 L 480 900 L 560 900 Z"
+                      className="fill-aurora-sea/15 dark:fill-aurora-sea/10"
+                    />
+                    <circle cx="980" cy="150" r="2.5" className="fill-aurora-dawn/70" />
+                    <circle cx="900" cy="270" r="3" className="fill-white/80" />
+                    <circle cx="820" cy="410" r="2" className="fill-aurora-sea/70" />
+                    <circle cx="750" cy="520" r="3" className="fill-aurora-dawn/70" />
+                    <circle cx="650" cy="680" r="2.5" className="fill-white/80" />
+                    <circle cx="580" cy="800" r="3" className="fill-aurora-sea/70" />
+
+                    {/* Layered Mountain Ridges */}
+                    <path
+                      d="M 0 540 Q 380 470 780 520 T 1600 490 L 1600 900 L 0 900 Z"
+                      className="fill-aurora-dawn/30 dark:fill-aurora-dawn/20"
+                    />
+                    <path
+                      d="M 0 640 Q 420 570 900 620 T 1600 600 L 1600 900 L 0 900 Z"
+                      className="fill-aurora-blush/45 dark:fill-aurora-blush/30"
+                    />
+                    <path
+                      d="M 0 740 Q 460 670 980 720 T 1600 700 L 1600 900 L 0 900 Z"
+                      className="fill-aurora-dusk/75 dark:fill-aurora-dusk/60"
+                    />
+                    <path
+                      d="M 0 830 Q 520 780 1050 820 T 1600 800 L 1600 900 L 0 900 Z"
+                      className="fill-aurora-dusk dark:fill-night-950"
+                    />
+
+                    {/* RIGHT STORYTELLING LANDMARK: Welcoming Sanctuary Shelter & Lantern ("Someone who can help") */}
+                    <g transform="translate(10, 10)">
+                      <path
+                        d="M 1315 620 L 1340 595 L 1365 620 Z"
+                        className="fill-aurora-sea/90 dark:fill-night-950"
+                      />
+                      <rect
+                        x="1324"
+                        y="620"
+                        width="32"
+                        height="36"
+                        rx="4"
+                        className="fill-aurora-dusk/80 dark:fill-night-900"
+                      />
+                      <path
+                        d="M 1332 656 L 1332 635 A 8 8 0 0 1 1348 635 L 1348 656 Z"
+                        className="fill-aurora-sea/30"
+                      />
+                      {/* Welcoming lantern light */}
+                      <circle cx="1340" cy="636" r="14" className="fill-aurora-sea/40" />
+                      <circle cx="1340" cy="636" r="7" className="fill-aurora-dawn" />
+                      <circle cx="1340" cy="636" r="2.5" className="fill-white" />
+                      {/* Quiet guiding starlight */}
+                      <circle cx="1300" cy="530" r="2" className="fill-white/80" />
+                      <circle cx="1380" cy="510" r="2.5" className="fill-aurora-sea/80" />
+                      <circle cx="1350" cy="470" r="1.5" className="fill-aurora-dawn/70" />
+                    </g>
+                  </>
+                )}
+              </g>
+
+              {/* Delicate Torn-Paper Edge Highlight along the open seam */}
               <path
-                d="M 0 1280 Q 360 1200 700 1260 T 1000 1220 L 1000 1600 L 0 1600 Z"
-                className="fill-aurora-dusk/75 dark:fill-aurora-dusk/60"
+                d={DECKLE_EDGE_PATH}
+                className="stroke-paper-50/80 dark:stroke-aurora-dawn/50"
+                strokeWidth="3.5"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
-
-              {/* Foreground Twilight Ridge */}
-              <path
-                d="M 0 1440 Q 420 1380 800 1420 T 1000 1390 L 1000 1600 L 0 1600 Z"
-                className="fill-aurora-dusk dark:fill-night-950"
-              />
-            </g>
-          </svg>
-        </motion.div>
-      </div>
-
-      {/* ─── REAL SERVER CONTENT LAYER ─── */}
-      {/* Positioned underneath the sticky curtain; uncurtains smoothly as you scroll */}
-      <div className="relative z-10 -mt-[100svh]">
-        {children}
+            </svg>
+          </motion.div>
+        </div>
       </div>
     </div>
   )

@@ -57,3 +57,10 @@
 - **Impeccable & Design Skills**: Enforced Design.md illustration rules (soft-geometric, no faces/distress, Aurora tokens only) with the Mountain Beacon and Guiding Lantern SVG vector artwork.
 - **Ponytail Review**: Kept the curtain wrapper strictly isolated as a client component while preserving the full Server Component DOM and tel: links underneath with zero new packages.
 - **Accessibility & Next.js Build Verification**: Verified accessible visible skip link, WCAG AA compliance, and confirmed 100% pass on npm run build, typecheck, and ESLint.
+
+
+- **Design Review & Architecture Refactor**: Diagnosed and resolved the sticky scroll math bug, isolating GetHelpCurtain to a dedicated 155svh hero stage while preserving natural flow for all 5 helplines.
+- **Motion & Visual Craft**: Implemented true diagonal zigzag paper-tear reveal (1600x900 16:9 viewBox, (1080,0) to (520,900)), deckle-edge stroke highlights, drop shadows, and subtle cardstock rotation.
+- **Crisis Safety & Triage**: Introduced unblocked persistent top crisis bar with direct CHILDLINE 1098 and TeleMANAS 14416 dial pills and jump link, ensuring emergency help is never gated behind scroll.
+- **Impeccable Antipattern Audit**: Ran detector, eliminated tacky bounce easing in favor of smooth deceleration, and verified 0 anti-patterns across refactored files.
+- **Modern Web Guidance & Verification**: Passed legacy-scan across all components with zero findings; confirmed 100% pass on Next.js production build, typecheck, and ESLint.
