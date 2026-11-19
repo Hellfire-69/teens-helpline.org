@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { LazyMotion, domAnimation, m } from "motion/react";
 import { Phone, AlertTriangle } from "lucide-react";
 
 export function CrisisBanner() {
@@ -13,13 +13,14 @@ export function CrisisBanner() {
   ];
 
   return (
-    <motion.div
-      id="crisis-banner"
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ type: "spring", stiffness: 260, damping: 34, bounce: 0 }}
-      className="bg-signal-crisis/10 border-b border-signal-crisis/20 px-4 py-3 shadow-glow-crisis backdrop-blur-md group/banner"
-    >
+    <LazyMotion features={domAnimation}>
+      <m.div
+        id="crisis-banner"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: "spring", stiffness: 260, damping: 34, bounce: 0 }}
+        className="bg-signal-crisis/10 border-b border-signal-crisis/20 px-4 py-3 shadow-glow-crisis backdrop-blur-md group/banner"
+      >
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-2 font-medium">
           <AlertTriangle className="h-5 w-5 text-signal-crisis" />
@@ -90,6 +91,7 @@ export function CrisisBanner() {
           </div>
         </div>
       </div>
-    </motion.div>
-  );
+    </m.div>
+  </LazyMotion>
+);
 }
