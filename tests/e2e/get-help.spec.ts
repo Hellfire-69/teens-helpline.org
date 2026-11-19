@@ -71,15 +71,18 @@ test.describe("Get Help Page — E2E Visual, Motion & Accessibility Tests", () =
     await page.evaluate(() => window.scrollTo(0, 800))
     await page.waitForTimeout(300)
 
-    // 8. Verify Alternative Pathways links
-    const peerLink = page.locator('a[href="/peer-support"]')
-    await peerLink.scrollIntoViewIfNeeded()
+    // 8. Verify Alternative Pathways links (scoped to alternative support section)
+    const altSupportSection = page.locator('section[aria-labelledby="alternative-support-heading"]')
+    await altSupportSection.scrollIntoViewIfNeeded()
+    await expect(altSupportSection).toBeVisible()
+
+    const peerLink = altSupportSection.locator('a[href="/peer-support"]')
     await expect(peerLink).toBeVisible()
 
-    const studyHubLink = page.locator('a[href="/study-hub"]')
+    const studyHubLink = altSupportSection.locator('a[href="/study-hub"]')
     await expect(studyHubLink).toBeVisible()
 
-    const novaLink = page.locator('a[href="/chat"]')
+    const novaLink = altSupportSection.locator('a[href="/chat"]')
     await expect(novaLink).toBeVisible()
 
     // 9. Test copy number button interaction with Copied feedback
