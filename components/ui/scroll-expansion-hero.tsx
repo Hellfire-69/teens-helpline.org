@@ -145,7 +145,6 @@ const ScrollExpandMedia = ({
       window.removeEventListener('touchend', handleTouchEnd as EventListener);
     };
     // scrollProgress is a stable MotionValue ref — safe single dependency.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrollProgress]);
 
   useEffect(() => {
@@ -199,8 +198,9 @@ const ScrollExpandMedia = ({
             <Image
               src={bgImageSrc}
               alt='Background'
-              width={1920}
-              height={1080}
+              width={1672}
+              height={941}
+              sizes='100vw'
               className='w-screen h-screen'
               style={{
                 objectFit: 'cover',
@@ -279,7 +279,8 @@ const ScrollExpandMedia = ({
                       src={mediaSrc}
                       alt={title || 'Media content'}
                       fill
-                      sizes="(max-width: 1280px) 100vw, 1280px"
+                      priority
+                      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 80vw, 1254px"
                       className='object-cover'
                     />
                     <motion.div
