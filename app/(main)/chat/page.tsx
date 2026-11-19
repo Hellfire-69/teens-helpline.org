@@ -11,7 +11,7 @@ import { PERSONA_THEMES } from "@/features/nova/persona-theme";
 import type { PersonaId } from "@/features/nova/schema";
 import { savePreferredPersonaAction } from "@/features/auth/actions";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
-import { WarningCircle, Lightning, Leaf, Brain } from "@phosphor-icons/react";
+import { WarningCircle, Lightning, Leaf, Brain, ArrowClockwise } from "@phosphor-icons/react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Suspense } from "react";
@@ -358,6 +358,29 @@ function ChatPageContent() {
                     </div>
                   );
                 })}
+
+                {error && messages.length > 0 && (
+                  <div className="w-full flex items-center gap-2 pl-0 sm:pl-16 mt-2" data-testid="chat-inline-error">
+                    <div className="inline-flex flex-wrap items-center gap-2 px-3.5 py-2 rounded-radius-md bg-paper-100 dark:bg-night-900 border border-border/50 text-type-body-sm text-ink-600 dark:text-ink-300 shadow-sm">
+                      <WarningCircle className="w-4 h-4 text-ink-400 shrink-0" />
+                      <span>We&apos;re having trouble connecting to Nova right now.</span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const lastUserMsg = [...messages].reverse().find((m) => m.role === "user");
+                          if (lastUserMsg) {
+                            sendMessage(lastUserMsg.content, true);
+                          }
+                        }}
+                        className="inline-flex items-center gap-1 font-medium text-aurora-sea hover:text-aurora-sea/80 underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-aurora-sea rounded ml-1"
+                        aria-label="Retry sending message"
+                      >
+                        <ArrowClockwise className="w-3.5 h-3.5" />
+                        <span>Retry</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="h-36 w-full shrink-0" />

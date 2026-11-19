@@ -22,7 +22,7 @@ type NovaState = {
   setStatus: (status: "resting" | "listening" | "responding") => void;
   setError: (error: string | null) => void;
   
-  sendMessage: (content: string) => Promise<void>;
+  sendMessage: (content: string, isRetry?: boolean) => Promise<void>;
   resetChat: () => void;
 };
 
@@ -40,11 +40,11 @@ export const useNovaStore = create<NovaState>((set, get) => ({
   setStatus: (status) => set({ status }),
   setError: (error) => set({ error }),
 
-  sendMessage: async (content: string) => {
+  sendMessage: async (content: string, isRetry?: boolean) => {
     const { messages, conversationId } = get();
     
-    // Add user message immediately
-    const newMessages: Message[] = [...messages, { role: "user", content }];
+    // Add user message immediately if not retrying existing turn
+    const newMessages: Message[] = isRetry ? messages : [...messages, { role: "user", content }];
     set({ messages: newMessages, status: "responding", error: null });
 
     try {
