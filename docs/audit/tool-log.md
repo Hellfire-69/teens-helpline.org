@@ -64,3 +64,9 @@
 - **Crisis Safety & Triage**: Introduced unblocked persistent top crisis bar with direct CHILDLINE 1098 and TeleMANAS 14416 dial pills and jump link, ensuring emergency help is never gated behind scroll.
 - **Impeccable Antipattern Audit**: Ran detector, eliminated tacky bounce easing in favor of smooth deceleration, and verified 0 anti-patterns across refactored files.
 - **Modern Web Guidance & Verification**: Passed legacy-scan across all components with zero findings; confirmed 100% pass on Next.js production build, typecheck, and ESLint.
+
+- **Helpline Directory Fact Auditing**: Verified all official helpline numbers/hours against government records; corrected iCALL operating hours to "Mon-Sat, 10am-8pm" and documented differences across crisis banner and safety bar.
+- **Unverified Claims Sanitization**: Stripped "Verified" claims from titles/hero, removed "moderated" and "trained teenager" peer claims with code proof from `service.ts`, simplified FAQ responses, and verified Quick Exit behavior directly against `quick-exit.tsx`.
+- **Design Token & Typography Alignment**: Enforced minimum 14px text size across all directory elements, removed uppercase tracking-wider eyebrow badges and square icon containers, and eliminated alarm-red cues in favor of ink/aurora tokens.
+- **Modern Web Guidance**: Executed `legacy-scan` across modified pages and components with 0 findings across 38 guides (52 active rules).
+- **TypeScript & Vitest Verification**: Confirmed 100% pass on Vitest test suite (`get-help.test.ts`), 0 TypeScript typecheck errors (`tsc --noEmit`), and 0 ESLint errors.
