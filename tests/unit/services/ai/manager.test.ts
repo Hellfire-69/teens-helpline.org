@@ -46,44 +46,25 @@ describe("AI Provider Manager (Failover Logic)", () => {
     expect(mockGroqGenerateReply).not.toHaveBeenCalled();
   });
 
-  it("retries Gemini once if it fails the first time", async () => {
-    mockGeminiGenerateReply
-      .mockRejectedValueOnce(new Error("Gemini temporary error"))
-      .mockResolvedValueOnce("Gemini reply on retry");
-      
-    const result = await generateWithFailover(dummyContext);
-    
-    expect(result.reply).toBe("Gemini reply on retry");
-    expect(result.providerUsed).toBe("gemini");
-    expect(mockGeminiGenerateReply).toHaveBeenCalledTimes(2);
-    expect(mockGroqGenerateReply).not.toHaveBeenCalled();
-  });
-
-  it("fails over to GROQ if Gemini fails twice", async () => {
-    mockGeminiGenerateReply
-      .mockRejectedValueOnce(new Error("Gemini error 1"))
-      .mockRejectedValueOnce(new Error("Gemini error 2"));
-      
+  it("fails over to GROQ immediately if Gemini fails (no retry)", async () => {
+    mockGeminiGenerateReply.mockRejectedValueOnce(new Error("Gemini error 1"));
     mockGroqGenerateReply.mockResolvedValueOnce("Groq fallback reply");
 
     const result = await generateWithFailover(dummyContext);
 
     expect(result.reply).toBe("Groq fallback reply");
     expect(result.providerUsed).toBe("groq");
-    expect(mockGeminiGenerateReply).toHaveBeenCalledTimes(2);
+    expect(mockGeminiGenerateReply).toHaveBeenCalledTimes(1);
     expect(mockGroqGenerateReply).toHaveBeenCalledTimes(1);
   });
 
   it("throws an error if both providers fail entirely", async () => {
-    mockGeminiGenerateReply
-      .mockRejectedValueOnce(new Error("Gemini error 1"))
-      .mockRejectedValueOnce(new Error("Gemini error 2"));
-      
+    mockGeminiGenerateReply.mockRejectedValueOnce(new Error("Gemini error 1"));
     mockGroqGenerateReply.mockRejectedValueOnce(new Error("Groq error"));
 
     await expect(generateWithFailover(dummyContext)).rejects.toThrow("All AI providers failed.");
 
-    expect(mockGeminiGenerateReply).toHaveBeenCalledTimes(2);
+    expect(mockGeminiGenerateReply).toHaveBeenCalledTimes(1);
     expect(mockGroqGenerateReply).toHaveBeenCalledTimes(1);
   });
 });
