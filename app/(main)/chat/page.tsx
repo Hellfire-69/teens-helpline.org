@@ -34,6 +34,7 @@ function ChatPageContent() {
 
   // References to locate components during particle flight
   const avatarRef = useRef<HTMLDivElement>(null);
+  const hasSavedPersonaRef = useRef(false);
 
   useEffect(() => {
     // Fetch conversation history on mount
@@ -79,6 +80,7 @@ function ChatPageContent() {
   const handleCardSelect = async (e: React.MouseEvent<HTMLDivElement>, id: PersonaId) => {
     if (activeOnboardingCard) return; // Prevent double-clicks
 
+    hasSavedPersonaRef.current = false;
     setActiveOnboardingCard(id);
     const cardRect = e.currentTarget.getBoundingClientRect();
     const avatarRect = avatarRef.current?.getBoundingClientRect();
@@ -92,6 +94,7 @@ function ChatPageContent() {
 
     if (shouldReduceMotion) {
       // Direct update for reduced motion
+      hasSavedPersonaRef.current = true;
       setActivePersona(id);
       savePreferredPersonaAction(id).catch(console.error);
       setHasSelectedPersona(true);
@@ -107,8 +110,9 @@ function ChatPageContent() {
     setIsTraveling(false);
     setIsBlooming(true);
 
-    // Set active persona and save
-    if (activeOnboardingCard) {
+    // Set active persona and save (guarded to run once per persona pick)
+    if (activeOnboardingCard && !hasSavedPersonaRef.current) {
+      hasSavedPersonaRef.current = true;
       setActivePersona(activeOnboardingCard);
       savePreferredPersonaAction(activeOnboardingCard).catch(console.error);
       setWaveTrigger(prev => prev + 1);
