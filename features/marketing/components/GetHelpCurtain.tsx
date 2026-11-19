@@ -1,27 +1,195 @@
 "use client"
 
 import * as React from "react"
+import Image from "next/image"
 import { motion, useScroll, useTransform, useSpring, useReducedMotion } from "motion/react"
-import { ArrowDown, Sparkle } from "@phosphor-icons/react"
+import { ArrowDown, Sparkle, ShieldCheck, Heart } from "@phosphor-icons/react"
 
 interface GetHelpCurtainProps {
-  /** Optional custom 16:9 illustration asset path (e.g., from Recraft) */
+  /** Optional custom illustration asset path */
   illustrationSrc?: string
 }
 
-// Shared deterministic diagonal zigzag seam from top-right (1080, 0) to bottom-left (520, 900)
-// Irregular organic deckle vertices with subtle natural jitter
+/**
+ * Almost vertical seam slightly offset from the exact centre (x = 800 in 1600x900 viewBox).
+ * Starts at top (824, 0) and flows with subtle organic deckle curves to bottom (784, 900).
+ * Total lateral drift is ~40px across 900px height (~2.5° inclination).
+ * No dramatic diagonal, no lightning bolts, no repetitive sharp zigzags.
+ */
 const SEAM_VERTICES =
-  "L 1028 95 L 955 190 L 914 285 L 838 380 L 792 475 L 718 570 L 674 665 L 596 760 L 552 835 L 520 900"
-const LEFT_SEAM_PATH = `M 0 0 L 1080 0 ${SEAM_VERTICES} L 0 900 Z`
-const RIGHT_SEAM_PATH = `M 1600 0 L 1080 0 ${SEAM_VERTICES} L 1600 900 Z`
-const DECKLE_EDGE_PATH = `M 1080 0 ${SEAM_VERTICES}`
+  "C 828 120, 818 200, 822 280 " +
+  "C 826 360, 812 440, 816 520 " +
+  "C 820 600, 804 680, 808 760 " +
+  "C 812 830, 786 870, 784 900"
+
+const LEFT_SEAM_PATH = `M 0 0 L 824 0 ${SEAM_VERTICES} L 0 900 Z`
+const RIGHT_SEAM_PATH = `M 1600 0 L 824 0 ${SEAM_VERTICES} L 1600 900 Z`
+const DECKLE_EDGE_PATH = `M 824 0 ${SEAM_VERTICES}`
+
+/**
+ * SanctuaryDawnArtwork
+ * An original, art-directed vector sanctuary environment behind the curtain.
+ * Evokes a peaceful morning dawn over soft layered terrain, quiet sanctuary lighting,
+ * and warm atmospheric reassurance.
+ */
+function SanctuaryDawnArtwork({ idPrefix = "sanctuary" }: { idPrefix?: string }) {
+  const skyGradId = `${idPrefix}-sky-grad`
+  const sunGradId = `${idPrefix}-sun-grad`
+  const riverGradId = `${idPrefix}-river-grad`
+  const hillGradId = `${idPrefix}-hill-grad`
+
+  return (
+    <svg
+      className="w-full h-full object-cover select-none pointer-events-none"
+      viewBox="0 0 1600 900"
+      preserveAspectRatio="xMidYMid slice"
+      aria-hidden="true"
+    >
+      <defs>
+        {/* Soft morning sky gradient from twilight violet to warm dawn apricot */}
+        <linearGradient id={skyGradId} x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#2A2440" />
+          <stop offset="35%" stopColor="#4A3B69" />
+          <stop offset="65%" stopColor="#96607C" />
+          <stop offset="85%" stopColor="#D98A72" />
+          <stop offset="100%" stopColor="#F5C088" />
+        </linearGradient>
+
+        {/* Radiant low sun aura */}
+        <radialGradient id={sunGradId} cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#FFF9E6" stopOpacity="0.95" />
+          <stop offset="25%" stopColor="#FCE4A6" stopOpacity="0.75" />
+          <stop offset="55%" stopColor="#F3A966" stopOpacity="0.35" />
+          <stop offset="100%" stopColor="#F3A966" stopOpacity="0" />
+        </radialGradient>
+
+        {/* Dawn light reflection on the sanctuary stream */}
+        <linearGradient id={riverGradId} x1="50%" y1="0%" x2="50%" y2="100%">
+          <stop offset="0%" stopColor="#FADBB3" stopOpacity="0.8" />
+          <stop offset="45%" stopColor="#E2A18D" stopOpacity="0.6" />
+          <stop offset="100%" stopColor="#5E4F7C" stopOpacity="0.4" />
+        </linearGradient>
+
+        {/* Foreground terrain mist blend */}
+        <linearGradient id={hillGradId} x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#3F3459" />
+          <stop offset="100%" stopColor="#1E192E" />
+        </linearGradient>
+      </defs>
+
+      {/* 1. Base Sky */}
+      <rect width="1600" height="900" fill={`url(#${skyGradId})`} />
+
+      {/* 2. Soft Sunrise Glow (Near center, gentle morning dawn) */}
+      <circle cx="830" cy="460" r="280" fill={`url(#${sunGradId})`} />
+      <circle cx="830" cy="460" r="90" fill="#FFFBE8" opacity="0.9" />
+
+      {/* 3. Distant Mountain Ridge — Pale Rose & Lavender mist */}
+      <path
+        d="M 0 460 Q 280 390 580 430 T 1180 410 Q 1420 380 1600 440 L 1600 900 L 0 900 Z"
+        fill="#B57F8E"
+        opacity="0.45"
+      />
+
+      {/* 4. Mid-Distant Mountain Ridge — Warm Dusk Violet */}
+      <path
+        d="M 0 530 Q 320 460 720 500 T 1360 480 Q 1500 470 1600 520 L 1600 900 L 0 900 Z"
+        fill="#7A5274"
+        opacity="0.65"
+      />
+
+      {/* 5. Serene Hillside Sanctuary with Warm Guiding Lantern */}
+      <g opacity="0.9">
+        {/* Sanctuary Lookout Cottage on the right ridge */}
+        <path
+          d="M 1240 540 L 1270 515 L 1300 540 Z"
+          fill="#3B3054"
+        />
+        <rect
+          x="1248"
+          y="540"
+          width="44"
+          height="32"
+          rx="3"
+          fill="#2C2342"
+        />
+        {/* Soft glowing amber lantern window */}
+        <rect
+          x="1262"
+          y="546"
+          width="16"
+          height="18"
+          rx="2"
+          fill="#FDE49E"
+        />
+        <circle cx="1270" cy="555" r="16" fill="#F4A261" opacity="0.4" />
+        <circle cx="1270" cy="555" r="32" fill="#F4A261" opacity="0.15" />
+      </g>
+
+      {/* 6. Rolling Foothills — Deep Twilight Lavender */}
+      <path
+        d="M 0 620 Q 420 540 880 590 T 1600 570 L 1600 900 L 0 900 Z"
+        fill="#55416B"
+        opacity="0.8"
+      />
+
+      {/* 7. Gentle Meandering Sanctuary Stream / Path of Morning Light */}
+      <path
+        d="M 830 520 C 810 590, 870 650, 820 720 C 770 790, 710 830, 680 900 L 860 900 C 900 840, 940 780, 910 710 C 880 640, 890 580, 850 520 Z"
+        fill={`url(#${riverGradId})`}
+      />
+
+      {/* 8. Foreground Hill Slopes */}
+      <path
+        d="M 0 710 Q 380 640 740 720 T 1600 680 L 1600 900 L 0 900 Z"
+        fill="#392C4D"
+        opacity="0.92"
+      />
+
+      {/* 9. Front Ground — Solid rich night soil anchoring the view */}
+      <path
+        d="M 0 810 Q 520 750 1020 800 T 1600 780 L 1600 900 L 0 900 Z"
+        fill={`url(#${hillGradId})`}
+      />
+
+      {/* 10. Organic Cypress / Pine Silhouettes on Hill Edges */}
+      <g fill="#1E172B" opacity="0.85">
+        {/* Left cluster */}
+        <path d="M 120 720 L 132 660 L 144 720 Z" />
+        <path d="M 136 730 L 148 640 L 160 730 Z" />
+        <path d="M 154 735 L 164 675 L 174 735 Z" />
+        {/* Right cluster near sanctuary */}
+        <path d="M 1320 690 L 1332 630 L 1344 690 Z" />
+        <path d="M 1340 705 L 1354 615 L 1368 705 Z" />
+        <path d="M 1362 700 L 1372 645 L 1382 700 Z" />
+      </g>
+
+      {/* 11. Subtle Morning Light Mists across the valley */}
+      <path
+        d="M 0 670 C 400 630 800 690 1200 640 C 1400 620 1520 650 1600 640"
+        stroke="#F5C088"
+        strokeWidth="1.5"
+        strokeOpacity="0.25"
+        fill="none"
+      />
+      <path
+        d="M 0 750 C 450 710 950 770 1600 720"
+        stroke="#FFFFFF"
+        strokeWidth="1"
+        strokeOpacity="0.18"
+        fill="none"
+      />
+    </svg>
+  )
+}
 
 /**
  * GetHelpCurtain
  *
- * Self-contained 155svh sticky hero reveal component with tactile diagonal paper-tear
- * physics, edge highlights, drop shadows, and calm storytelling artwork.
+ * Self-contained 130svh sticky hero reveal component.
+ * Features an almost vertical, subtly inclined near-center seam (~2.5° lateral drift).
+ * Two distinct panels part smoothly left and right to reveal a warm sanctuary dawn,
+ * offering emotional reassurance and immediate unblocked access to help.
  */
 export function GetHelpCurtain({ illustrationSrc }: GetHelpCurtainProps) {
   const containerRef = React.useRef<HTMLDivElement>(null)
@@ -36,90 +204,148 @@ export function GetHelpCurtain({ illustrationSrc }: GetHelpCurtainProps) {
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
+    layoutEffect: false,
   })
 
-  // Weighted tactile spring matching cardstock inertia
+  // Weighted tactile spring matching natural fabric/cardstock inertia
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 180,
-    damping: 26,
-    mass: 0.12,
+    stiffness: 160,
+    damping: 24,
+    mass: 0.1,
   })
 
-  // Parting transforms with subtle organic paper rotation
-  const leftX = useTransform(smoothProgress, [0, 0.82], ["0%", "-108%"])
-  const rightX = useTransform(smoothProgress, [0, 0.82], ["0%", "108%"])
-  const leftRotate = useTransform(smoothProgress, [0, 0.82], [0, -2.5])
-  const rightRotate = useTransform(smoothProgress, [0, 0.82], [0, 2.5])
-  const curtainOpacity = useTransform(smoothProgress, [0.75, 0.88], [1, 0])
+  // Parting transforms: panels slide laterally to opposite sides with subtle natural rotation
+  const leftX = useTransform(smoothProgress, [0, 0.85], ["0%", "-104%"])
+  const rightX = useTransform(smoothProgress, [0, 0.85], ["0%", "104%"])
+  const leftRotate = useTransform(smoothProgress, [0, 0.85], [0, -1.2])
+  const rightRotate = useTransform(smoothProgress, [0, 0.85], [0, 1.2])
+  const curtainOpacity = useTransform(smoothProgress, [0.76, 0.92], [1, 0])
 
   // Centered hero reveal transforms
-  const heroScale = useTransform(smoothProgress, [0.05, 0.82], [0.95, 1])
-  const heroOpacity = useTransform(smoothProgress, [0.05, 0.75], [0.4, 1])
+  const heroScale = useTransform(smoothProgress, [0.04, 0.82], [0.94, 1])
+  const heroOpacity = useTransform(smoothProgress, [0.04, 0.72], [0.35, 1])
 
   // Scroll cue affordance transforms
-  const scrollCueOpacity = useTransform(smoothProgress, [0, 0.16], [1, 0])
-  const scrollCueY = useTransform(smoothProgress, [0, 0.16], [0, -12])
+  const scrollCueOpacity = useTransform(smoothProgress, [0, 0.18], [1, 0])
+  const scrollCueY = useTransform(smoothProgress, [0, 0.18], [0, -14])
 
   // Reduced motion and SSR fallback: render static hero in plain document flow
   if (!mounted || prefersReduced) {
     return (
-      <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 md:px-8 pt-12 pb-8 text-center">
-        <h1 className="font-fraunces text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-ink-900 dark:text-white mb-3">
-          I Need Help Now
+      <section
+        ref={containerRef}
+        aria-label="Welcome Sanctuary"
+        style={{ position: "relative" }}
+        className="relative w-full max-w-4xl mx-auto px-4 sm:px-6 md:px-8 pt-8 md:pt-12 pb-6 text-center"
+      >
+        {/* Reassuring badge */}
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-aurora-sea/10 border border-aurora-sea/20 text-aurora-sea text-sm font-medium mb-4">
+          <Heart className="w-3.5 h-3.5 text-aurora-blush" weight="fill" />
+          <span>You are welcome here. Take all the time you need.</span>
+        </div>
+
+        <h1 className="font-fraunces text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight text-ink-900 dark:text-white mb-4 text-balance">
+          Take a gentle breath. You don&apos;t have to carry this alone.
         </h1>
-        <p className="font-sans text-lg sm:text-xl font-medium text-aurora-sea dark:text-aurora-sea mb-4">
-          You don't have to carry it all alone.
+
+        <p className="font-sans text-base sm:text-lg md:text-xl text-ink-700 dark:text-ink-200 leading-relaxed max-w-2xl mx-auto mb-6">
+          Whatever you are facing right now—heavy thoughts, confusion, exhaustion, or distress—take it one step at a time. Confidential support is here for you.
         </p>
-        <p className="font-sans text-base sm:text-lg text-ink-700 dark:text-ink-300 leading-relaxed max-w-2xl mx-auto mb-6">
-          If you are in immediate danger, feeling overwhelmed, or need to talk to a professional right now, please reach out to one of the free, confidential Indian helplines below.
-        </p>
-      </div>
+
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          <a
+            href="#emergency-triage"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-ink-900 hover:bg-ink-800 text-white dark:bg-white dark:text-ink-900 dark:hover:bg-paper-100 font-semibold text-sm sm:text-base shadow-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aurora-sea"
+          >
+            <span>Jump to Helplines Directory</span>
+            <ArrowDown className="w-4 h-4" weight="bold" />
+          </a>
+          <div className="inline-flex items-center gap-2 text-sm text-ink-600 dark:text-ink-300">
+            <ShieldCheck className="w-4 h-4 text-aurora-sea" weight="fill" />
+            <span>100% Free &amp; Confidential</span>
+          </div>
+        </div>
+      </section>
     )
   }
 
   return (
-    <div
+    <section
       ref={containerRef}
-      className="relative w-full h-[135svh] md:h-[155svh]"
+      aria-label="Welcome Sanctuary and Helpline Reveal"
+      style={{ position: "relative" }}
+      className="relative w-full h-[125svh] md:h-[135svh]"
     >
       {/* ─── STICKY 100svh VIEWPORT STAGE ─── */}
       <div className="sticky top-0 h-[100svh] w-full overflow-hidden flex flex-col items-center justify-center">
-        {/* ─── LAYER 1 (z-10): CENTERED HERO REVEAL CONTENT ─── */}
+        
+        {/* ─── LAYER 1 (z-10): REVEALED SANCTUARY ARTWORK & REASSURING MESSAGE ─── */}
+        <div className="absolute inset-0 w-full h-full z-10">
+          {/* Peaceful vector dawn environment */}
+          {illustrationSrc ? (
+            <Image
+              src={illustrationSrc}
+              alt="Calming sanctuary dawn"
+              fill
+              className="object-cover"
+              sizes="100vw"
+              priority
+            />
+          ) : (
+            <SanctuaryDawnArtwork idPrefix="sanctuary-revealed" />
+          )}
+
+          {/* Soft central gradient scrim to ensure text legibility */}
+          <div className="absolute inset-0 bg-gradient-to-t from-paper-50 via-paper-50/70 to-transparent dark:from-night-950 dark:via-night-950/75 dark:to-transparent pointer-events-none" />
+        </div>
+
+        {/* ─── LAYER 1.5: CENTERED HERO REVEAL CONTENT ─── */}
         <motion.div
           style={{ scale: heroScale, opacity: heroOpacity }}
-          className="relative z-10 w-full max-w-3xl mx-auto px-4 sm:px-6 md:px-8 text-center flex flex-col items-center justify-center py-12"
+          className="relative z-10 w-full max-w-3xl mx-auto px-4 sm:px-6 md:px-8 text-center flex flex-col items-center justify-center py-6 pointer-events-auto"
         >
-          <h1 className="font-fraunces text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-ink-900 dark:text-white mb-3">
-            I Need Help Now
+          {/* Empathetic eyebrow pill */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-paper-50/90 dark:bg-night-900/90 border border-ink-900/10 dark:border-white/10 text-ink-800 dark:text-ink-100 text-sm font-medium shadow-sm backdrop-blur-md mb-4">
+            <Heart className="w-3.5 h-3.5 text-aurora-blush" weight="fill" />
+            <span>You are safe here. Take all the time you need.</span>
+          </div>
+
+          <h1 className="font-fraunces text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight text-ink-900 dark:text-white mb-4 text-balance">
+            Take a gentle breath. You don&apos;t have to carry this alone.
           </h1>
-          <p className="font-sans text-lg sm:text-xl font-medium text-aurora-sea dark:text-aurora-sea mb-4">
-            You don't have to carry it all alone.
+
+          <p className="font-sans text-base sm:text-lg md:text-xl text-ink-700 dark:text-ink-200 leading-relaxed max-w-2xl mx-auto mb-6">
+            Whatever you are facing right now—heavy thoughts, confusion, exhaustion, or distress—take it one step at a time. Free support is waiting just below.
           </p>
-          <p className="font-sans text-base sm:text-lg text-ink-700 dark:text-ink-300 leading-relaxed max-w-2xl mx-auto mb-8">
-            If you are in immediate danger, feeling overwhelmed, or need to talk to a professional right now, please reach out to one of the free, confidential Indian helplines below.
-          </p>
-          <a
-            href="#helplines-list"
-            className="group inline-flex items-center gap-2 text-sm font-semibold text-aurora-sea hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aurora-sea rounded-radius-sm py-2 px-3 transition-colors"
-          >
-            <span>Scroll down to view all 5 helplines</span>
-            <ArrowDown className="w-4 h-4 transition-transform group-hover:translate-y-0.5" />
-          </a>
+
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <a
+              href="#emergency-triage"
+              className="group inline-flex items-center gap-2 px-6 py-3 rounded-full bg-ink-900 hover:bg-ink-800 text-white dark:bg-white dark:text-ink-900 dark:hover:bg-paper-100 font-semibold text-sm sm:text-base shadow-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aurora-sea"
+            >
+              <span>Scroll down for all helplines</span>
+              <ArrowDown className="w-4 h-4 transition-transform group-hover:translate-y-0.5" weight="bold" />
+            </a>
+            <div className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-700 dark:text-ink-300">
+              <ShieldCheck className="w-4 h-4 text-aurora-sea" weight="fill" />
+              <span>Official Indian Helplines</span>
+            </div>
+          </div>
         </motion.div>
 
         {/* ─── LAYER 2 (z-30): SCROLL AFFORDANCE CUE ─── */}
         <motion.div
           style={{ opacity: scrollCueOpacity, y: scrollCueY }}
-          className="absolute top-[52%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none select-none flex flex-col items-center"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 pointer-events-none select-none flex flex-col items-center"
         >
-          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-paper-50/90 dark:bg-night-950/90 text-ink-900 dark:text-white border border-ink-900/15 dark:border-white/15 text-xs sm:text-sm font-semibold shadow-md backdrop-blur-sm animate-pulse-subtle">
+          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-paper-50/90 dark:bg-night-950/90 text-ink-900 dark:text-white border border-ink-900/15 dark:border-white/15 text-sm font-semibold shadow-md backdrop-blur-sm">
             <Sparkle className="w-3.5 h-3.5 text-aurora-dawn shrink-0" weight="fill" />
-            <span>Scroll to part the mist</span>
+            <span>Scroll gently to part the curtains</span>
             <ArrowDown className="w-3.5 h-3.5 text-aurora-sea shrink-0" weight="bold" />
           </span>
         </motion.div>
 
-        {/* ─── LAYER 3 (z-20): DIAGONAL PARTING CARDSTOCK CURTAIN PANELS ─── */}
+        {/* ─── LAYER 3 (z-20): NEAR-VERTICAL PARTING CURTAIN PANELS ─── */}
         <div
           className="absolute inset-0 w-full h-full pointer-events-none z-20"
           aria-hidden="true"
@@ -131,7 +357,7 @@ export function GetHelpCurtain({ illustrationSrc }: GetHelpCurtainProps) {
               rotate: leftRotate,
               opacity: curtainOpacity,
               transformOrigin: "bottom left",
-              filter: "drop-shadow(-8px 12px 28px rgba(28,27,41,0.28))",
+              filter: "drop-shadow(-8px 12px 28px rgba(28,27,41,0.22))",
             }}
             className="absolute inset-0 w-full h-full will-change-transform"
           >
@@ -142,12 +368,12 @@ export function GetHelpCurtain({ illustrationSrc }: GetHelpCurtainProps) {
               aria-hidden="true"
             >
               <defs>
-                <clipPath id="left-tear-clip">
+                <clipPath id="left-curtain-clip">
                   <path d={LEFT_SEAM_PATH} />
                 </clipPath>
               </defs>
 
-              <g clipPath="url(#left-tear-clip)">
+              <g clipPath="url(#left-curtain-clip)">
                 {illustrationSrc ? (
                   <image
                     href={illustrationSrc}
@@ -156,95 +382,15 @@ export function GetHelpCurtain({ illustrationSrc }: GetHelpCurtainProps) {
                     preserveAspectRatio="xMidYMid slice"
                   />
                 ) : (
-                  <>
-                    {/* Sky Background */}
-                    <rect
-                      width="1600"
-                      height="900"
-                      className="fill-paper-100 dark:fill-night-900 transition-colors"
-                    />
-
-                    {/* Atmospheric Mist & Gradient Bands */}
-                    <path
-                      d="M 0 320 C 450 280 850 340 1600 300 L 1600 900 L 0 900 Z"
-                      className="fill-aurora-dawn/15 dark:fill-aurora-dawn/10"
-                    />
-                    <path
-                      d="M 0 440 C 400 400 900 460 1600 420 L 1600 900 L 0 900 Z"
-                      className="fill-aurora-blush/25 dark:fill-aurora-blush/15"
-                    />
-
-                    {/* Diagonal Mist / Starlight River along the tear line */}
-                    <path
-                      d="M 1120 0 L 1040 0 L 480 900 L 560 900 Z"
-                      className="fill-aurora-sea/15 dark:fill-aurora-sea/10"
-                    />
-                    <circle cx="980" cy="150" r="2.5" className="fill-aurora-dawn/70" />
-                    <circle cx="900" cy="270" r="3" className="fill-white/80" />
-                    <circle cx="820" cy="410" r="2" className="fill-aurora-sea/70" />
-                    <circle cx="750" cy="520" r="3" className="fill-aurora-dawn/70" />
-                    <circle cx="650" cy="680" r="2.5" className="fill-white/80" />
-                    <circle cx="580" cy="800" r="3" className="fill-aurora-sea/70" />
-
-                    {/* Layered Mountain Ridges */}
-                    <path
-                      d="M 0 540 Q 380 470 780 520 T 1600 490 L 1600 900 L 0 900 Z"
-                      className="fill-aurora-dawn/30 dark:fill-aurora-dawn/20"
-                    />
-                    <path
-                      d="M 0 640 Q 420 570 900 620 T 1600 600 L 1600 900 L 0 900 Z"
-                      className="fill-aurora-blush/45 dark:fill-aurora-blush/30"
-                    />
-                    <path
-                      d="M 0 740 Q 460 670 980 720 T 1600 700 L 1600 900 L 0 900 Z"
-                      className="fill-aurora-dusk/75 dark:fill-aurora-dusk/60"
-                    />
-                    <path
-                      d="M 0 830 Q 520 780 1050 820 T 1600 800 L 1600 900 L 0 900 Z"
-                      className="fill-aurora-dusk dark:fill-night-950"
-                    />
-
-                    {/* LEFT STORYTELLING LANDMARK: Hilltop Lookout Under Stars ("You") */}
-                    <g transform="translate(40, 20)">
-                      <path
-                        d="M 210 560 L 240 535 L 270 560 Z"
-                        className="fill-aurora-dusk/90 dark:fill-night-950"
-                      />
-                      <line
-                        x1="220"
-                        y1="560"
-                        x2="220"
-                        y2="585"
-                        className="stroke-aurora-dusk/90 dark:stroke-night-900"
-                        strokeWidth="2.5"
-                      />
-                      <line
-                        x1="260"
-                        y1="560"
-                        x2="260"
-                        y2="585"
-                        className="stroke-aurora-dusk/90 dark:stroke-night-900"
-                        strokeWidth="2.5"
-                      />
-                      {/* Quiet amber beacon light */}
-                      <circle cx="240" cy="565" r="10" className="fill-aurora-dawn/40" />
-                      <circle cx="240" cy="565" r="5" className="fill-aurora-dawn" />
-                      <circle cx="240" cy="565" r="2" className="fill-white" />
-                      {/* Quiet starry constellation above */}
-                      <circle cx="190" cy="460" r="2" className="fill-aurora-dawn/80" />
-                      <circle cx="240" cy="430" r="2.5" className="fill-white/90" />
-                      <circle cx="290" cy="450" r="1.5" className="fill-aurora-dawn/70" />
-                      <circle cx="260" cy="390" r="2" className="fill-white/90" />
-                    </g>
-                  </>
+                  <SanctuaryDawnArtwork idPrefix="sanctuary-left-curtain" />
                 )}
               </g>
 
-              {/* Delicate Torn-Paper Edge Highlight along the open seam */}
+              {/* Delicate tactile edge highlight along the open seam */}
               <path
                 d={DECKLE_EDGE_PATH}
-                className="stroke-paper-50/80 dark:stroke-aurora-dawn/50"
-                strokeWidth="3.5"
+                className="stroke-paper-50/90 dark:stroke-aurora-dawn/50"
+                strokeWidth="2.5"
                 fill="none"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -259,7 +405,7 @@ export function GetHelpCurtain({ illustrationSrc }: GetHelpCurtainProps) {
               rotate: rightRotate,
               opacity: curtainOpacity,
               transformOrigin: "bottom right",
-              filter: "drop-shadow(8px 12px 28px rgba(28,27,41,0.28))",
+              filter: "drop-shadow(8px 12px 28px rgba(28,27,41,0.22))",
             }}
             className="absolute inset-0 w-full h-full will-change-transform"
           >
@@ -270,12 +416,12 @@ export function GetHelpCurtain({ illustrationSrc }: GetHelpCurtainProps) {
               aria-hidden="true"
             >
               <defs>
-                <clipPath id="right-tear-clip">
+                <clipPath id="right-curtain-clip">
                   <path d={RIGHT_SEAM_PATH} />
                 </clipPath>
               </defs>
 
-              <g clipPath="url(#right-tear-clip)">
+              <g clipPath="url(#right-curtain-clip)">
                 {illustrationSrc ? (
                   <image
                     href={illustrationSrc}
@@ -284,90 +430,15 @@ export function GetHelpCurtain({ illustrationSrc }: GetHelpCurtainProps) {
                     preserveAspectRatio="xMidYMid slice"
                   />
                 ) : (
-                  <>
-                    {/* Sky Background */}
-                    <rect
-                      width="1600"
-                      height="900"
-                      className="fill-paper-100 dark:fill-night-900 transition-colors"
-                    />
-
-                    {/* Atmospheric Mist & Gradient Bands */}
-                    <path
-                      d="M 0 320 C 450 280 850 340 1600 300 L 1600 900 L 0 900 Z"
-                      className="fill-aurora-dawn/15 dark:fill-aurora-dawn/10"
-                    />
-                    <path
-                      d="M 0 440 C 400 400 900 460 1600 420 L 1600 900 L 0 900 Z"
-                      className="fill-aurora-blush/25 dark:fill-aurora-blush/15"
-                    />
-
-                    {/* Diagonal Mist / Starlight River along the tear line */}
-                    <path
-                      d="M 1120 0 L 1040 0 L 480 900 L 560 900 Z"
-                      className="fill-aurora-sea/15 dark:fill-aurora-sea/10"
-                    />
-                    <circle cx="980" cy="150" r="2.5" className="fill-aurora-dawn/70" />
-                    <circle cx="900" cy="270" r="3" className="fill-white/80" />
-                    <circle cx="820" cy="410" r="2" className="fill-aurora-sea/70" />
-                    <circle cx="750" cy="520" r="3" className="fill-aurora-dawn/70" />
-                    <circle cx="650" cy="680" r="2.5" className="fill-white/80" />
-                    <circle cx="580" cy="800" r="3" className="fill-aurora-sea/70" />
-
-                    {/* Layered Mountain Ridges */}
-                    <path
-                      d="M 0 540 Q 380 470 780 520 T 1600 490 L 1600 900 L 0 900 Z"
-                      className="fill-aurora-dawn/30 dark:fill-aurora-dawn/20"
-                    />
-                    <path
-                      d="M 0 640 Q 420 570 900 620 T 1600 600 L 1600 900 L 0 900 Z"
-                      className="fill-aurora-blush/45 dark:fill-aurora-blush/30"
-                    />
-                    <path
-                      d="M 0 740 Q 460 670 980 720 T 1600 700 L 1600 900 L 0 900 Z"
-                      className="fill-aurora-dusk/75 dark:fill-aurora-dusk/60"
-                    />
-                    <path
-                      d="M 0 830 Q 520 780 1050 820 T 1600 800 L 1600 900 L 0 900 Z"
-                      className="fill-aurora-dusk dark:fill-night-950"
-                    />
-
-                    {/* RIGHT STORYTELLING LANDMARK: Welcoming Sanctuary Shelter & Lantern ("Someone who can help") */}
-                    <g transform="translate(10, 10)">
-                      <path
-                        d="M 1315 620 L 1340 595 L 1365 620 Z"
-                        className="fill-aurora-sea/90 dark:fill-night-950"
-                      />
-                      <rect
-                        x="1324"
-                        y="620"
-                        width="32"
-                        height="36"
-                        rx="4"
-                        className="fill-aurora-dusk/80 dark:fill-night-900"
-                      />
-                      <path
-                        d="M 1332 656 L 1332 635 A 8 8 0 0 1 1348 635 L 1348 656 Z"
-                        className="fill-aurora-sea/30"
-                      />
-                      {/* Welcoming lantern light */}
-                      <circle cx="1340" cy="636" r="14" className="fill-aurora-sea/40" />
-                      <circle cx="1340" cy="636" r="7" className="fill-aurora-dawn" />
-                      <circle cx="1340" cy="636" r="2.5" className="fill-white" />
-                      {/* Quiet guiding starlight */}
-                      <circle cx="1300" cy="530" r="2" className="fill-white/80" />
-                      <circle cx="1380" cy="510" r="2.5" className="fill-aurora-sea/80" />
-                      <circle cx="1350" cy="470" r="1.5" className="fill-aurora-dawn/70" />
-                    </g>
-                  </>
+                  <SanctuaryDawnArtwork idPrefix="sanctuary-right-curtain" />
                 )}
               </g>
 
-              {/* Delicate Torn-Paper Edge Highlight along the open seam */}
+              {/* Delicate tactile edge highlight along the open seam */}
               <path
                 d={DECKLE_EDGE_PATH}
-                className="stroke-paper-50/80 dark:stroke-aurora-dawn/50"
-                strokeWidth="3.5"
+                className="stroke-paper-50/90 dark:stroke-aurora-dawn/50"
+                strokeWidth="2.5"
                 fill="none"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -375,7 +446,8 @@ export function GetHelpCurtain({ illustrationSrc }: GetHelpCurtainProps) {
             </svg>
           </motion.div>
         </div>
+
       </div>
-    </div>
+    </section>
   )
 }

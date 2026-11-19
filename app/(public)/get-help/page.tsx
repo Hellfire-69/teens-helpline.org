@@ -1,186 +1,175 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { ArrowLeft, Phone, Clock, Chats, BookOpen, ArrowDown } from "@phosphor-icons/react/dist/ssr"
-import { Button } from "@/components/ui/button"
-import { HelpRidgeWindow } from "@/features/marketing/components/HelpRidgeWindow"
+import {
+  ArrowRight,
+  CaretDown,
+} from "@phosphor-icons/react/dist/ssr"
 import { GetHelpCurtain } from "@/features/marketing/components/GetHelpCurtain"
+import { HelplineDirectory } from "@/features/marketing/components/HelplineDirectory"
+import { HelpRidgeWindow } from "@/features/marketing/components/HelpRidgeWindow"
 
 export const metadata: Metadata = {
-  title: "Get Help Now | TeensHelpline",
-  description: "Access immediate crisis resources, peer chat support, or self-help materials.",
+  title: "Get Help Now — Crisis & Mental Health Helplines | TeensHelpline",
+  description:
+    "Free, confidential Indian crisis helplines, 24/7 mental health support, peer chat, and self-care resources for teenagers.",
 }
 
-const HELPLINES = [
-  { name: "CHILDLINE (Youth Emergency)", number: "1098", availability: "24/7, Free", desc: "Government emergency response service for children and teenagers." },
-  { name: "TeleMANAS", number: "14416", availability: "24/7, Free", desc: "Government tele-mental health helpline available in multiple languages." },
-  { name: "KIRAN Helpline", number: "1800-599-0019", availability: "24/7, Free", desc: "National mental health rehabilitation helpline under Ministry of Social Justice." },
-  { name: "Vandrevala Foundation", number: "1860-266-2345", availability: "24/7, Free", desc: "Non-profit crisis intervention counselling via call or online chat." },
-  { name: "iCALL (TISS Initiative)", number: "9152987821", availability: "Mon-Sat, 10am-8pm", desc: "Professional psychosocial counselling service run by trained counselors." }
+const FAQS = [
+  {
+    question: "What happens when I contact a helpline?",
+    answer:
+      "A counsellor answers the call. You can talk about what is on your mind or take a moment to pause. They will guide the conversation at your pace.",
+  },
+  {
+    question: "Do I need to share my real name?",
+    answer:
+      "Helplines focus on your immediate wellbeing and safety. You only need to share what you feel comfortable sharing.",
+  },
+  {
+    question: "Can teenagers contact these services?",
+    answer:
+      "Yes. Child Helpline 1098 is dedicated specifically to youth under 18. Tele-MANAS, Vandrevala Foundation, and iCALL also support teenagers of any age.",
+  },
+  {
+    question: "What does Quick Exit actually do?",
+    answer:
+      "Clicking Quick Exit immediately replaces the current page in your browser with a Google search for today's weather, preventing someone nearby from seeing what you were reading and stopping the browser back button from returning here. It does not erase your device's overall browsing history.",
+  },
 ]
 
 export default function GetHelpPage() {
   return (
     <div className="w-full min-h-screen bg-paper-50 dark:bg-night-950 text-ink-900 dark:text-white selection:bg-aurora-dawn/20">
-      <style>{`
-        @keyframes helpFadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        @media (prefers-reduced-motion: no-preference) {
-          .help-fade-in {
-            animation: helpFadeIn 0.35s ease-out both;
-          }
-        }
-      `}</style>
-
-      {/* ─── UNBLOCKED TOP CRISIS TRIAGE BAR ─── */}
-      <header className="sticky top-0 z-40 w-full bg-paper-50/90 dark:bg-night-950/90 backdrop-blur-md border-b border-ink-900/10 dark:border-white/10 px-4 sm:px-6 py-3">
-        <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3 text-sm">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1.5 font-semibold text-aurora-sea hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aurora-sea rounded-radius-sm"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to Home</span>
-          </Link>
-
-          {/* Quick-dial crisis pills & skip jump button */}
-          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-            <span className="text-xs font-semibold uppercase tracking-wider text-ink-600 dark:text-ink-400 hidden lg:inline">
-              Immediate 24/7 Crisis:
-            </span>
-            <a
-              href="tel:1098"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-ink-900 text-white dark:bg-white dark:text-ink-900 hover:bg-ink-800 dark:hover:bg-paper-100 text-xs sm:text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aurora-sea min-h-[36px]"
-            >
-              <Phone className="w-3.5 h-3.5" weight="fill" />
-              <span>CHILDLINE 1098</span>
-            </a>
-            <a
-              href="tel:14416"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-paper-100 dark:bg-night-900 border border-ink-900/10 dark:border-white/10 text-ink-900 dark:text-white hover:border-aurora-sea text-xs sm:text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aurora-sea min-h-[36px]"
-            >
-              <Phone className="w-3.5 h-3.5" weight="fill" />
-              <span>TeleMANAS 14416</span>
-            </a>
-            <a
-              href="#helplines-list"
-              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-aurora-sea/10 text-aurora-sea hover:bg-aurora-sea/20 text-xs sm:text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aurora-sea min-h-[36px]"
-            >
-              <span>Skip to helplines</span>
-              <ArrowDown className="w-3.5 h-3.5" weight="bold" />
-            </a>
-          </div>
-        </div>
-      </header>
-
-      {/* ─── DEDICATED 155svh STICKY HERO REVEAL STAGE ─── */}
+      {/* ─── SCROLL-LINKED SANCTUARY CURTAIN HERO ─── */}
       <GetHelpCurtain />
 
-      {/* ─── MAIN CONTENT: HELPLINES DIRECTORY & ALTERNATE SUPPORT ─── */}
-      <main className="w-full max-w-4xl mx-auto px-4 sm:px-6 md:px-8 pb-20 help-fade-in">
-        {/* Helplines List — rows sit directly on cream page with thin dividers */}
-        <section
-          id="helplines-list"
-          aria-label="Helplines Directory"
-          className="w-full divide-y divide-ink-900/10 dark:divide-white/10 mb-space-16 scroll-mt-24 pt-4"
-        >
-          {HELPLINES.map((line) => (
-            <div
-              key={line.name}
-              className="py-space-8 first:pt-0 last:pb-0 flex flex-col sm:flex-row sm:items-center justify-between gap-6"
-            >
-              <div className="flex-1">
-                <span className="font-inter font-semibold text-base sm:text-lg text-ink-900 dark:text-white block mb-1">
-                  {line.name}
-                </span>
-                <span className="font-fraunces text-3xl md:text-4xl font-semibold tracking-tight text-ink-900 dark:text-white block mb-2">
-                  {line.number}
-                </span>
-                <p className="font-sans text-base text-ink-700 dark:text-ink-300 leading-relaxed max-w-xl mb-3">
-                  {line.desc}
-                </p>
-                <div className="flex items-center gap-2 text-sm sm:text-base font-medium text-ink-600 dark:text-ink-400">
-                  <Clock className="w-4 h-4 text-aurora-sea shrink-0" weight="bold" aria-hidden="true" />
-                  <span>{line.availability}</span>
-                </div>
-              </div>
+      {/* ─── MAIN CONTENT CONTAINER ─── */}
+      <main className="w-full max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-10 md:py-16 space-y-16">
+        
+        {/* ─── HELPLINES DIRECTORY ─── */}
+        <HelplineDirectory />
 
-              <Button
-                asChild
-                className="shrink-0 w-full sm:w-auto rounded-full bg-ink-900 hover:bg-ink-800 text-white dark:bg-white dark:text-ink-900 dark:hover:bg-paper-100 min-h-[44px] px-6 py-3 text-base font-semibold shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aurora-sea focus-visible:ring-offset-2"
-              >
-                <a
-                  href={`tel:${line.number.replace(/[^0-9]/g, "")}`}
-                  className="flex items-center justify-center gap-2"
-                >
-                  <Phone className="w-4 h-4 shrink-0" weight="fill" aria-hidden="true" />
-                  <span>Call {line.number}</span>
-                </a>
-              </Button>
-            </div>
-          ))}
-        </section>
-
-        {/* Quiet decorative ridge window positioned as an artistic divider before alternate support */}
-        <div className="my-space-12">
+        {/* ─── ARTISTIC DIVIDER ─── */}
+        <div className="my-6 md:my-10">
           <HelpRidgeWindow className="shadow-sm" />
         </div>
 
-        {/* If you aren't in a crisis Options */}
+        {/* ─── ALTERNATIVE PATHWAYS: TEENSHELPLINE ECOSYSTEM ─── */}
         <section
-          aria-labelledby="non-crisis-heading"
-          className="pt-space-8 border-t border-ink-900/10 dark:border-white/10"
+          aria-labelledby="alternative-support-heading"
+          className="pt-6 border-t border-ink-900/10 dark:border-white/10"
         >
-          <h2
-            id="non-crisis-heading"
-            className="font-fraunces text-2xl sm:text-3xl font-semibold text-ink-900 dark:text-white mb-6"
-          >
-            If you aren&apos;t in a crisis
-          </h2>
+          <div className="mb-6">
+            <span className="text-sm font-semibold text-aurora-sea dark:text-aurora-sea block mb-1">
+              Alternative Support
+            </span>
+            <h2
+              id="alternative-support-heading"
+              className="font-fraunces text-2xl sm:text-3xl font-semibold text-ink-900 dark:text-white mb-1.5"
+            >
+              When you aren&apos;t in a crisis
+            </h2>
+            <p className="font-sans text-sm text-ink-600 dark:text-ink-300">
+              Quiet, gentle ways to reflect, learn, or talk with someone who gets it.
+            </p>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-            <div className="flex flex-col items-start justify-between gap-4">
-              <div>
-                <h3 className="font-inter font-semibold text-lg text-ink-900 dark:text-white flex items-center gap-2">
-                  <Chats className="w-5 h-5 text-aurora-blush shrink-0" weight="duotone" aria-hidden="true" />
-                  <span>Talk with a Peer</span>
+          {/* Simple text-led list of three links */}
+          <div className="divide-y divide-ink-900/10 dark:divide-white/10">
+            {/* 1. Talk with a Peer */}
+            <article className="py-6 first:pt-2 last:pb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="max-w-2xl">
+                <h3 className="font-inter font-semibold text-base sm:text-lg text-ink-900 dark:text-white mb-1">
+                  Talk with a Peer
                 </h3>
-                <p className="font-sans text-base text-ink-700 dark:text-ink-300 leading-relaxed mt-2">
-                  If you aren&apos;t in a crisis but want to talk anonymously with another teenager who gets it.
+                <p className="font-sans text-sm text-ink-600 dark:text-ink-300 leading-relaxed">
+                  Talk anonymously with another teenager who gets it.
                 </p>
               </div>
-              <Button
-                asChild
-                className="rounded-full bg-ink-900 hover:bg-ink-800 text-white dark:bg-white dark:text-ink-900 dark:hover:bg-paper-100 min-h-[44px] px-6 py-2.5 text-base font-semibold shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aurora-sea focus-visible:ring-offset-2"
+              <Link
+                href="/peer-support"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-ink-900 dark:text-white hover:text-aurora-sea dark:hover:text-aurora-sea transition-colors shrink-0 group focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-aurora-sea rounded py-1"
               >
-                <Link href="/peer-support">
-                  Start Peer Chat
-                </Link>
-              </Button>
-            </div>
+                <span>Start Peer Chat</span>
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </article>
 
-            <div className="flex flex-col items-start justify-between gap-4">
-              <div>
-                <h3 className="font-inter font-semibold text-lg text-ink-900 dark:text-white flex items-center gap-2">
-                  <BookOpen className="w-5 h-5 text-aurora-sea shrink-0" weight="duotone" aria-hidden="true" />
-                  <span>Explore Study Hub</span>
+            {/* 2. Explore Study Hub */}
+            <article className="py-6 first:pt-2 last:pb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="max-w-2xl">
+                <h3 className="font-inter font-semibold text-base sm:text-lg text-ink-900 dark:text-white mb-1">
+                  Explore Study Hub
                 </h3>
-                <p className="font-sans text-base text-ink-700 dark:text-ink-300 leading-relaxed mt-2">
-                  Find articles on stress management, bullying guidance, and focus tools.
+                <p className="font-sans text-sm text-ink-600 dark:text-ink-300 leading-relaxed">
+                  Self-paced guides on exam anxiety, panic coping, and grounding exercises.
                 </p>
               </div>
-              <Button
-                asChild
-                className="rounded-full bg-ink-900 hover:bg-ink-800 text-white dark:bg-white dark:text-ink-900 dark:hover:bg-paper-100 min-h-[44px] px-6 py-2.5 text-base font-semibold shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aurora-sea focus-visible:ring-offset-2"
+              <Link
+                href="/study-hub"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-ink-900 dark:text-white hover:text-aurora-sea dark:hover:text-aurora-sea transition-colors shrink-0 group focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-aurora-sea rounded py-1"
               >
-                <Link href="/study-hub">
-                  Open Study Hub
-                </Link>
-              </Button>
-            </div>
+                <span>Open Study Hub</span>
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </article>
+
+            {/* 3. Reflect with Nova */}
+            <article className="py-6 first:pt-2 last:pb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="max-w-2xl">
+                <h3 className="font-inter font-semibold text-base sm:text-lg text-ink-900 dark:text-white mb-1">
+                  Reflect with Nova
+                </h3>
+                <p className="font-sans text-sm text-ink-600 dark:text-ink-300 leading-relaxed">
+                  Have a quiet, judgment-free conversation with our elder-sibling AI companion.
+                </p>
+              </div>
+              <Link
+                href="/chat"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-ink-900 dark:text-white hover:text-aurora-sea dark:hover:text-aurora-sea transition-colors shrink-0 group focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-aurora-sea rounded py-1"
+              >
+                <span>Chat with Nova</span>
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </article>
           </div>
         </section>
+
+        {/* ─── QUIET DISCLOSURE-BASED FAQ SECTION ─── */}
+        <section
+          aria-labelledby="faq-heading"
+          className="pt-6 border-t border-ink-900/10 dark:border-white/10"
+        >
+          <div className="mb-6">
+            <span className="text-sm font-semibold text-ink-600 dark:text-ink-400 block mb-1">
+              Common Questions
+            </span>
+            <h2
+              id="faq-heading"
+              className="font-fraunces text-2xl sm:text-3xl font-semibold text-ink-900 dark:text-white"
+            >
+              Frequently asked questions
+            </h2>
+          </div>
+
+          <div className="divide-y divide-ink-900/10 dark:divide-white/10">
+            {FAQS.map((faq, i) => (
+              <details
+                key={i}
+                className="group py-4 first:pt-0 last:pb-0"
+              >
+                <summary className="flex items-center justify-between gap-4 cursor-pointer select-none font-inter font-medium text-sm sm:text-base text-ink-900 dark:text-white hover:text-aurora-sea dark:hover:text-aurora-sea transition-colors py-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-aurora-sea rounded">
+                  <span>{faq.question}</span>
+                  <CaretDown className="w-4 h-4 text-ink-400 shrink-0 transition-transform group-open:rotate-180" />
+                </summary>
+                <p className="font-sans text-sm text-ink-600 dark:text-ink-300 leading-relaxed pt-2.5 pb-1 pr-6">
+                  {faq.answer}
+                </p>
+              </details>
+            ))}
+          </div>
+        </section>
+
       </main>
     </div>
   )
