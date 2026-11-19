@@ -1,5 +1,4 @@
 import { test, expect } from "@playwright/test"
-import * as path from "node:path"
 
 test.describe("Get Help Page — E2E Visual, Motion & Accessibility Tests", () => {
   test("renders get-help page with verified helplines, curtain reveal, and responsive integrity", async ({
@@ -16,6 +15,7 @@ test.describe("Get Help Page — E2E Visual, Motion & Accessibility Tests", () =
 
     // 3. Verify immediate emergency triage section and numbers
     const erssCall = page.locator('a[href="tel:112"]')
+    await erssCall.scrollIntoViewIfNeeded()
     await expect(erssCall).toBeVisible()
     const childlineCall = page.locator('a[href="tel:1098"]')
     await expect(childlineCall).toBeVisible()
@@ -60,13 +60,6 @@ test.describe("Get Help Page — E2E Visual, Motion & Accessibility Tests", () =
       return document.documentElement.scrollWidth > document.documentElement.clientWidth
     })
     expect(hasHorizontalOverflow).toBe(false)
-
-    // 10. Capture screenshot for review
-    const screenshotPath = path.join(
-      "C:\\Users\\Nox\\.gemini\\antigravity\\brain\\e6481364-c6f3-4013-819d-e4dcb1c7ad72",
-      "get-help-desktop.png"
-    )
-    await page.screenshot({ path: screenshotPath, fullPage: true })
   })
 
   test("renders gracefully under reduced-motion preferences without layout traps", async ({
@@ -98,13 +91,7 @@ test.describe("Get Help Page — E2E Visual, Motion & Accessibility Tests", () =
 
     // Verify touch targets are clickable
     const call1098 = page.locator('a[href="tel:1098"]')
+    await call1098.scrollIntoViewIfNeeded()
     await expect(call1098).toBeVisible()
-
-    // Capture mobile screenshot
-    const mobileScreenshotPath = path.join(
-      "C:\\Users\\Nox\\.gemini\\antigravity\\brain\\e6481364-c6f3-4013-819d-e4dcb1c7ad72",
-      "get-help-mobile.png"
-    )
-    await page.screenshot({ path: mobileScreenshotPath, fullPage: false })
   })
 })
