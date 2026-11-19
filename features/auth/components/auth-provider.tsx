@@ -106,10 +106,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   )
 }
 
+const DEFAULT_AUTH_CONTEXT: AuthContextValue = {
+  user: null,
+  profile: null,
+  preferences: null,
+  loading: false,
+  signIn: async () => { throw new Error("useAuth was called outside of an AuthProvider") },
+  signUp: async () => { throw new Error("useAuth was called outside of an AuthProvider") },
+  signOut: async () => {},
+  signInAnonymously: async () => { throw new Error("useAuth was called outside of an AuthProvider") },
+  signInWithGoogle: async () => { throw new Error("useAuth was called outside of an AuthProvider") },
+  refreshProfile: async () => {},
+}
+
 export function useAuth() {
   const context = useContext(AuthContext)
   if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider")
+    if (process.env.NODE_ENV === "development") {
+      console.warn("useAuth was called outside of an AuthProvider. Using unauthenticated fallback.")
+    }
+    return DEFAULT_AUTH_CONTEXT
   }
   return context
 }

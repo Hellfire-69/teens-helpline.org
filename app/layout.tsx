@@ -39,8 +39,6 @@ export const metadata: Metadata = {
   },
 };
 
-import { AuthProvider } from "@/features/auth/components/auth-provider";
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -49,9 +47,7 @@ export default function RootLayout({
   return (
     <html lang="en" data-scroll-behavior="smooth" className={cn(inter.variable, fraunces.variable, "font-sans")} suppressHydrationWarning>
       <body>
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        {children}
       </body>
     </html>
   );
