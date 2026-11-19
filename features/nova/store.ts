@@ -5,6 +5,7 @@ export type Message = {
   role: "user" | "assistant";
   content: string;
   isEscalated?: boolean;
+  isFallback?: boolean;
 };
 
 type NovaState = {
@@ -21,7 +22,7 @@ type NovaState = {
   setStatus: (status: "resting" | "listening" | "responding") => void;
   setError: (error: string | null) => void;
   
-  sendMessage: (content: string) => Promise<void>;
+  sendMessage: (content: string, isRetry?: boolean) => Promise<void>;
   resetChat: () => void;
 };
 
@@ -39,16 +40,18 @@ export const useNovaStore = create<NovaState>((set, get) => ({
   setStatus: (status) => set({ status }),
   setError: (error) => set({ error }),
 
-  sendMessage: async (content: string) => {
+  sendMessage: async (content: string, isRetry?: boolean) => {
     const { messages, conversationId } = get();
     
-    // Add user message immediately
-    const newMessages: Message[] = [...messages, { role: "user", content }];
+    // Add user message immediately if not retrying existing turn
+    const newMessages: Message[] = isRetry ? messages : [...messages, { role: "user", content }];
     set({ messages: newMessages, status: "responding", error: null });
 
     try {
-      // Recent history payload for anonymous context
-      const recentHistory = newMessages.slice(-7, -1); // Exclude the one just sent
+      // Recent history payload for anonymous context (exclude fallback notices)
+      const recentHistory = newMessages
+        .filter((m) => !m.isFallback)
+        .slice(-7, -1); // Exclude the one just sent
 
       const res = await fetch("/api/chat", {
         method: "POST",
@@ -73,7 +76,8 @@ export const useNovaStore = create<NovaState>((set, get) => ({
           { 
             role: "assistant", 
             content: data.data.reply,
-            isEscalated: data.data.escalation
+            isEscalated: data.data.escalation,
+            isFallback: data.data.providerUsed === "fallback"
           }
         ],
         conversationId: data.data.conversationId || state.conversationId,

@@ -11,7 +11,7 @@ import { PERSONA_THEMES } from "@/features/nova/persona-theme";
 import type { PersonaId } from "@/features/nova/schema";
 import { savePreferredPersonaAction } from "@/features/auth/actions";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
-import { WarningCircle, Lightning, Leaf, Brain } from "@phosphor-icons/react";
+import { WarningCircle, Lightning, Leaf, Brain, ArrowClockwise } from "@phosphor-icons/react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Suspense } from "react";
@@ -34,6 +34,7 @@ function ChatPageContent() {
 
   // References to locate components during particle flight
   const avatarRef = useRef<HTMLDivElement>(null);
+  const hasSavedPersonaRef = useRef(false);
 
   useEffect(() => {
     // Fetch conversation history on mount
@@ -79,6 +80,7 @@ function ChatPageContent() {
   const handleCardSelect = async (e: React.MouseEvent<HTMLDivElement>, id: PersonaId) => {
     if (activeOnboardingCard) return; // Prevent double-clicks
 
+    hasSavedPersonaRef.current = false;
     setActiveOnboardingCard(id);
     const cardRect = e.currentTarget.getBoundingClientRect();
     const avatarRect = avatarRef.current?.getBoundingClientRect();
@@ -92,6 +94,7 @@ function ChatPageContent() {
 
     if (shouldReduceMotion) {
       // Direct update for reduced motion
+      hasSavedPersonaRef.current = true;
       setActivePersona(id);
       savePreferredPersonaAction(id).catch(console.error);
       setHasSelectedPersona(true);
@@ -107,8 +110,9 @@ function ChatPageContent() {
     setIsTraveling(false);
     setIsBlooming(true);
 
-    // Set active persona and save
-    if (activeOnboardingCard) {
+    // Set active persona and save (guarded to run once per persona pick)
+    if (activeOnboardingCard && !hasSavedPersonaRef.current) {
+      hasSavedPersonaRef.current = true;
       setActivePersona(activeOnboardingCard);
       savePreferredPersonaAction(activeOnboardingCard).catch(console.error);
       setWaveTrigger(prev => prev + 1);
@@ -358,6 +362,29 @@ function ChatPageContent() {
                     </div>
                   );
                 })}
+
+                {error && messages.length > 0 && (
+                  <div className="w-full flex items-center gap-2 pl-0 sm:pl-16 mt-2" data-testid="chat-inline-error">
+                    <div className="inline-flex flex-wrap items-center gap-2 px-3.5 py-2 rounded-radius-md bg-paper-100 dark:bg-night-900 border border-border/50 text-type-body-sm text-ink-600 dark:text-ink-300 shadow-sm">
+                      <WarningCircle className="w-4 h-4 text-ink-400 shrink-0" />
+                      <span>We&apos;re having trouble connecting to Nova right now.</span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const lastUserMsg = [...messages].reverse().find((m) => m.role === "user");
+                          if (lastUserMsg) {
+                            sendMessage(lastUserMsg.content, true);
+                          }
+                        }}
+                        className="inline-flex items-center gap-1 font-medium text-aurora-sea hover:text-aurora-sea/80 underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-aurora-sea rounded ml-1"
+                        aria-label="Retry sending message"
+                      >
+                        <ArrowClockwise className="w-3.5 h-3.5" />
+                        <span>Retry</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="h-36 w-full shrink-0" />

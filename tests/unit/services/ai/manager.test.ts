@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { generateWithFailover } from "../../../../services/ai/manager";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { generateWithFailover, FALLBACK_REPLY } from "../../../../services/ai/manager";
 import type { AIProviderContext } from "../../../../services/ai/types";
 
 const { mockGeminiGenerateReply, mockGroqGenerateReply } = vi.hoisted(() => {
@@ -25,7 +25,7 @@ vi.mock("../../../../services/ai/groq", () => {
   };
 });
 
-describe("AI Provider Manager (Failover Logic)", () => {
+describe("AI Provider Manager (Failover & Fallback Logic)", () => {
   const dummyContext: AIProviderContext = {
     systemPrompt: "Test System Prompt",
     messages: [{ role: "user", content: "Hello" }],
@@ -35,55 +35,95 @@ describe("AI Provider Manager (Failover Logic)", () => {
     vi.clearAllMocks();
   });
 
-  it("returns Gemini's reply when successful on the first try", async () => {
-    mockGeminiGenerateReply.mockResolvedValueOnce("Gemini reply 1");
-    
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("primary ok then secondary never called", async () => {
+    mockGeminiGenerateReply.mockResolvedValueOnce("Gemini successful reply");
+
     const result = await generateWithFailover(dummyContext);
-    
-    expect(result.reply).toBe("Gemini reply 1");
+
+    expect(result.reply).toBe("Gemini successful reply");
     expect(result.providerUsed).toBe("gemini");
     expect(mockGeminiGenerateReply).toHaveBeenCalledTimes(1);
     expect(mockGroqGenerateReply).not.toHaveBeenCalled();
   });
 
-  it("retries Gemini once if it fails the first time", async () => {
-    mockGeminiGenerateReply
-      .mockRejectedValueOnce(new Error("Gemini temporary error"))
-      .mockResolvedValueOnce("Gemini reply on retry");
-      
-    const result = await generateWithFailover(dummyContext);
-    
-    expect(result.reply).toBe("Gemini reply on retry");
-    expect(result.providerUsed).toBe("gemini");
-    expect(mockGeminiGenerateReply).toHaveBeenCalledTimes(2);
-    expect(mockGroqGenerateReply).not.toHaveBeenCalled();
-  });
-
-  it("fails over to GROQ if Gemini fails twice", async () => {
-    mockGeminiGenerateReply
-      .mockRejectedValueOnce(new Error("Gemini error 1"))
-      .mockRejectedValueOnce(new Error("Gemini error 2"));
-      
+  it("fails over to secondary immediately if primary fails with an error (no retry)", async () => {
+    mockGeminiGenerateReply.mockRejectedValueOnce(new Error("Gemini immediate error"));
     mockGroqGenerateReply.mockResolvedValueOnce("Groq fallback reply");
 
     const result = await generateWithFailover(dummyContext);
 
     expect(result.reply).toBe("Groq fallback reply");
     expect(result.providerUsed).toBe("groq");
-    expect(mockGeminiGenerateReply).toHaveBeenCalledTimes(2);
+    expect(mockGeminiGenerateReply).toHaveBeenCalledTimes(1);
     expect(mockGroqGenerateReply).toHaveBeenCalledTimes(1);
   });
 
-  it("throws an error if both providers fail entirely", async () => {
-    mockGeminiGenerateReply
-      .mockRejectedValueOnce(new Error("Gemini error 1"))
-      .mockRejectedValueOnce(new Error("Gemini error 2"));
-      
-    mockGroqGenerateReply.mockRejectedValueOnce(new Error("Groq error"));
+  it("primary times out then secondary answers", async () => {
+    vi.useFakeTimers();
 
-    await expect(generateWithFailover(dummyContext)).rejects.toThrow("All AI providers failed.");
+    // Primary hangs longer than primary timeout (4s)
+    mockGeminiGenerateReply.mockImplementation(
+      (_ctx, signal?: AbortSignal) =>
+        new Promise((resolve, reject) => {
+          const timer = setTimeout(() => resolve("Late Gemini"), 10000);
+          signal?.addEventListener("abort", () => {
+            clearTimeout(timer);
+            reject(new Error("Operation aborted"));
+          });
+        })
+    );
 
-    expect(mockGeminiGenerateReply).toHaveBeenCalledTimes(2);
+    mockGroqGenerateReply.mockResolvedValueOnce("Groq answered after Gemini timeout");
+
+    const promise = generateWithFailover(dummyContext);
+    await vi.advanceTimersByTimeAsync(4001);
+    const result = await promise;
+
+    expect(result.reply).toBe("Groq answered after Gemini timeout");
+    expect(result.providerUsed).toBe("groq");
+    expect(mockGeminiGenerateReply).toHaveBeenCalledTimes(1);
     expect(mockGroqGenerateReply).toHaveBeenCalledTimes(1);
+  });
+
+  it("both fail then fallback returned, nothing thrown", async () => {
+    mockGeminiGenerateReply.mockRejectedValueOnce(new Error("Gemini down"));
+    mockGroqGenerateReply.mockRejectedValueOnce(new Error("Groq down"));
+
+    let threwError = false;
+    let result;
+    try {
+      result = await generateWithFailover(dummyContext);
+    } catch {
+      threwError = true;
+    }
+
+    expect(threwError).toBe(false);
+    expect(result).toBeDefined();
+    expect(result?.reply).toBe(FALLBACK_REPLY);
+    expect(result?.providerUsed).toBe("fallback");
+    expect(mockGeminiGenerateReply).toHaveBeenCalledTimes(1);
+    expect(mockGroqGenerateReply).toHaveBeenCalledTimes(1);
+  });
+
+  it("both time out then fallback returned, nothing thrown", async () => {
+    vi.useFakeTimers();
+
+    mockGeminiGenerateReply.mockImplementation(
+      () => new Promise((resolve) => setTimeout(() => resolve("Late Gemini"), 10000))
+    );
+    mockGroqGenerateReply.mockImplementation(
+      () => new Promise((resolve) => setTimeout(() => resolve("Late Groq"), 10000))
+    );
+
+    const promise = generateWithFailover(dummyContext);
+    await vi.advanceTimersByTimeAsync(9100);
+    const result = await promise;
+
+    expect(result.reply).toBe(FALLBACK_REPLY);
+    expect(result.providerUsed).toBe("fallback");
   });
 });

@@ -11,6 +11,8 @@ import { defineConfig, devices } from "@playwright/test";
  * The CI job for E2E is scaffolded in .github/workflows/ci.yml but is not
  * required to pass until those tests exist.
  */
+const port = process.env["PORT"] ?? "3005";
+
 export default defineConfig({
   testDir: "./tests/e2e",
   fullyParallel: true,
@@ -19,7 +21,7 @@ export default defineConfig({
   workers: process.env["CI"] ? 1 : undefined,
   reporter: "html",
   use: {
-    baseURL: process.env["PLAYWRIGHT_BASE_URL"] ?? "http://localhost:3000",
+    baseURL: process.env["PLAYWRIGHT_BASE_URL"] ?? `http://localhost:${port}`,
     trace: "on-first-retry",
   },
   projects: [
@@ -30,8 +32,8 @@ export default defineConfig({
   ],
   // Start the dev server before running tests locally
   webServer: {
-    command: "npm run dev",
-    url: "http://localhost:3000",
+    command: `npx next dev -p ${port}`,
+    url: `http://localhost:${port}`,
     reuseExistingServer: !process.env["CI"],
     timeout: 120_000,
   },

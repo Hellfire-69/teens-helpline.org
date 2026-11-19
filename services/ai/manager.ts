@@ -6,51 +6,98 @@ import { logger } from "@/lib/logger";
 const gemini = new GeminiProvider();
 const groq = new GroqProvider();
 
+export const FALLBACK_REPLY =
+  "I'm having a little trouble connecting right now, but please know you don't have to carry this alone. While I reconnect, you can find free, confidential support on our [Get Help resources](/get-help), or take a gentle breath and try messaging me again in a moment.";
+
+const PRIMARY_TIMEOUT_MS = 4000;
+const SECONDARY_TIMEOUT_MS = 5000;
+
 /**
- * Wraps a promise with a strict timeout to ensure AI provider hangs (e.g. from 
- * internal 503 backoffs) don't block the failover pipeline.
+ * Wraps provider call with AbortController to ensure timed-out requests
+ * are cancelled on the wire and don't block the failover pipeline.
  */
-async function withTimeout<T>(promise: Promise<T>, ms: number = 8000): Promise<T> {
-  let timer: NodeJS.Timeout;
+async function executeWithTimeout<T>(
+  fn: (signal: AbortSignal) => Promise<T>,
+  ms: number,
+  providerName: string
+): Promise<T> {
+  const controller = new AbortController();
+  let timer: NodeJS.Timeout | undefined;
+
   const timeoutPromise = new Promise<never>((_, reject) => {
-    timer = setTimeout(() => reject(new Error(`Provider timed out after ${ms}ms`)), ms);
+    timer = setTimeout(() => {
+      controller.abort();
+      reject(new Error(`${providerName} timed out after ${ms}ms`));
+    }, ms);
   });
-  return Promise.race([promise, timeoutPromise]).finally(() => clearTimeout(timer));
+
+  try {
+    return await Promise.race([fn(controller.signal), timeoutPromise]);
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
 }
 
 /**
- * Implements the Provider Abstraction & automatic failover described in TRD §17.
- * 
- * Pipeline:
- * 1. Try Gemini (Primary) with an 8-second timeout.
- * 2. If failed, retry Gemini once.
- * 3. If failed again, failover to GROQ (Secondary).
- * 4. If GROQ fails, throw an error so the caller can return the safe static fallback.
+ * Implements the Provider Abstraction & automatic failover:
+ * 1. Try Gemini (Primary) with a 4-second timeout using AbortController.
+ * 2. If failed, fail over to GROQ immediately (no same-provider retry).
+ * 3. Try GROQ (Secondary) with a 5-second timeout using AbortController.
+ * 4. Log provider used, latency, and failovers (without message text).
  */
 export async function generateWithFailover(context: AIProviderContext): Promise<ProviderResponse> {
+  const startTime = Date.now();
+
   // 1. Try Gemini primary
   try {
-    const reply = await withTimeout(gemini.generateReply(context));
+    const geminiStart = Date.now();
+    const reply = await executeWithTimeout(
+      (signal) => gemini.generateReply(context, signal),
+      PRIMARY_TIMEOUT_MS,
+      "Gemini"
+    );
+    const latencyMs = Date.now() - geminiStart;
+    logger.info("AI generation succeeded with primary provider", {
+      provider: "gemini",
+      latencyMs,
+      messagesCount: context.messages.length,
+    });
     return { reply, providerUsed: "gemini" };
   } catch (error) {
-    logger.warn("Gemini generation failed, retrying once before failover", { error: String(error) });
-    
-    // Retry Gemini once per TRD §17
-    try {
-      const reply = await withTimeout(gemini.generateReply(context));
-      return { reply, providerUsed: "gemini" };
-    } catch (retryError) {
-      logger.error("Gemini retry failed, failing over to GROQ", { error: String(retryError) });
-    }
+    const geminiLatencyMs = Date.now() - startTime;
+    logger.warn("Primary provider failed, failing over to secondary", {
+      primaryProvider: "gemini",
+      secondaryProvider: "groq",
+      latencyMs: geminiLatencyMs,
+      error: error instanceof Error ? error.message : String(error),
+    });
   }
 
   // 2. Try GROQ secondary/fallback
   try {
-    const reply = await withTimeout(groq.generateReply(context));
+    const groqStart = Date.now();
+    const reply = await executeWithTimeout(
+      (signal) => groq.generateReply(context, signal),
+      SECONDARY_TIMEOUT_MS,
+      "Groq"
+    );
+    const latencyMs = Date.now() - groqStart;
+    logger.info("AI generation succeeded with secondary provider", {
+      provider: "groq",
+      latencyMs,
+      totalLatencyMs: Date.now() - startTime,
+      messagesCount: context.messages.length,
+    });
     return { reply, providerUsed: "groq" };
   } catch (error) {
-    logger.error("GROQ fallback also failed", { error: String(error) });
-    // Both providers failed.
-    throw new Error("All AI providers failed.");
+    const totalLatencyMs = Date.now() - startTime;
+    logger.error("All AI providers failed, returning calm fallback", {
+      totalLatencyMs,
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return {
+      reply: FALLBACK_REPLY,
+      providerUsed: "fallback",
+    };
   }
 }

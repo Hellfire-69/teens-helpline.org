@@ -5,11 +5,9 @@ import { logger } from "@/lib/logger";
 import { ANTI_INJECTION_GUARD } from "@/features/nova/prompt";
 
 const groq = new Groq({ apiKey: serverEnv.GROQ_API_KEY });
-// LLaMA3.1-8b is fast, standard conversational fallback.
-const MODEL_NAME = "llama-3.1-8b-instant";
 
 export class GroqProvider implements AIProvider {
-  async generateReply(context: AIProviderContext): Promise<string> {
+  async generateReply(context: AIProviderContext, signal?: AbortSignal): Promise<string> {
     logger.info("Generating reply with GROQ (fallback)...", { messagesCount: context.messages.length });
 
     if (context.messages.length === 0) {
@@ -18,7 +16,7 @@ export class GroqProvider implements AIProvider {
 
     const lastMessage = context.messages[context.messages.length - 1];
     
-    // For smaller models (8B), the system prompt at the beginning is often "forgotten" 
+    // For smaller models (8B/20B), the system prompt at the beginning is often "forgotten" 
     // We enforce compliance by repeating the core directive immediately before the user's message.
     const securedLastMessage = {
       role: "user" as const,
@@ -31,11 +29,14 @@ export class GroqProvider implements AIProvider {
       securedLastMessage
     ];
 
-    const chatCompletion = await groq.chat.completions.create({
-      messages,
-      model: MODEL_NAME,
-      temperature: 0.7,
-    });
+    const chatCompletion = await groq.chat.completions.create(
+      {
+        messages,
+        model: serverEnv.GROQ_MODEL,
+        temperature: 0.7,
+      },
+      signal ? { signal } : undefined
+    );
 
     const reply = chatCompletion.choices[0]?.message?.content;
     if (!reply) {

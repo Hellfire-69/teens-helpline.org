@@ -6,12 +6,11 @@ import { logger } from "@/lib/logger";
 const genAI = new GoogleGenerativeAI(serverEnv.GEMINI_API_KEY);
 
 export class GeminiProvider implements AIProvider {
-  async generateReply(context: AIProviderContext): Promise<string> {
+  async generateReply(context: AIProviderContext, signal?: AbortSignal): Promise<string> {
     logger.info("Generating reply with Gemini...", { messagesCount: context.messages.length });
     
-    // We use gemini-flash-lite-latest as the standard conversational model for speed and efficiency.
     const model = genAI.getGenerativeModel({
-      model: "gemini-flash-lite-latest",
+      model: serverEnv.GEMINI_MODEL,
       systemInstruction: context.systemPrompt,
     });
 
@@ -27,7 +26,10 @@ export class GeminiProvider implements AIProvider {
       throw new Error("Last message must be from user");
     }
 
-    const result = await chatSession.sendMessage([{ text: lastMessage.content }]);
+    const result = await chatSession.sendMessage(
+      [{ text: lastMessage.content }],
+      signal ? { signal } : undefined
+    );
     return result.response.text();
   }
 }

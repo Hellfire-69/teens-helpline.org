@@ -6,7 +6,7 @@ export interface AIProviderContext {
 export interface ProviderResponse {
   reply: string;
   error?: string;
-  providerUsed: "gemini" | "groq";
+  providerUsed: "gemini" | "groq" | "fallback";
 }
 
 export interface AIProvider {
@@ -14,5 +14,5 @@ export interface AIProvider {
    * Generates a reply from the AI provider.
    * Should throw an error if the generation fails (so failover can catch it).
    */
-  generateReply(context: AIProviderContext): Promise<string>;
+  generateReply(context: AIProviderContext, signal?: AbortSignal): Promise<string>;
 }

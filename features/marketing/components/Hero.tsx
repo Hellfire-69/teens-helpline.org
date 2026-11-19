@@ -14,8 +14,8 @@ export function Hero({ onContinueAnonymously }: HeroProps) {
   return (
     <ScrollExpandMedia
       mediaType="image"
-      mediaSrc="/images/hero-foreground.png"
-      bgImageSrc="/images/hero-background.png"
+      mediaSrc="/images/hero-foreground.webp"
+      bgImageSrc="/images/hero-background.webp"
       title="A safe place to pause, talk, | and find your next step"
       scrollToExpand="Scroll to explore"
       textBlend={false}

@@ -4,7 +4,7 @@ import * as React from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { motion, AnimatePresence } from "motion/react"
+import { LazyMotion, domAnimation, m, AnimatePresence } from "motion/react"
 import { cn } from "@/lib/utils"
 import {
   House,
@@ -55,7 +55,7 @@ export function Navbar() {
   }
 
   return (
-    <>
+    <LazyMotion features={domAnimation}>
       {/* ─── DESKTOP TOP BAR NAV (lg breakpoint and up) ─── */}
       <header
         className="hidden lg:block fixed top-14 left-1/2 -translate-x-1/2 z-50 w-max transition-all duration-300"
@@ -72,7 +72,7 @@ export function Navbar() {
             aria-label="TeensHelpline Home"
           >
             <div className="relative w-8 h-8 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-              <Image src="/images/logo-v2.png" alt="TeensHelpline Logo" fill sizes="32px" className="object-contain scale-[2]" />
+              <Image src="/images/logo-v2-sm.png" alt="TeensHelpline Logo" fill sizes="32px" className="object-contain scale-[2]" />
             </div>
             <span className="font-fraunces text-lg font-semibold text-ink-900 dark:text-white tracking-tight">
               TeensHelpline
@@ -105,7 +105,7 @@ export function Navbar() {
                   )}
                 >
                   {showDarkPill && (
-                    <motion.div
+                    <m.div
                       layoutId="navbar-pill"
                       className="absolute inset-0 bg-ink-900 dark:bg-white rounded-full shadow-md"
                       transition={{ type: "spring", stiffness: 500, damping: 35 }}
@@ -131,21 +131,21 @@ export function Navbar() {
                 )}
               >
                 {(hoveredPath ? hoveredPath === 'other' : false) && (
-                  <motion.div
+                  <m.div
                     layoutId="navbar-pill"
                     className="absolute inset-0 bg-ink-900 dark:bg-white rounded-full shadow-md"
                     transition={{ type: "spring", stiffness: 500, damping: 35 }}
                   />
                 )}
                 <span className="relative z-10">Other</span>
-                <motion.span className="relative z-10" animate={{ rotate: dropdownOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
+                <m.span className="relative z-10" animate={{ rotate: dropdownOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
                   <CaretDown className="w-3.5 h-3.5" />
-                </motion.span>
+                </m.span>
               </button>
 
               <AnimatePresence>
                 {dropdownOpen && (
-                  <motion.div
+                  <m.div
                     initial={{ opacity: 0, y: 10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
@@ -171,7 +171,7 @@ export function Navbar() {
                           )}
                         >
                           {isDropdownHovered && (
-                            <motion.div
+                            <m.div
                               layoutId="dropdown-pill"
                               className="absolute inset-0 bg-ink-900 dark:bg-white rounded-xl shadow-sm"
                               transition={{ type: "spring", stiffness: 500, damping: 35 }}
@@ -182,7 +182,7 @@ export function Navbar() {
                         </Link>
                       )
                     })}
-                  </motion.div>
+                  </m.div>
                 )}
               </AnimatePresence>
             </div>
@@ -214,7 +214,7 @@ export function Navbar() {
           aria-label="TeensHelpline Home"
         >
           <div className="relative w-6 h-6 flex items-center justify-center">
-            <Image src="/images/logo-v2.png" alt="TeensHelpline Logo" fill sizes="24px" className="object-contain scale-[2]" />
+            <Image src="/images/logo-v2-sm.png" alt="TeensHelpline Logo" fill sizes="24px" className="object-contain scale-[2]" />
           </div>
           <span className="font-fraunces text-sm font-semibold text-ink-900 dark:text-white tracking-tight">
             TeensHelpline
@@ -288,7 +288,7 @@ export function Navbar() {
       {/* ─── MOBILE DRAWER MENU OVERLAY ─── */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
@@ -334,9 +334,9 @@ export function Navbar() {
                 Sign In
               </Link>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
-    </>
+    </LazyMotion>
   )
 }

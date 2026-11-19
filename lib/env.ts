@@ -22,6 +22,8 @@ const serverEnvSchema = z.object({
     .min(1, "SUPABASE_SERVICE_ROLE_KEY is required"),
   GEMINI_API_KEY: z.string().min(1, "GEMINI_API_KEY is required"),
   GROQ_API_KEY: z.string().min(1, "GROQ_API_KEY is required"),
+  GEMINI_MODEL: z.string().min(1).default("gemini-flash-lite-latest"),
+  GROQ_MODEL: z.string().min(1).default("openai/gpt-oss-20b"),
   NODE_ENV: z
     .enum(["development", "production", "test"])
     .default("development"),

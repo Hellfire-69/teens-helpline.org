@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { motion, useScroll, useTransform, useSpring, useReducedMotion } from "motion/react"
+import { LazyMotion, domAnimation, m, useScroll, useTransform, useSpring, useReducedMotion } from "motion/react"
 import { Heart, ShieldWarning } from "@phosphor-icons/react"
 
 const EXPLORE_LINKS = [
@@ -45,9 +45,10 @@ export function Footer() {
   const wordmarkY = useTransform(smoothProgress, [0, 1], ["50%", "0%"])
 
   return (
-    <footer
-      ref={footerRef}
-      aria-label="Site Footer"
+    <LazyMotion features={domAnimation}>
+      <footer
+        ref={footerRef}
+        aria-label="Site Footer"
       className="relative w-full mt-auto border-t border-ink-900/10 dark:border-white/10 bg-paper-50/90 dark:bg-night-950/90 backdrop-blur-xl text-ink-900 dark:text-white pt-12 md:pt-16 pb-36 md:pb-28 px-4 md:px-8 overflow-hidden transition-colors duration-200"
     >
       <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-8 mb-6">
@@ -146,7 +147,7 @@ export function Footer() {
           WebkitMaskImage: "linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 45%, transparent 95%)",
         }}
       >
-        <motion.span
+        <m.span
           style={{
             y: prefersReduced ? 0 : wordmarkY,
             fontSize: "clamp(2.35rem, 11.2vw, 11rem)",
@@ -155,7 +156,7 @@ export function Footer() {
           className="font-fraunces font-bold text-ink-900 dark:text-white tracking-tighter whitespace-nowrap inline-block leading-none"
         >
           TeensHelpline
-        </motion.span>
+        </m.span>
       </div>
 
       {/* Thin divider line */}
@@ -172,5 +173,6 @@ export function Footer() {
         </div>
       </div>
     </footer>
+    </LazyMotion>
   )
 }

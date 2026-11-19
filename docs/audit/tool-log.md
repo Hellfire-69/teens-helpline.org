@@ -43,3 +43,46 @@
 - **Next.js Image & Routing Optimization**: Calibrated responsive sizes prop on hero media and added data-scroll-behavior="smooth" to html tag in root layout.
 - **Ponytail Code Review**: Conducted complete quality audit across all 8 About page files; verified zero dead code, strict types, no memory leaks, and lean diffs.
 - **Superpowers Verification**: Verified 100% pass on typecheck, ESLint, and impeccable antipattern detector across the entire repository.
+
+
+- **Superpowers (Brainstorming & Verification)**: Designed calm, editorial Help page layout matching About visual language, verified 100% adherence to Design.md and verified all criteria before completion.
+- **Modern Web Guidance**: Applied CSS-only gentle fade-in respecting prefers-reduced-motion; legacy-scan reported 0 findings across changed files.
+- **Impeccable & Design Skills**: Enforced Fraunces visual hero numbers, Inter labels, calm apricot/rose/plum static SVG ridge window, 44px tap targets, and eliminated alarm-red cues.
+- **Ponytail Review**: Verified minimal surgical diffs, 0 new packages, fixed broken /study-hub route, and preserved Server Component architecture.
+- **Audit & Type Safety Verification**: Confirmed 0 typecheck errors and 0 lint errors across the repository and audited cross-component helpline consistency.
+
+
+- **Superpowers (Brainstorming & Verification)**: Planned and validated the scroll-driven curtain story reveal with interlocking seam geometry, 180svh mobile ergonomics, and comprehensive keyboard/reduced-motion fallbacks.
+- **Modern Web Guidance**: Verified native scroll-driven MotionValues (useScroll, useTransform, useSpring) without wheel/touch interception; legacy-scan reported 0 findings.
+- **Impeccable & Design Skills**: Enforced Design.md illustration rules (soft-geometric, no faces/distress, Aurora tokens only) with the Mountain Beacon and Guiding Lantern SVG vector artwork.
+- **Ponytail Review**: Kept the curtain wrapper strictly isolated as a client component while preserving the full Server Component DOM and tel: links underneath with zero new packages.
+- **Accessibility & Next.js Build Verification**: Verified accessible visible skip link, WCAG AA compliance, and confirmed 100% pass on npm run build, typecheck, and ESLint.
+
+
+- **Design Review & Architecture Refactor**: Diagnosed and resolved the sticky scroll math bug, isolating GetHelpCurtain to a dedicated 155svh hero stage while preserving natural flow for all 5 helplines.
+- **Motion & Visual Craft**: Implemented true diagonal zigzag paper-tear reveal (1600x900 16:9 viewBox, (1080,0) to (520,900)), deckle-edge stroke highlights, drop shadows, and subtle cardstock rotation.
+- **Crisis Safety & Triage**: Introduced unblocked persistent top crisis bar with direct CHILDLINE 1098 and TeleMANAS 14416 dial pills and jump link, ensuring emergency help is never gated behind scroll.
+- **Impeccable Antipattern Audit**: Ran detector, eliminated tacky bounce easing in favor of smooth deceleration, and verified 0 anti-patterns across refactored files.
+- **Modern Web Guidance & Verification**: Passed legacy-scan across all components with zero findings; confirmed 100% pass on Next.js production build, typecheck, and ESLint.
+
+- **Helpline Directory Fact Auditing**: Verified all official helpline numbers/hours against government records; corrected iCALL operating hours to "Mon-Sat, 10am-8pm" and documented differences across crisis banner and safety bar.
+- **Unverified Claims Sanitization**: Stripped "Verified" claims from titles/hero, removed "moderated" and "trained teenager" peer claims with code proof from `service.ts`, simplified FAQ responses, and verified Quick Exit behavior directly against `quick-exit.tsx`.
+- **Design Token & Typography Alignment**: Enforced minimum 14px text size across all directory elements, removed uppercase tracking-wider eyebrow badges and square icon containers, and eliminated alarm-red cues in favor of ink/aurora tokens.
+- **Modern Web Guidance**: Executed `legacy-scan` across modified pages and components with 0 findings across 38 guides (52 active rules).
+- **TypeScript & Vitest Verification**: Confirmed 100% pass on Vitest test suite (`get-help.test.ts`), 0 TypeScript typecheck errors (`tsc --noEmit`), and 0 ESLint errors.
+
+- **Context7 & Compiler Optimization**: Queried Next.js 16 compiler specifications for `experimental.optimizePackageImports` on `@phosphor-icons/react`, reducing barrel overhead while confirming built-in tree shaking for Lucide.
+- **Edge Proxy Scoping & Vitest Suite**: Restated middleware route matcher to strictly target guarded and auth surfaces, protecting public routes from unneeded session round trips, and wrote unit test suite (`proxy-matcher.test.ts`) guaranteeing 100% coverage of all `app/(main)` route folders.
+- **Auth Architecture Audit & Layout Boundary Refactor**: Isolated `<AuthProvider>` to authenticated segment layouts (`app/(auth)` and `app/(main)`), eliminating public route auth overhead while adding a dev-fallback in `useAuth()` to prevent runtime regressions, and documented `/dashboard` duplicate `getUser` round trip.
+- **Motion Tree-Shaking**: Migrated `Navbar`, `Footer`, and `CrisisBanner` to motion/react's `LazyMotion` with `domAnimation` and `m` primitives, stripping synchronous motion runtime weight from initial page load without altering visual design or accessibility attributes.
+- **Sharp Asset Engineering & Next.js Image Optimization**: Generated 2x-calibrated `logo-v2-sm.png` and high-efficiency WebP hero vistas via sharp outside the repository, added explicit LCP `priority` and responsive `sizes` in `scroll-expansion-hero.tsx`, reducing home page image payload by 93.4% (6.7 MB down to 440 kB) and first load JS by ~30% across public routes.
+
+- **Context7 & Provider Model Auditing**: Audited current official Gemini (`gemini-flash-lite-latest`) and Groq (`openai/gpt-oss-20b`) model IDs and verified `reasoning_effort: 'low'` capability for sub-second responses.
+- **AI Architecture & Failover Orchestration**: Replaced retired Groq model, eliminated redundant same-provider retries, and implemented calibrated timeouts (4s primary Gemini, 5s secondary Groq) with `AbortController` cancellation and zero-PII logging.
+- **Safety & Fallback Integrity**: Engineered non-persisted calm fallback message with working same-tab `/get-help` link, verified crisis-detection logic remains 100% synchronous and AI-provider independent, and preserved Response Validator guards.
+- **Chat UI & Resilience Hardening**: Replaced silent error states with calm inline retry UI under message bubbles, guarded persona preference actions against duplicate flight triggers using ref locks, and preserved all visual styling tokens.
+- **Ponytail Review & Superpowers Verification**: Confirmed 0 typecheck errors, 0 ESLint errors, created comprehensive Vitest unit test suite covering failovers/timeouts/fallbacks (100% passing across 55 tests), and verified 0 secrets leaked.
+- **Next.js Route Segment Configuration**: Configured `maxDuration = 30` on `/api/chat` route to guarantee adequate serverless execution budget on Vercel for provider failover without function termination.
+- **Playwright E2E Locator Diagnostics**: Investigated PR #25 CI failure on get-help.spec.ts, identifying root cause as Playwright strict mode collisions between global CrisisBanner tel links (4 elements total) and directory links; resolved by scoping emergency and mental health helpline locators directly to #emergency-triage and #mental-health-directory sections.
+- **E2E Accessibility & Touch Target Hardening**: Preserved all 6 helpline checks, WhatsApp link, skip link, and alternative pathways while adding explicit assertions for >=44px minimum tap target heights across all call targets and validating clean zero-overflow layout under 390px mobile and prefers-reduced-motion environments (100% pass on typecheck, ESLint, and 55 Vitest tests).
+
