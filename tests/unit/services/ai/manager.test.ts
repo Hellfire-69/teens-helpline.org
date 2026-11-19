@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { generateWithFailover } from "../../../../services/ai/manager";
+import { generateWithFailover, FALLBACK_REPLY } from "../../../../services/ai/manager";
 import type { AIProviderContext } from "../../../../services/ai/types";
 
 const { mockGeminiGenerateReply, mockGroqGenerateReply } = vi.hoisted(() => {
@@ -58,12 +58,14 @@ describe("AI Provider Manager (Failover Logic)", () => {
     expect(mockGroqGenerateReply).toHaveBeenCalledTimes(1);
   });
 
-  it("throws an error if both providers fail entirely", async () => {
+  it("returns calm fallback message if both providers fail entirely", async () => {
     mockGeminiGenerateReply.mockRejectedValueOnce(new Error("Gemini error 1"));
     mockGroqGenerateReply.mockRejectedValueOnce(new Error("Groq error"));
 
-    await expect(generateWithFailover(dummyContext)).rejects.toThrow("All AI providers failed.");
+    const result = await generateWithFailover(dummyContext);
 
+    expect(result.reply).toBe(FALLBACK_REPLY);
+    expect(result.providerUsed).toBe("fallback");
     expect(mockGeminiGenerateReply).toHaveBeenCalledTimes(1);
     expect(mockGroqGenerateReply).toHaveBeenCalledTimes(1);
   });

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useReducedMotion } from "motion/react";
 import type { Message } from "../store";
 import ReactMarkdown from "react-markdown";
+import Link from "next/link";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 
@@ -71,7 +72,26 @@ export function ChatMessage({ message, isLatestNovaMessage }: ChatMessageProps) 
         "max-w-[95%] md:max-w-[85%] text-type-body-md text-ink-900 dark:text-white leading-relaxed prose dark:prose-invert prose-p:leading-relaxed prose-a:text-aurora-sea hover:prose-a:text-aurora-sea/80 prose-strong:font-semibold prose-ul:my-2 prose-li:my-0.5",
         !isLatestNovaMessage && "opacity-90"
       )}>
-        <ReactMarkdown>{displayedText}</ReactMarkdown>
+        <ReactMarkdown
+          components={{
+            a: ({ href, children, ...props }) => {
+              if (href?.startsWith("/")) {
+                return (
+                  <Link href={href} className="text-aurora-sea hover:text-aurora-sea/80 underline font-medium" {...props}>
+                    {children}
+                  </Link>
+                );
+              }
+              return (
+                <a href={href} target="_self" className="text-aurora-sea hover:text-aurora-sea/80 underline font-medium" {...props}>
+                  {children}
+                </a>
+              );
+            }
+          }}
+        >
+          {displayedText}
+        </ReactMarkdown>
       </div>
     </motion.div>
   );

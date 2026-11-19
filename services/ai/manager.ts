@@ -6,6 +6,9 @@ import { logger } from "@/lib/logger";
 const gemini = new GeminiProvider();
 const groq = new GroqProvider();
 
+export const FALLBACK_REPLY =
+  "I'm having a little trouble connecting right now, but please know you don't have to carry this alone. While I reconnect, you can find free, confidential support on our [Get Help resources](/get-help), or take a gentle breath and try messaging me again in a moment.";
+
 const PRIMARY_TIMEOUT_MS = 4000;
 const SECONDARY_TIMEOUT_MS = 5000;
 
@@ -88,10 +91,13 @@ export async function generateWithFailover(context: AIProviderContext): Promise<
     return { reply, providerUsed: "groq" };
   } catch (error) {
     const totalLatencyMs = Date.now() - startTime;
-    logger.error("All AI providers failed", {
+    logger.error("All AI providers failed, returning calm fallback", {
       totalLatencyMs,
       error: error instanceof Error ? error.message : String(error),
     });
-    throw new Error("All AI providers failed.");
+    return {
+      reply: FALLBACK_REPLY,
+      providerUsed: "fallback",
+    };
   }
 }

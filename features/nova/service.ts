@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { checkRiskSignal } from "./escalation";
 import { buildSystemPrompt } from "./prompt";
-import { generateWithFailover } from "../../services/ai/manager";
+import { generateWithFailover, FALLBACK_REPLY } from "../../services/ai/manager";
 import { validateResponse } from "./validator";
 import { logger } from "@/lib/logger";
 import {
@@ -56,7 +56,9 @@ export async function handleChatTurn(req: ChatRequest, auth: AuthUserContext): P
   let conversationId = req.conversationId;
 
   if (isAnonymous) {
-    history = (req.recentHistory || []).slice(-6); // Server-side cap for anonymous
+    history = (req.recentHistory || [])
+      .filter((m) => m.content !== FALLBACK_REPLY)
+      .slice(-6); // Server-side cap for anonymous
   }
   
   // Resolve Persona
@@ -127,7 +129,8 @@ export async function handleChatTurn(req: ChatRequest, auth: AuthUserContext): P
   }
 
   // 6. DB Persistence for Logged In users
-  if (!isAnonymous && conversationId) {
+  // Rule: Do NOT save the fallback into chat history or AI context for later turns
+  if (!isAnonymous && conversationId && providerResponse.providerUsed !== "fallback") {
     // Append both messages to the conversation
     // Awaiting in parallel
     await Promise.all([
