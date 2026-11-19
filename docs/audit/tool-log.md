@@ -82,4 +82,5 @@
 - **Safety & Fallback Integrity**: Engineered non-persisted calm fallback message with working same-tab `/get-help` link, verified crisis-detection logic remains 100% synchronous and AI-provider independent, and preserved Response Validator guards.
 - **Chat UI & Resilience Hardening**: Replaced silent error states with calm inline retry UI under message bubbles, guarded persona preference actions against duplicate flight triggers using ref locks, and preserved all visual styling tokens.
 - **Ponytail Review & Superpowers Verification**: Confirmed 0 typecheck errors, 0 ESLint errors, created comprehensive Vitest unit test suite covering failovers/timeouts/fallbacks (100% passing across 55 tests), and verified 0 secrets leaked.
+- **Next.js Route Segment Configuration**: Configured `maxDuration = 30` on `/api/chat` route to guarantee adequate serverless execution budget on Vercel for provider failover without function termination.
 
